@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/03/25 02:12:58 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/03/28 05:40:46 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,31 @@ typedef struct s_list
 	struct s_list	*link;
 }	t_list;
 
-/************************* Libft utils *************************/
+/********************************* Libft utils ********************************/
 
+int			ft_isalpha(int ch);
 void		ft_putchar(char ch);
-void		ft_putstr(char *str);
+char		**ft_free_arr(char **str);
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(const char *s1);
+void		ft_putstr_fd(char *s, int fd);
 char		*ft_strjoin(char *s1, char *s2);
+char		**ft_split(char const *s, char c);
 int			ft_strcmp(const char *s1, const char *s2);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
 
-/**************************** List utils ***************************/
+/********************************* List utils *********************************/
 
-t_list		*ft_lstnew(int data, char *content);
+t_list		*ft_lstnew(char *content);
 t_list		*ft_lstlast(t_list *head);
 void		*ft_destroy_list(t_list **head);
 void		ft_lstadd_back(t_list **head, t_list *new);
+
+/***************************** Parsing functions ******************************/
+
+int			ft_count_bytes(char *input);
+void		ft_first_check(char *input);
+char		*ft_create_updated_input(char *input);
+void		ft_fill_list(char *input, t_list **list);
 
 #endif

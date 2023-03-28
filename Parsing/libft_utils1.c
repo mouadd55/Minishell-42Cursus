@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 17:37:17 by moudrib           #+#    #+#             */
-/*   Updated: 2023/03/24 20:01:41 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/03/27 01:41:44 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,18 @@ void	ft_putchar(char ch)
 	write (1, &ch, 1);
 }
 
-void	ft_putstr(char *str)
+void	ft_putstr_fd(char *s, int fd)
 {
 	int	i;
 
-	i = -1;
-	while (str[++i])
-		ft_putchar(str[i]);
+	i = 0;
+	if (!s)
+		return ;
+	while (s[i])
+	{
+		write (fd, &s[i], 1);
+		i++;
+	}
 }
 
 char	*ft_strdup(const char *s1)

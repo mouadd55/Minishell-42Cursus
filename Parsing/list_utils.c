@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 16:45:14 by moudrib           #+#    #+#             */
-/*   Updated: 2023/03/24 16:51:09 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/03/26 21:29:25 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_list	*ft_lstnew(int data, char *content)
+t_list	*ft_lstnew(char *content)
 {
 	t_list	*head;
 
