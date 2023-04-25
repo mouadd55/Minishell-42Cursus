@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 17:37:17 by moudrib           #+#    #+#             */
-/*   Updated: 2023/03/27 01:41:44 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/04/25 11:42:41 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-void	ft_putchar(char ch)
+void	ft_putchar(char ch, int fd)
 {
-	write (1, &ch, 1);
+	write (fd, &ch, 1);
 }
 
 void	ft_putstr_fd(char *s, int fd)
