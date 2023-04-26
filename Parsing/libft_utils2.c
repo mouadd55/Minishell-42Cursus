@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 20:01:56 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/25 13:12:59 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/26 13:36:02 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,25 @@ int	ft_strchr( char *str, int find)
 
 	i = 0;
 	j = ft_strlen(str);
-	while (i <= j)
+	while (str[i])
 	{
 		if (str[i] == (char) find)
 			return (i);
 		i++;
+	}
+	return (0);
+}
+
+int	ft_strrchr(char *str, int c)
+{
+	int	srcl;
+
+	srcl = ft_strlen(str);
+	while (srcl >= 0)
+	{
+		if (str[srcl] == (char) c)
+			return (srcl);
+		srcl--;
 	}
 	return (0);
 }

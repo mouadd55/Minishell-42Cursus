@@ -6,20 +6,20 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/25 18:49:36 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/26 20:05:15 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char check_char(char *input, int c)
+int	check_char(char *input, int c)
 {
 	int	i;
 
 	i = 0;
 	while (input[i])
 	{
-		if(input[i] == (char) c)
+		if (input[i] == (char) c)
 			return (1);
 		i++;
 	}
@@ -41,67 +41,52 @@ size_t	ft_count_char(char *input, char c)
 	return (count);
 }
 
-void ft_first_middle_check(char *input)
+void	ft_first_middle_check(char *input)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (i < ft_strlen(input))
 	{
-		if (((check_char("<>", input[i]) && check_char("<>", input[i+1]))
-			|| (input[i] == '|' && input[i+1] == '|'))
-			&& (!input[i+2] || ft_count_char(&input[i+2], ' ') == ft_strlen(&input[i+2])))
-			syntax_error(NULL, input[i]);
-		else if (input[i] == '|' && input[i+1] == '|')
-			syntax_error(NULL, input[i]);
+		if (((check_char("<>", input[i]) || check_char("<>", input[i + 1]))
+				|| (input[i] == '|' && input[i + 1] == '|'))
+			&& (!input[i + 2] || ft_count_char(&input[i + 2], ' ')
+				== ft_strlen(&input[i + 2])))
+			return (syntax_error(&input[i], 0));
+		else if (input[i] == '|' && (input[i + 1] == '|'
+				|| ft_count_char(&input[i + 1], ' ')
+				== ft_strlen(&input[i + 1])))
+			return (syntax_error(NULL, '|'));
+		else if (input[i] == '(' || input[i] == ')')
+			return (syntax_error(NULL, input[i]));
 		i++;
 	}
-	
 }
 
 void	ft_first_last_check(char *input)
 {
-	size_t i;
+	size_t	i;
 
-	i = ft_strlen(input);
-	ft_first_middle_check(input);
+	i = -1;
 	if (check_char("()|", input[0])
-		|| (check_char("<>", input[0]) &&
-		(!input[1] || ft_count_char(&input[0], ' ') == ft_strlen(&input[1]))))
-		syntax_error(NULL, input[0]);
-	else if ((ft_count_char(input, '"')%2))
-		syntax_error(NULL, '"');
-	else if ((ft_count_char(input, '\'')%2))
-		syntax_error(NULL, '\'');
-	else if ((i = ft_strchr(input, '|')) || ft_strchr(input, ')')
-			|| ft_strchr(input, '('))
-	{
-		while (i<ft_strlen(input))
-		{
-			if (input[i] == '|' && (input[i+1] == '|'
-			|| ft_count_char(&input[i+1], ' ') == ft_strlen(&input[i+1])))
-				syntax_error(NULL, '|');
-			if (input[i] == '(' || input[i] == ')')
-				syntax_error(NULL, input[i]);
-			i++;
-		}
-	}
+		|| (check_char("<>", input[0])
+			&& (!input[1] || ft_count_char(&input[0], ' ')
+				== ft_strlen(&input[1]))))
+		return (syntax_error(NULL, input[0]));
+	else if ((ft_count_char(input, '"') % 2))
+		return (syntax_error(NULL, '"'));
+	else if ((ft_count_char(input, '\'') % 2))
+		return (syntax_error(NULL, '\''));
+	else
+		ft_first_middle_check(input);
 }
-
 
 char	*ft_create_updated_input(char *input)
 {
-	int		i;
-	int		j;
-	char	*new_input = "hi";
-
-	j = 0;
-	i = -1;
+	char *a = ft_strdup(""); // don't touch it
 	ft_first_last_check(input);
-	return (new_input);
-	
+	return(a);
 }
-
 
 void	ft_fill_list(char *input, t_list **list)
 {
