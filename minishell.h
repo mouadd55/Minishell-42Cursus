@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/26 13:07:06 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/28 15:01:57 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include "string.h"
 # include <readline/history.h>
 # include <readline/readline.h>
 
@@ -39,6 +40,7 @@ int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 int			ft_strchr( char *str, int find);
 int			ft_strrchr(char *str, int c);
+
 /********************************* List utils *********************************/
 
 t_list		*ft_lstnew(char *content);
@@ -52,5 +54,10 @@ void		ft_first_check(char *input);
 char		*ft_create_updated_input(char *input);
 void		ft_fill_list(char *input, t_list **list);
 void		syntax_error(char *s2, char e);
+int		ft_first_last_check(char *input);
+
+
+
+
 
 #endif

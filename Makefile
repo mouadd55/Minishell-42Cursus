@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
+#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/03/28 05:29:53 by moudrib          ###   ########.fr        #
+#    Updated: 2023/04/28 15:04:04 by yonadry          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,8 @@ SRC		=	\
 			Parsing/libft_utils1.c \
 			Parsing/libft_utils2.c \
 			Parsing/libft_utils3.c \
+			Parsing/parsing.c \
+
 
 OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
