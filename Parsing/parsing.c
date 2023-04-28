@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 15:52:52 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/28 15:01:51 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/28 16:13:13 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int ft_check_double_specials(char *input)
 
 	i = -1;
 	tmp = NULL;
+	if (ft_strchr(input, '>') || ft_strchr(input, '<') || ft_strchr(input, '|'))
+	{
 	while (input[++i])
 	{
 		if (check_char("|><", input[i]))
@@ -88,11 +90,15 @@ int ft_check_double_specials(char *input)
 			break;
 		}
 	}
-	i = -1;
-	while (tmp && tmp[++i])
+	i = 0;
+	while (tmp[i] && !ft_isalpha(tmp[i]))
 	{
 		if (check_char("><|", tmp[i]))
 			return (syntax_error(NULL, tmp[i]), 1);
+		i++;
+	}
+	if (ft_strchr(&tmp[i], '>') || ft_strchr(&tmp[i], '<') || ft_strchr(&tmp[i], '|'))
+		ft_check_double_specials(&tmp[i]);
 	}
 	return (0);
 }
@@ -107,10 +113,6 @@ int	ft_first_last_check(char *input)
 			&& (!input[1] || ft_count_char(&input[0], ' ')
 				== ft_strlen(&input[1]))))
 		return (syntax_error(NULL, input[0]), 1);
-	else if ((ft_count_char(input, '"') % 2))
-		return (syntax_error(NULL, '"'), 1);
-	else if ((ft_count_char(input, '\'') % 2))
-		return (syntax_error(NULL, '\''), 1);
 	else if (ft_first_middle_check(input))
 		return (1);
 	else

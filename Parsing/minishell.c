@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/28 15:16:26 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/28 15:39:42 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ int	main(int ac, char **av)
 		// ft_destroy_list(&list);
 		// free(input);
 		// free(input);
-		while (list)
-		{
-			printf("%s\n", list->content);
-			list = list->link;
-		}
+		// while (list)
+		// {
+		// 	printf("%s\n", list->content);
+		// 	list = list->link;
+		// }
 	}
 	system("leaks minishell");
 	return (0);
