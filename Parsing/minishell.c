@@ -3,14 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/28 15:39:42 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/29 18:00:04 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	ft_count_bytes(char *input)
+{
+	int	i;
+	int	bytes;
+
+	i = -1;
+	bytes = 1;
+	while (input[++i])
+	{
+		if (input[i] == '|')
+			bytes += 2;
+		bytes++;
+	}
+	return (bytes);
+}
+
+char	*ft_create_updated_input(char *input)
+{
+	int		i;
+	int		j;
+	char	*new_input;
+
+	j = 0;
+	i = -1;
+	new_input = malloc(sizeof(char) * ft_count_bytes(input));
+	if (!new_input)
+		return (NULL);
+	while (input[++i])
+	{
+		if (input[i] == ' ')
+			new_input[j++] = ' ';
+		else if (input[i] == '|')
+		{
+			new_input[j++] = ' ';
+			new_input[j++] = input[i];
+			new_input[j++] = ' ';
+		}
+		else
+			new_input[j++] = input[i];
+	}
+	new_input[j] = '\0';
+	return (free(input), new_input);
+}
 
 void	ft_fill_list(char *input, t_list **list)
 {
@@ -18,7 +62,7 @@ void	ft_fill_list(char *input, t_list **list)
 	char	**arr;
 
 	i = -1;
-	arr = ft_split(input, '.');
+	arr = ft_split(input, ' ');
 	while (arr[++i])
 		ft_lstadd_back(list, ft_lstnew(ft_strdup(arr[i])));
 	ft_free_arr(arr);
@@ -28,6 +72,7 @@ int	main(int ac, char **av)
 {
 	char	*input;
 	t_list	*list;
+	// t_list	*tmp;
 
 	(void)av;
 	if (ac != 1)
@@ -39,17 +84,19 @@ int	main(int ac, char **av)
 			break ;
 		if (ft_strlen(input))
 			add_history(input);
-		if (ft_first_last_check(input))
-			free(input);
-		ft_fill_list(input, &list);
-		// ft_destroy_list(&list);
-		// free(input);
-		// free(input);
-		// while (list)
-		// {
-		// 	printf("%s\n", list->content);
-		// 	list = list->link;
-		// }
+		if (ft_strlen(input) && ft_first_last_check(input))
+		{
+			input = ft_create_updated_input(input);
+			ft_fill_list(input, &list);
+			// tmp = list;
+			// while (tmp)
+			// {
+			// 	printf("%s\n", tmp->content);
+			// 	tmp = tmp->link;
+			// }
+			ft_destroy_list(&list);
+		}
+		free(input);
 	}
 	system("leaks minishell");
 	return (0);

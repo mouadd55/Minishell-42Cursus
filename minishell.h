@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/28 15:01:57 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/29 07:11:04 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,8 @@ void		ft_lstadd_back(t_list **head, t_list *new);
 
 /***************************** Parsing functions ******************************/
 
-void		ft_first_check(char *input);
-char		*ft_create_updated_input(char *input);
 void		ft_fill_list(char *input, t_list **list);
 void		syntax_error(char *s2, char e);
-int		ft_first_last_check(char *input);
-
-
-
-
+int			ft_first_last_check(char *input);
 
 #endif

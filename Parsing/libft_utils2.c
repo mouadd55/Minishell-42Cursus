@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 20:01:56 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/26 13:36:02 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/04/29 05:11:43 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ void	syntax_error(char *s2, char e)
 	if (e)
 		ft_putchar(e, 2);
 	ft_putchar('\n', 2);
-	return;
+	return ;
 }
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	int	i;
