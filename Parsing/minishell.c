@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/29 18:00:04 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/04/30 19:42:51 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_fill_list(char *input, t_list **list)
 int	main(int ac, char **av)
 {
 	char	*input;
-	t_list	*list;
+	// t_list	*list;
 	// t_list	*tmp;
 
 	(void)av;
@@ -87,17 +87,19 @@ int	main(int ac, char **av)
 		if (ft_strlen(input) && ft_first_last_check(input))
 		{
 			input = ft_create_updated_input(input);
-			ft_fill_list(input, &list);
+			ft_split_input(input);
+			// printf("%d\n", ft_count_arguments(input));
+			// ft_fill_list(input, &list);
 			// tmp = list;
 			// while (tmp)
 			// {
 			// 	printf("%s\n", tmp->content);
 			// 	tmp = tmp->link;
 			// }
-			ft_destroy_list(&list);
+			// ft_destroy_list(&list);
 		}
-		free(input);
+		// free(input);
 	}
-	system("leaks minishell");
+	// system("leaks minishell");
 	return (0);
 }
