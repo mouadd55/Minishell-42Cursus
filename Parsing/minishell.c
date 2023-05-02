@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/02 13:45:10 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/02 18:57:42 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_count_bytes(char *input)
 	return (bytes);
 }
 
-char	* ft_create_updated_input(char *input)
+char	*ft_create_updated_input(char *input)
 {
 	int		i;
 	int		j;
@@ -51,7 +51,6 @@ char	* ft_create_updated_input(char *input)
 			new_input[j++] = input[i];
 	}
 	new_input[j] = '\0';
-	printf("|%s|\n", new_input);
 	return (free(input), new_input);
 }
 
@@ -61,7 +60,7 @@ void	ft_fill_list(char *input, t_list **list)
 	char	**arr;
 
 	i = -1;
-	arr = ft_split(input, ' ');
+	arr = ft_split(input, "<");
 	while (arr[++i])
 		ft_lstadd_back(list, ft_lstnew(ft_strdup(arr[i])));
 	ft_free_arr(arr);
@@ -69,41 +68,29 @@ void	ft_fill_list(char *input, t_list **list)
 
 int	main(int ac, char **av, char **env)
 {
-	char	*input;
+	// char	*input;
 	int		i;
 
 	// t_list	*list;
-	// t_list	*tmp;
 	i = 0;
-	// while (env[i])
-	// 	printf("declare -x %s=\"value\"|----------------\n", env[i++]);
-	(void)env;
 	(void)av;
 	if (ac != 1)
 		return (0);
-	while (1)
-	{
-		input = readline("➜  Minishell ");
-		if (!input)
-			break ;
-		if (ft_strlen(input))
-			add_history(input);
-		if (ft_strlen(input) && ft_first_last_check(input))
-		{
-			input = ft_create_updated_input(input);
-			ft_split_input(input);
-			// printf("%d\n", ft_count_arguments(input));
-			// ft_fill_list(input, &list);
-			// tmp = list;
-			// while (tmp)
-			// {
-			// 	printf("%s\n", tmp->content);
-			// 	tmp = tmp->link;
-			// }
-			// ft_destroy_list(&list);
-		}
-		// free(input);
-	}
+	print_env(ft_split_environment(env));
+	// while (1)
+	// {
+	// 	i = -1;
+	// 	input = readline("➜  Minishell ");
+	// 	if (!input)
+	// 		break ;
+	// 	if (ft_strlen(input))
+	// 		add_history(input);
+	// 	if (ft_strlen(input) && ft_first_last_check(input))
+	// 	{
+	// 		input = ft_create_updated_input(input);
+
+	// 	}
+	// }
 	// system("leaks minishell");
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/01 18:03:52 by moudrib          ###   ########.fr        #
+#    Updated: 2023/05/02 18:41:38 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,14 +19,14 @@ G		= \x1B[32m
 W		= \x1B[0m
 B		= \033[1m
 SRC		=	\
+			Parsing/input.c \
+			Parsing/parsing.c \
 			Parsing/minishell.c \
 			Parsing/list_utils.c \
+			Parsing/environment.c \
 			Parsing/libft_utils1.c \
 			Parsing/libft_utils2.c \
 			Parsing/libft_utils3.c \
-			Parsing/parsing.c \
-			Parsing/input.c \
-
 
 OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
@@ -52,7 +52,6 @@ $(OBJDIR)%.o: %.c minishell.h
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "$(G)Compiling: $(W)$<"
-	@clear
 
 clean:
 	@rm -rf $(OBJDIR)

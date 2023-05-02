@@ -41,7 +41,7 @@ void	ft_split_input(char *input)
 	char	**arr;
 
 	i = 0;
-	arr = ft_split(input, ' ');
+	arr = ft_split(input, "<>|");
 	if (!arr)
 		return ;
 
