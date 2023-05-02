@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/01 11:46:41 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/02 13:45:52 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 int			ft_strchr( char *str, int find);
 int			ft_strrchr(char *str, int c);
-
+int			check_char(char *input, int c);
 /********************************* List utils *********************************/
 
 t_list		*ft_lstnew(char *content);

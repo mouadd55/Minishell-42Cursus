@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 15:52:52 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/29 18:01:06 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/02 13:50:23 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,16 +178,19 @@ int	ft_first_last_check(char *input)
 	size_t	i;
 
 	i = -1;
-	if (check_char("()|", input[0]) || (check_char("<>", input[0]) && (!input[1]
-				|| ft_count_char(&input[0], ' ') == ft_strlen(&input[1]))))
-		return (syntax_error(NULL, input[0]), 0);
-	else if (ft_first_middle_check(input))
-		return (0);
-	else if (check_double_quotes(input))
-		return (0);
-	else if (check_single_quotes(input))
-		return (0);
-	else
-		ft_check_double_specials(input);
+	if (!ft_strchr(input, '\"') && !ft_strchr(input, '\''))
+	{
+		if (check_char("()|", input[0]) || (check_char("<>", input[0]) && (!input[1]
+					|| ft_count_char(&input[0], ' ') == ft_strlen(&input[1]))))
+			return (syntax_error(NULL, input[0]), 0);
+		else if (ft_first_middle_check(input))
+			return (0);
+		else if (check_double_quotes(input))
+			return (0);
+		else if (check_single_quotes(input))
+			return (0);
+		else
+			ft_check_double_specials(input);
+	}
 	return (1);
 }

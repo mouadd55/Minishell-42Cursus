@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/01 15:33:28 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/02 13:45:10 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_count_bytes(char *input)
 	return (bytes);
 }
 
-char	*ft_create_updated_input(char *input)
+char	* ft_create_updated_input(char *input)
 {
 	int		i;
 	int		j;
@@ -41,9 +41,7 @@ char	*ft_create_updated_input(char *input)
 		return (NULL);
 	while (input[++i])
 	{
-		if (input[i] == ' ')
-			new_input[j++] = ' ';
-		else if (input[i] == '|')
+		if (check_char("|><", input[i]))
 		{
 			new_input[j++] = ' ';
 			new_input[j++] = input[i];
@@ -53,6 +51,7 @@ char	*ft_create_updated_input(char *input)
 			new_input[j++] = input[i];
 	}
 	new_input[j] = '\0';
+	printf("|%s|\n", new_input);
 	return (free(input), new_input);
 }
 
@@ -68,12 +67,17 @@ void	ft_fill_list(char *input, t_list **list)
 	ft_free_arr(arr);
 }
 
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **env)
 {
 	char	*input;
+	int		i;
+
 	// t_list	*list;
 	// t_list	*tmp;
-
+	i = 0;
+	// while (env[i])
+	// 	printf("declare -x %s=\"value\"|----------------\n", env[i++]);
+	(void)env;
 	(void)av;
 	if (ac != 1)
 		return (0);

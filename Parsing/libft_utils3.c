@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 04:27:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/03/28 05:41:25 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/02 13:52:20 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_count_words(char const *s, char c)
+int	ft_count_words(char const *s, char *c)
 {
 	int	i;
 	int	count;
@@ -21,22 +21,22 @@ int	ft_count_words(char const *s, char c)
 	count = 0;
 	while (s[i])
 	{
-		while (s[i] && s[i] == c)
+		while (s[i] && check_char(c , s[i]))
 			i++;
 		if (s[i])
 			count++;
-		while (s[i] && s[i] != c)
+		while (s[i] && !check_char(c , s[i]))
 			i++;
 	}
 	return (count);
 }
 
-static int	ft_lenword(char const *s, char c)
+static int	ft_lenword(char const *s, char *c)
 {
 	int	i;
 
 	i = 0;
-	while (s[i] && s[i] != c)
+	while (s[i] && !check_char(c , s[i]))
 		i++;
 	return (i);
 }
@@ -55,29 +55,29 @@ char	**ft_free_arr(char **str)
 	return (0);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char *c)
 {
 	int		i;
 	char	**str;
 
 	i = 0;
-	if (s == 0)
-		return (0);
+	if (!s)
+		return (NULL);
 	str = malloc((ft_count_words(s, c) + 1) * sizeof(char *));
-	if (str == 0)
-		return (0);
-	while (*s != '\0')
+	if (!str)
+		return (NULL);
+	while (*s)
 	{
-		while (*s == c)
+		while (check_char(c , *s))
 			s++;
-		if (*s != '\0')
+		if (*s)
 		{
 			str[i] = ft_substr(s, 0, ft_lenword(s, c));
-			if (str[i] == 0)
+			if (!str[i])
 				return (ft_free_arr(str));
 			i++;
 		}
-		while (*s != c && *s)
+		while (!check_char(c , *s) && *s)
 			s++;
 	}
 	str[i] = 0;
