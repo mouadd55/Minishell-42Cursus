@@ -6,24 +6,48 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/02 20:44:51 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/03 14:25:13 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_env(t_list *env)
+void	print_env(int i, int count, t_list *env)
 {
-	printf("                 \e[1m\e[93mEnvironment        ");
-	printf("\n--------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-	printf("|              Key             |                                                         Value                                                         |\n");
-	printf("--------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-	while (env)
+	if (i && i == count)
 	{
-		printf("|%29s |%118s |\n", env->key, env->value);
-		env = env->link;
+		while (env)
+		{
+			printf("%s=%s\n", env->key, env->value);
+			env = env->link;
+		}
+	}	
+}
+
+void	env_parsing(char *input, t_list *env)
+{
+	t_vars v;
+
+	v.i = -1;
+	v.count = 0;
+	v.arr = ft_split(input, " \t\n\v\f\r");
+	while (v.arr[++v.i])
+	{
+		if (ft_strcmp(v.arr[v.i], "env") == 0)
+			v.count++;
+		else if (v.arr[v.i][0] == '-' && ft_strlen(v.arr[v.i]) > 1)
+		{
+			printf("env: illegal option -- %c\n", v.arr[v.i][1]);
+			return ;
+		}
+		else if (v.arr[v.i][0] != '-')
+		{
+			printf("env: %s: No such file or directory\n", v.arr[v.i]);
+			return ;
+		}
 	}
-	printf("--------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+	print_env(v.i, v.count, env);
+	ft_free_arr(v.arr);
 }
 
 t_list	*ft_lstnew_env(char *key, char *value)

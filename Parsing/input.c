@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int is_space(int c)
+int	is_space(int c)
 {
 	if ((c >= 9 && c <= 13) || c == 32)
 		return (1);
@@ -33,18 +33,6 @@ int	ft_count_arguments(char *input)
 		}
 	}
 	return (var.count);
-}
-
-void	ft_split_input(char *input)
-{
-	int		i;
-	char	**arr;
-
-	i = 0;
-	arr = ft_split(input, "<>|");
-	if (!arr)
-		return ;
-
 }
 
 // char	*ft_strjoin_c(char *s1, char c)

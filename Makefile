@@ -6,7 +6,7 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/02 18:41:38 by moudrib          ###   ########.fr        #
+#    Updated: 2023/05/03 10:27:00 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ W		= \x1B[0m
 B		= \033[1m
 SRC		=	\
 			Parsing/input.c \
-			Parsing/parsing.c \
+			Parsing/parsing1.c \
+			Parsing/parsing2.c \
 			Parsing/minishell.c \
 			Parsing/list_utils.c \
 			Parsing/environment.c \

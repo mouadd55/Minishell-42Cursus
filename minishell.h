@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/02 18:51:31 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/03 14:26:49 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,12 @@ typedef struct s_list
 
 typedef struct t_vars
 {
-	int	i;
-	int	j;
-	int	flag;
-	int	count;
+	int		i;
+	int		j;
+	int		flag;
+	int		count;
+	int		d_quotes;
+	char	**arr;
 }	t_vars;
 
 /********************************* Libft utils ********************************/
@@ -63,12 +65,14 @@ void		ft_lstadd_back(t_list **head, t_list *new);
 
 /***************************** Parsing functions ******************************/
 
-void		print_env(t_list *env);
-void		ft_split_input(char *input);
 void		syntax_error(char *s2, char e);
 int			ft_count_arguments(char *input);
 int			ft_first_last_check(char *input);
 t_list		*ft_split_environment(char **env);
+void		env_parsing(char *input, t_list *env);
 void		ft_fill_list(char *input, t_list **list);
+
+int			check_single_quotes(char *input);
+int			check_double_quotes(char *input);
 
 #endif

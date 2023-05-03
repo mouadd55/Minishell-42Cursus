@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parsing1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 15:52:52 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/02 13:50:23 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/03 10:39:20 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,83 +105,13 @@ int	ft_check_double_specials(char *input)
 	return (0);
 }
 
-int	check_double_quotes(char *input)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 1;
-	if (ft_strchr(input, '\"') || input[0] == '\"')
-	{
-		i = ft_strchr(input, '\"');
-		while (input[i++])
-		{
-			if (input[i] == '\"')
-			{
-				count++;
-				break ;
-			}
-		}
-		if (count % 2 != 0)
-		{
-			syntax_error(NULL, '\"');
-			return (1);
-		}
-		else
-			check_double_quotes(&input[i + 1]);
-	}
-	return (0);
-}
-
-int	check_single_quotes(char *input)
-{
-	int	i;
-	int	flag;
-	int	count;
-	int	d_quotes;
-
-	i = 0;
-	flag = 0;
-	count = 0;
-	d_quotes = 0;
-	while (input[i])
-	{
-		if (input[i] == '\"' && (d_quotes % 2 == 0))
-		{
-			flag = 1;
-			d_quotes++;	
-		}
-		else if (input[i] == '\"' && (d_quotes % 2 != 0))
-		{
-			flag = 0;
-			d_quotes++;	
-		}
-		if (input[i] == '\\' && input[i + 1] && input[i + 1] == '\'')
-			i += 2;
-		else if (input[i] == '\'')
-		{
-			if (flag == 0)
-				count++;
-			i++;
-		}
-		else
-			i++;
-	}
-	if (count % 2)
-		return (syntax_error(NULL, '\''), 1);
-	return (0);
-}
-
 int	ft_first_last_check(char *input)
 {
-	size_t	i;
-
-	i = -1;
 	if (!ft_strchr(input, '\"') && !ft_strchr(input, '\''))
 	{
-		if (check_char("()|", input[0]) || (check_char("<>", input[0]) && (!input[1]
-					|| ft_count_char(&input[0], ' ') == ft_strlen(&input[1]))))
+		if (check_char("()|", input[0]) || (check_char("<>", input[0])
+				&& (!input[1] || ft_count_char(&input[0],
+						' ') == ft_strlen(&input[1]))))
 			return (syntax_error(NULL, input[0]), 0);
 		else if (ft_first_middle_check(input))
 			return (0);

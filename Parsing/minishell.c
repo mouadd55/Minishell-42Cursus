@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/02 18:57:42 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/03 14:23:28 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,31 +66,31 @@ void	ft_fill_list(char *input, t_list **list)
 	ft_free_arr(arr);
 }
 
+void	ft_builtins(char *input, char **env)
+{
+	env_parsing(input, ft_split_environment(env));
+}
+
 int	main(int ac, char **av, char **env)
 {
-	// char	*input;
-	int		i;
-
+	char	*input;
 	// t_list	*list;
-	i = 0;
+
 	(void)av;
 	if (ac != 1)
 		return (0);
-	print_env(ft_split_environment(env));
-	// while (1)
-	// {
-	// 	i = -1;
-	// 	input = readline("➜  Minishell ");
-	// 	if (!input)
-	// 		break ;
-	// 	if (ft_strlen(input))
-	// 		add_history(input);
-	// 	if (ft_strlen(input) && ft_first_last_check(input))
-	// 	{
-	// 		input = ft_create_updated_input(input);
-
-	// 	}
-	// }
-	// system("leaks minishell");
+	// print_env(ft_split_environment(env));
+	while (1)
+	{
+		input = readline("➜  Minishell ");
+		if (!input)
+			break ;
+		if (ft_strlen(input))
+			add_history(input);
+		if (ft_strlen(input) && ft_first_last_check(input))
+			input = ft_create_updated_input(input);
+		ft_builtins(input, env);
+	}
+	system("leaks minishell");
 	return (0);
 }
