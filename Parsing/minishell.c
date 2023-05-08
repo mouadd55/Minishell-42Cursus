@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/03 14:23:28 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/07 20:19:21 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,27 @@ void	ft_builtins(char *input, char **env)
 {
 	env_parsing(input, ft_split_environment(env));
 }
+void minihell(char *input)
+{
+	t_list *lst;
 
+	lst = ft_split_input(input);
+	if (!check_syntax(lst))
+	{
+
+	while (lst)
+	{
+		printf("|%s|\n", lst->content);
+		lst = lst->link;
+	}
+	}
+
+}
 int	main(int ac, char **av, char **env)
 {
 	char	*input;
-	// t_list	*list;
+	// t_list	*lst;
+	(void) env;
 
 	(void)av;
 	if (ac != 1)
@@ -87,9 +103,8 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (ft_strlen(input))
 			add_history(input);
-		if (ft_strlen(input) && ft_first_last_check(input))
-			input = ft_create_updated_input(input);
-		ft_builtins(input, env);
+		minihell(input);
+		// ft_builtins(input, env);
 	}
 	system("leaks minishell");
 	return (0);

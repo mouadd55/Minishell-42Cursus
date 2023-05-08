@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 16:45:14 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/02 19:33:57 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/07 20:06:17 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,17 @@ void	*ft_destroy_list(t_list **head)
 		(*head) = tmp;
 	}
 	return (0);
+}
+
+int	ft_lstsize(t_list *lst)
+{
+	int	counter;
+
+	counter = 0;
+	while (lst)
+	{
+		counter++;
+		lst = lst->link;
+	}
+	return (counter);
 }

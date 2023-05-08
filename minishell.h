@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/03 14:26:49 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/07 20:06:27 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef struct t_vars
 	int		count;
 	int		d_quotes;
 	char	**arr;
+	int		start;
+	int		end;
 }	t_vars;
 
 /********************************* Libft utils ********************************/
@@ -62,7 +64,7 @@ t_list		*ft_lstlast(t_list *head);
 void		*ft_destroy_list(t_list **head);
 t_list		*ft_lstnew_env(char *key, char *value);
 void		ft_lstadd_back(t_list **head, t_list *new);
-
+int			ft_lstsize(t_list *lst);
 /***************************** Parsing functions ******************************/
 
 void		syntax_error(char *s2, char e);
@@ -71,8 +73,8 @@ int			ft_first_last_check(char *input);
 t_list		*ft_split_environment(char **env);
 void		env_parsing(char *input, t_list *env);
 void		ft_fill_list(char *input, t_list **list);
-
+t_list		*ft_split_input(char *input);
 int			check_single_quotes(char *input);
 int			check_double_quotes(char *input);
-
+int			check_syntax(t_list *lst);
 #endif

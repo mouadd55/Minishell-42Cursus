@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/03 14:25:13 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/03 15:24:30 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ void	env_parsing(char *input, t_list *env)
 	{
 		if (ft_strcmp(v.arr[v.i], "env") == 0)
 			v.count++;
-		else if (v.arr[v.i][0] == '-' && ft_strlen(v.arr[v.i]) > 1)
+		else if (v.count && v.arr[v.i][0] == '-' && ft_strlen(v.arr[v.i]) > 1)
 		{
 			printf("env: illegal option -- %c\n", v.arr[v.i][1]);
 			return ;
 		}
-		else if (v.arr[v.i][0] != '-')
+		else if (v.count && v.arr[v.i][0] != '-')
 		{
 			printf("env: %s: No such file or directory\n", v.arr[v.i]);
 			return ;
