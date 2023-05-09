@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/07 20:25:45 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:21:17 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ void	handle_quotes(t_vars *v, t_list **lst, char c)
 			v->j++;
 			while (v->arr[v->i][v->j] && v->arr[v->i][v->j] != c)
 				v->j++;
-			ft_lstadd_back(lst, ft_lstnew(ft_substr(v->arr[v->i], v->start,
-					v->j - v->start	+ 1)));
+			ft_lstadd_back(lst, ft_lstnew(ft_substr(v->arr[v->i], v->start, v->j
+						- v->start + 1)));
 			v->j++;
 		}
 		else if (v->arr[v->i][v->j] && !is_quote(v->arr[v->i][v->j]))
@@ -95,15 +95,15 @@ void	handle_quotes(t_vars *v, t_list **lst, char c)
 			while (v->arr[v->i][v->j] && !is_quote(v->arr[v->i][v->j])
 				&& !is_special(v->arr[v->i][v->j]))
 				v->j++;
-			ft_lstadd_back(lst, ft_lstnew(ft_substr(v->arr[v->i], v->start,
-				v->j - v->start)));
+			ft_lstadd_back(lst, ft_lstnew(ft_substr(v->arr[v->i], v->start, v->j
+						- v->start)));
 		}
-		}
+	}
 	if (v->arr[v->i][v->j] && is_special(v->arr[v->i][v->j]))
 		handle_redirect(lst, v);
 }
 
-static void split_input(t_list **lst, t_vars *v)
+static void	split_input(t_list **lst, t_vars *v)
 {
 	if (v->arr[v->i] && (check_char(v->arr[v->i], '\"')
 			|| check_char(v->arr[v->i], '\'')))
@@ -123,12 +123,11 @@ static void split_input(t_list **lst, t_vars *v)
 				while (v->arr[v->i][v->j] && !is_special(v->arr[v->i][v->j]))
 					v->j++;
 				v->end = v->j - v->start;
-				ft_lstadd_back(lst, ft_lstnew(ft_substr(v->arr[v->i],
-							v->start, v->end)));
+				ft_lstadd_back(lst, ft_lstnew(ft_substr(v->arr[v->i], v->start,
+							v->end)));
 			}
 		}
 	}
-
 }
 
 t_list	*ft_split_input(char *input)

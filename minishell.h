@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/07 20:06:27 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:13:32 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 typedef struct s_list
 {
 	char			*content;
+	char			*type;
 	char			*key;
 	char			*value;
 	struct s_list	*link;
@@ -39,6 +40,7 @@ typedef struct t_vars
 	char	**arr;
 	int		start;
 	int		end;
+	char	*str;
 }	t_vars;
 
 /********************************* Libft utils ********************************/
@@ -77,4 +79,7 @@ t_list		*ft_split_input(char *input);
 int			check_single_quotes(char *input);
 int			check_double_quotes(char *input);
 int			check_syntax(t_list *lst);
+void		export_parsing(t_list *list);
+void		lexer(t_list **list);
+
 #endif

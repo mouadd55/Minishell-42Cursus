@@ -6,13 +6,13 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/03 10:27:00 by moudrib          ###   ########.fr        #
+#    Updated: 2023/05/09 14:31:43 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror  -g -O1 #-fsanitize=address
+CFLAGS	= -Wall -Wextra   -g -O1 #-fsanitize=address
 OBJDIR	= Object_files/
 R		= \x1B[91m
 G		= \x1B[32m
@@ -20,6 +20,8 @@ W		= \x1B[0m
 B		= \033[1m
 SRC		=	\
 			Parsing/input.c \
+			Parsing/lexer.c \
+			Parsing/export.c \
 			Parsing/parsing1.c \
 			Parsing/parsing2.c \
 			Parsing/minishell.c \
