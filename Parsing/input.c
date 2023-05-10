@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/09 16:21:17 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/10 11:40:44 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,10 @@ t_list	*ft_split_input(char *input)
 		split_input(&lst, &v);
 		v.i++;
 		if (v.arr[v.i])
-			ft_lstadd_back(&lst, ft_lstnew(" "));
+			ft_lstadd_back(&lst, ft_lstnew(ft_strdup(" ")));
 	}
+	if (v.arr)
+		ft_free_arr(v.arr);
 	tmp = lst;
 	while (tmp)
 	{

@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/09 16:13:52 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/10 10:22:06 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_env(int i, int count, t_list *env)
+void	print_env(int i, int count, t_env *env)
 {
 	if (i && i == count)
 	{
@@ -24,7 +24,7 @@ void	print_env(int i, int count, t_list *env)
 	}	
 }
 
-void	env_parsing(char *input, t_list *env)
+void	env_parsing(char *input, t_env *env)
 {
 	t_vars	v;
 
@@ -50,11 +50,24 @@ void	env_parsing(char *input, t_list *env)
 	ft_free_arr(v.arr);
 }
 
-t_list	*ft_lstnew_env(char *key, char *value)
+t_env	*ft_lstlast_env(t_env *head)
 {
-	t_list	*head;
+	if (!head)
+		return (NULL);
+	while (head)
+	{
+		if (head->link == NULL)
+			return (head);
+		head = head->link;
+	}
+	return (NULL);
+}
 
-	head = (t_list *)malloc(sizeof(t_list));
+t_env	*ft_lstnew_env(char *key, char *value)
+{
+	t_env	*head;
+
+	head = (t_env *)malloc(sizeof(t_env));
 	if (!head)
 		return (NULL);
 	head->key = key;
@@ -64,12 +77,44 @@ t_list	*ft_lstnew_env(char *key, char *value)
 	return (head);
 }
 
-t_list	*ft_split_environment(char **env)
+void	ft_lstadd_back_env(t_env **head, t_env *new)
+{
+	t_env	*tmp;
+
+	if (!*head || !head)
+		*head = new;
+	else
+	{
+		tmp = ft_lstlast_env(*head);
+		tmp->link = new;
+		new->prev = tmp;
+	}
+}
+
+void	*ft_destroy_list_env(t_env **head)
+{
+	t_env	*tmp;
+
+	if (!head || !*head)
+		return (0);
+	tmp = *head;
+	while (tmp)
+	{
+		tmp = (*head)->link;
+		free((*head)->key);
+		free((*head)->value);
+		free(*head);
+		(*head) = tmp;
+	}
+	return (0);
+}
+
+t_env	*ft_split_environment(char **env)
 {
 	int		i;
 	int		start;
 	int		length;
-	t_list	*envr;
+	t_env	*envr;
 
 	i = -1;
 	envr = NULL;
@@ -79,7 +124,7 @@ t_list	*ft_split_environment(char **env)
 		length = ft_strlen(env[i]);
 		while (env[i][start] != '=')
 			start++;
-		ft_lstadd_back(&envr, ft_lstnew_env(ft_substr(env[i], 0, start),
+		ft_lstadd_back_env(&envr, ft_lstnew_env(ft_substr(env[i], 0, start),
 				ft_substr(env[i], start + 1, length)));
 	}
 	return (envr);

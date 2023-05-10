@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/09 16:13:32 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/10 11:23:26 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,17 @@ typedef struct s_list
 {
 	char			*content;
 	char			*type;
-	char			*key;
-	char			*value;
 	struct s_list	*link;
 	struct s_list	*prev;
 }	t_list;
+
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*link;
+	struct s_env	*prev;
+}	t_env;
 
 typedef struct t_vars
 {
@@ -63,23 +69,27 @@ char		*ft_substr(char const *s, unsigned int start, size_t len);
 
 t_list		*ft_lstnew(char *content);
 t_list		*ft_lstlast(t_list *head);
+t_env		*ft_lstlast_env(t_env *head);
 void		*ft_destroy_list(t_list **head);
-t_list		*ft_lstnew_env(char *key, char *value);
+void		*ft_destroy_list_env(t_env **head);
+t_env		*ft_lstnew_env(char *key, char *value);
 void		ft_lstadd_back(t_list **head, t_list *new);
+void		ft_lstadd_back_env(t_env **head, t_env *new);
 int			ft_lstsize(t_list *lst);
 /***************************** Parsing functions ******************************/
 
 void		syntax_error(char *s2, char e);
-int			ft_count_arguments(char *input);
-int			ft_first_last_check(char *input);
-t_list		*ft_split_environment(char **env);
-void		env_parsing(char *input, t_list *env);
-void		ft_fill_list(char *input, t_list **list);
+t_env		*ft_split_environment(char **env);
+void		env_parsing(char *input, t_env *env);
 t_list		*ft_split_input(char *input);
-int			check_single_quotes(char *input);
-int			check_double_quotes(char *input);
 int			check_syntax(t_list *lst);
 void		export_parsing(t_list *list);
 void		lexer(t_list **list);
+
+int			ft_count_arguments(char *input);
+int			ft_first_last_check(char *input);
+void		ft_fill_list(char *input, t_list **list);
+int			check_single_quotes(char *input);
+int			check_double_quotes(char *input);
 
 #endif
