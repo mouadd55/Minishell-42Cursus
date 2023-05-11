@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/11 18:15:55 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/11 19:17:53 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ int	check_valid_variable(char *input)
 	{
 		while (new_input[i] && new_input[i] == ' ')
 			i++;
-		
 	}
 	return (0);
 }
@@ -125,7 +124,7 @@ int	remove_unnecessary_nodes(t_list **list)
 	while (tmp)
 	{
 		if ((tmp->content[0] == '\"' || tmp->content[0] == '\'')
-			&& ft_strlen(tmp->content) == 2)
+				&& ft_strlen(tmp->content) == 2)
 			delete_node(list, position);
 		else if (tmp->content[0] == '=')
 			break ;
@@ -149,6 +148,11 @@ int	check_before_value(t_list **list)
 			while (tmp && !ft_strcmp(tmp->type, "SPACE"))
 				tmp = tmp->link;
 			remove_unnecessary_nodes(list);
+			tmp = ft_lstlast(*list);
+			if (tmp->content[0] == '=' && !ft_strcmp(tmp->prev->type, "SPACE")
+				&& !ft_strcmp(tmp->prev->prev->content, "export"))
+				printf("minishell: export: `%s': not a valid identifier\n",
+						tmp->content);
 			break ;
 		}
 		tmp = tmp->link;

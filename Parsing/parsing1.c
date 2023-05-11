@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 15:52:52 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/11 15:48:52 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/11 19:30:52 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,12 @@ int	check_syntax(t_list *lst)
 			return (syntax_error(lst->link->link->content, 0), 1);
 		else if (check_char(lst->content, '(') || check_char(lst->content, ')'))
 			return (syntax_error(lst->content, 0), 1);
+		else if (lst->content[0] == '\'' &&
+			(lst->content[ft_strlen(lst->content)-1] != '\'' || !lst->content[1]))
+			return (syntax_error(NULL, lst->content[0]), 1);
+		else if (lst->content[0] == '\"' &&
+			(lst->content[ft_strlen(lst->content)-1] != '\"' || !lst->content[1]))
+			return (syntax_error(NULL, lst->content[0]), 1);
 		lst = lst->link;
 	}
 	return (0);
