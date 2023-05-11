@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/10 11:40:44 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/11 15:23:11 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	is_quote(char input)
 
 char	is_special(char c)
 {
-	if (check_char("()=+|><", c))
+	if (check_char("()=+|><$", c))
 		return (c);
 	return (0);
 }

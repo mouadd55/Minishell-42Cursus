@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/10 10:38:21 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/11 17:41:46 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,16 @@ void	ft(t_list *stack)
 	printf("---------------------------------------\x1B[0m\n\n");
 }
 
-t_env	*ft_builtins(char *input, char **env)
-{
-	t_env	*envr;
+// t_env	*ft_builtins(char *input, char **env, t_list *list)
+// {
+// 	t_env	*envr;
 
-	envr = ft_split_environment(env);
-	env_parsing(input, envr);
-	ft_destroy_list_env(&envr);
-	// export_parsing(list);
-	return (envr);
-}
+// 	envr = ft_split_environment(env);
+// 	env_parsing(input, envr);
+// 	export_parsing(input, list, envr);
+
+// 	return (envr);
+// }
 
 t_list	*minihell(char *input)
 {
@@ -46,6 +46,9 @@ t_list	*minihell(char *input)
 
 	lst = ft_split_input(input);
 	if (check_syntax(lst))
+		return (0);
+	lexer(&lst);
+	if (ft_strlen(input) && (export_parsing(input) || check_before_value(&lst)))
 		return (0);
 	return (lst);
 }
@@ -57,6 +60,7 @@ int	main(int ac, char **av, char **env)
 	t_list	*lst;
 
 	(void)av;
+	(void)env;
 	if (ac != 1)
 		return (0);
 	while (1)
@@ -66,11 +70,12 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (ft_strlen(input))
 			add_history(input);
-		envr = ft_builtins(input, env);
 		lst = minihell(input);
 		if (lst)
 		{
-			lexer(&lst);
+			// remove_unnecessary_nodes(&lst);
+			// envr = ft_builtins(input, env, lst);
+			// lexer(&lst);
 			ft(lst);
 			ft_destroy_list(&lst);
 		}

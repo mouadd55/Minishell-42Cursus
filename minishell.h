@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/10 11:23:26 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/11 17:39:56 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,15 @@ t_env		*ft_split_environment(char **env);
 void		env_parsing(char *input, t_env *env);
 t_list		*ft_split_input(char *input);
 int			check_syntax(t_list *lst);
-void		export_parsing(t_list *list);
+int			export_parsing(char *input);
 void		lexer(t_list **list);
+void		delete_node(t_list **list, int position);
+int			check_before_value(t_list **list);
 
-int			ft_count_arguments(char *input);
-int			ft_first_last_check(char *input);
-void		ft_fill_list(char *input, t_list **list);
-int			check_single_quotes(char *input);
-int			check_double_quotes(char *input);
+// int			ft_count_arguments(char *input);
+// int			ft_first_last_check(char *input);
+// void		ft_fill_list(char *input, t_list **list);
+// int			check_single_quotes(char *input);
+// int			check_double_quotes(char *input);
 
 #endif
