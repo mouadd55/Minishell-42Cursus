@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/11 17:39:56 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/12 16:29:48 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char		*ft_strjoin(char *s1, char *s2);
 char		**ft_split(char const *s, char *c);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
+char		*ft_strtrim(char *s1, char *set);
 
 /********************************* List utils *********************************/
 

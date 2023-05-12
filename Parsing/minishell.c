@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/11 19:35:39 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/12 20:58:35 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,8 @@ int	main(int ac, char **av, char **env)
 		lst = minihell(input);
 		if (lst)
 		{
-			// remove_unnecessary_nodes(&lst);
-			// envr = ft_builtins(input, env, lst);
-			// lexer(&lst);
+			envr = ft_builtins(input, env, lst);
+			lexer(&lst);
 			ft(lst);
 			ft_destroy_list(&lst);
 		}

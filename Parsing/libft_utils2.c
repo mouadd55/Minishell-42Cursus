@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 20:01:56 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/05 13:16:34 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/12 20:52:57 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (dest);
 }
 
-int	ft_strchr( char *str, int find)
+int	ft_strchr(char *str, int find)
 {
 	int	i;
 	int	j;
