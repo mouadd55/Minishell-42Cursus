@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/12 20:59:27 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/13 19:20:30 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,6 +288,8 @@ int	check_before_value(t_list **list)
 	t_list	*tmp1;
 
 	var = NULL;
+	if (ft_lstsize(*list) < 3)
+		return (0);
 	tmp1 = (*list)->link->link;
 	lexer_for_export(&tmp1);
 	while (tmp1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/12 16:29:48 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/13 19:12:28 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 typedef struct s_list
 {
 	char			*content;
+	int				pos;
 	char			*type;
 	struct s_list	*link;
 	struct s_list	*prev;
@@ -52,6 +53,8 @@ typedef struct t_vars
 /********************************* Libft utils ********************************/
 
 int			ft_isalpha(int ch);
+int			is_space(int c);
+int			is_space(int c);
 char		**ft_free_arr(char **str);
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(const char *s1);
