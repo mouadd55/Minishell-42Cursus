@@ -6,7 +6,7 @@
 #    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/13 19:27:13 by yonadry          ###   ########.fr        #
+#    Updated: 2023/05/14 19:38:14 by yonadry          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,7 @@ SRC		=	\
 			Parsing/libft_utils1.c \
 			Parsing/libft_utils2.c \
 			Parsing/libft_utils3.c \
+			Parsing/expand.c \
 
 OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
