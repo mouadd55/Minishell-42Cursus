@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/14 20:30:52 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/17 20:42:50 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,44 +29,50 @@ void	ft(t_list *stack)
 	printf("---------------------------------------\x1B[0m\n\n");
 }
 
-t_env	*ft_builtins(/*char *input, */char **env/*, t_list *list*/)
+t_env	*ft_builtins(char *input, t_env **env)
 {
-	t_env	*envr;
-
-	envr = ft_split_environment(env);
-	// env_parsing(input, envr);
-	// export_parsing(input);
-
-	return (envr);
+	env_parsing(input, *env);
+	return (*env);
 }
 
-t_list	*minihell(char *input)
-{
-	t_list	*lst;
-
-	lst = ft_split_input(input);
-	if (check_syntax(lst))
-		return (0);
-	lexer(&lst);
-	// if (ft_strlen(input) && (export_parsing(input) || check_before_value(&lst)))
-	// 	return (0);
-	return (lst);
-}
 void echo(t_list *list)
 {
-	if (!ft_strcmp(list->content, "echo"))
+	t_list *tmp;
+
+	tmp = list;
+	if (tmp && tmp->link && !ft_strcmp(tmp->content, "echo"))
 	{
-		list = list->link->link;
-		while (list)
+		tmp = tmp->link->link;
+		while (tmp)
 		{
-			if (strstr("PIPE,HEREDOC,APPEND,OUTPUT,INPUT", list->type))
+			if (strstr("PIPE,HEREDOC,APPEND,OUTPUT,INPUT", tmp->type))
 				break;
-			printf("%s", list->content);
-			list = list->link;
+			printf("%s", tmp->content);
+			tmp = tmp->link;
 		}
-		printf("\n");
 	}
+	if (!ft_strcmp(list->content, "echo"))
+		printf("\n");
 }
+
+void	minihell(char *input, t_env **envr, t_list **lst)
+{
+	if (check_syntax(*lst))
+		return ;
+	lexer(lst);
+	*envr = ft_builtins(input, envr);
+	if (lst)
+	{
+		// lexer(&lst);
+		expand_var(lst, *envr);
+		echo(*lst);
+		ft(*lst);
+		// ft_destroy_list(&lst);
+	}
+	if (ft_strlen(input) && (export_parsing(input) || check_before_value(lst, envr)))
+		return ;
+}
+
 
 int	main(int ac, char **av, char **env)
 {
@@ -75,9 +81,10 @@ int	main(int ac, char **av, char **env)
 	t_list	*lst;
 
 	(void)av;
-	(void)env;
 	if (ac != 1)
 		return (0);
+	envr = NULL;
+	envr = ft_split_environment(env);
 	while (1)
 	{
 		input = readline("➜  Minishell ");
@@ -85,16 +92,8 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (ft_strlen(input))
 			add_history(input);
-		lst = minihell(input);
-		if (lst)
-		{
-			envr = ft_builtins(env);
-			lexer(&lst);
-			expand_var(&lst, envr);
-			// ft(lst);
-			echo(lst);
-			// ft_destroy_list(&lst);
-		}
+		lst = ft_split_input(input);
+		minihell(input, &envr, &lst);
 		// ft_destroy_list_env(&envr);
 		free(input);
 	}

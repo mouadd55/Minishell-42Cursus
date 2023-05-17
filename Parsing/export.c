@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/13 19:20:30 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/17 19:35:05 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../minishell.h"
 
 #include "../minishell.h"
 
@@ -114,26 +116,26 @@ int	check_valid_variable(char *input)
 	return (0);
 }
 
-int	remove_empty_quotes(t_list **list)
-{
-	int		position;
-	t_list	*tmp;
+// int	remove_empty_quotes(t_list **list)
+// {
+// 	int		position;
+// 	t_list	*tmp;
 
-	tmp = *list;
-	position = 1;
-	while (tmp)
-	{
-		if ((tmp->content[0] == '\"' || tmp->content[0] == '\'')
-			&& ft_strlen(tmp->content) == 2)
-			delete_node(list, position);
-		else if (tmp->content[0] == '=')
-			break ;
-		else
-			position++;
-		tmp = tmp->link;
-	}
-	return (1);
-}
+// 	tmp = *list;
+// 	position = 1;
+// 	while (tmp)
+// 	{
+// 		if ((tmp->content[0] == '\"' || tmp->content[0] == '\'')
+// 			&& ft_strlen(tmp->content) == 2)
+// 			delete_node(list, position);
+// 		else if (tmp->content[0] == '=')
+// 			break ;
+// 		else
+// 			position++;
+// 		tmp = tmp->link;
+// 	}
+// 	return (1);
+// }
 
 char	*f_strrchr(const char *s, int c)
 {
@@ -223,6 +225,20 @@ char	*ft_strtrim(char *s1, char *set)
 // 	return (0);
 // }
 
+int	check_if_variable_exist(t_env *env, char *var, t_env **tmp)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->key, var) == 0)
+		{
+			*tmp = env;
+			return (1);
+		}
+		env = env->link;
+	}
+	return (0);
+}
+
 int	check_type(char *type)
 {
 	if (ft_strcmp(type, "PIPE") && ft_strcmp(type, "APPEND") && ft_strcmp(type,
@@ -238,7 +254,8 @@ void	lexer_for_export(t_list **list)
 	tmp = *list;
 	while (tmp && check_type(tmp->type))
 	{
-		while (tmp && ft_strcmp(tmp->content, "=") && check_type(tmp->type))
+		while (tmp && (ft_strcmp(tmp->content, "=") && ft_strcmp(tmp->content,
+					"+")) && check_type(tmp->type))
 		{
 			if (ft_strcmp(tmp->type, "SPACE"))
 			{
@@ -247,11 +264,56 @@ void	lexer_for_export(t_list **list)
 			}
 			tmp = tmp->link;
 		}
-		if (tmp && !ft_strcmp(tmp->content, "="))
+		if (tmp && !ft_strcmp(tmp->content, "+"))
 		{
 			free(tmp->type);
-			tmp->type = ft_strdup("EQUAL");
-			tmp = tmp->link;
+			if ((ft_strcmp(tmp->prev->content, " ") && tmp->link
+					&& !ft_strcmp(tmp->link->content, "=")))
+				tmp->type = ft_strdup("PLUS");
+			else
+			{
+				tmp->type = ft_strdup("VAR");
+				tmp = tmp->link;
+				if (!tmp)
+					return ;
+				while (tmp && ft_strcmp(tmp->content, " "))
+				{
+					if (ft_strcmp(tmp->type, "SPACE"))
+					{
+						free(tmp->type);
+						tmp->type = ft_strdup("VAR");
+					}
+					tmp = tmp->link;
+					if (!tmp)
+						return ;
+					if (tmp && !ft_strcmp(tmp->content, " "))
+					{
+						tmp = tmp->prev;
+						break ;
+					}
+				}
+			}
+			if (ft_strcmp(tmp->type, "SPACE"))
+				tmp = tmp->link;
+		}
+		if (tmp && !ft_strcmp(tmp->content, "="))
+		{
+			if (!ft_strcmp(tmp->prev->type, "SPACE"))
+			{
+				while (tmp && ft_strcmp(tmp->type, "SPACE")
+					&& check_type(tmp->type))
+				{
+					free(tmp->type);
+					tmp->type = ft_strdup("VAR");
+					tmp = tmp->link;
+				}
+			}
+			else
+			{
+				free(tmp->type);
+				tmp->type = ft_strdup("EQUAL");
+				tmp = tmp->link;
+			}
 		}
 		while (tmp && ft_strcmp(tmp->type, "SPACE") && check_type(tmp->type))
 		{
@@ -282,27 +344,118 @@ int	check_valid_var(char *var)
 	return (0);
 }
 
-int	check_before_value(t_list **list)
+int	check_before_value(t_list **list, t_env **env)
 {
+	int		vars;
+	int		flag;
+	int		count;
 	char	*var;
+	char	*value;
 	t_list	*tmp1;
+	t_env	*tmp2;
+	t_list	*tmp3;
 
 	var = NULL;
-	if (ft_lstsize(*list) < 3)
-		return (0);
-	tmp1 = (*list)->link->link;
+	value = NULL;
+	vars = 0;
+	flag = 0;
+	count = 0;
+	tmp1 = *list;
+	tmp2 = NULL;
+	tmp3 = NULL;
+	if (tmp1->link && !ft_strcmp(tmp1->link->content, "+"))
+		return (1);
+	while (tmp1 && ft_strcmp(tmp1->content, "export"))
+	{
+		if (!tmp1)
+			return (1);
+		count++;
+		tmp1 = tmp1->link;
+	}
+	if (ft_lstsize(*list) < count + 2)
+		return (1);
+	tmp1 = tmp1->link->link;
 	lexer_for_export(&tmp1);
 	while (tmp1)
 	{
-		while (tmp1 && !ft_strcmp(tmp1->type, "SPACE"))
+		while (tmp1 && !ft_strcmp(tmp1->type, "SPACE")) // ??
 			tmp1 = tmp1->link;
 		while (tmp1 && !ft_strcmp(tmp1->type, "VAR"))
 		{
+			vars++;
 			var = ft_strjoin(var, ft_strtrim(tmp1->content, "\"\'"));
 			tmp1 = tmp1->link;
 		}
-		if (check_valid_var(var))
+		if (check_valid_var(var) || (var && var[0] == '-'))
+		{
 			printf("minishell: export: `%s': not a valid identifier\n", var);
+			if (vars == 1)
+				return (1);
+		}
+		else
+		{
+			tmp3 = tmp1;
+			if (tmp1 && !ft_strcmp(tmp1->type, "PLUS"))
+			{
+				flag = 1;
+				tmp1 = tmp1->link;
+			}
+			if (tmp1 && tmp1->link && !ft_strcmp(tmp1->link->type, "VALUE"))
+				tmp1 = tmp1->link;
+			while (tmp1 && !ft_strcmp(tmp1->type, "VALUE"))
+			{
+				value = ft_strjoin(value, ft_strtrim(tmp1->content, "\"\'"));
+				tmp1 = tmp1->link;
+			}
+			if (tmp1 && !ft_strcmp(tmp1->type, "EQUAL")) // new
+				tmp1 = tmp1->link;
+			if (ft_strlen(var) == 0 && value)
+				printf("minishell: export: `=%s': not a valid identifier\n",
+					value);
+			else if (ft_strlen(var) == 0)
+				printf("minishell: export: `': not a valid identifier\n");
+			else if (check_if_variable_exist(*env, var, &tmp2))
+			{
+				// if ((tmp1 && !ft_strcmp(tmp1->type, "SPACE")) || !tmp1)
+				// tmp2->value = ft_strjoin(tmp2->value, "");
+				if (flag == 1 && value)
+					tmp2->value = ft_strjoin(tmp2->value, value);
+				else if (value)
+				{
+					free(tmp2->value);
+					tmp2->value = ft_strdup(value);
+				}
+			}
+			else if (flag == 1)
+			{
+				if (value)
+					ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(var),
+							ft_strdup(value)));
+				else
+					ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(var),
+							ft_strdup("")));
+			}
+			else
+			{
+				if (tmp3 && tmp3->link && !ft_strcmp(tmp3->type, "EQUAL")
+					&& !ft_strcmp(tmp3->link->type, "VALUE"))
+					ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(var),
+							ft_strdup(value)));
+				else if (tmp1 && !tmp1->link && !ft_strcmp(tmp1->type, "EQUAL"))
+					ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(var),
+							ft_strdup("")));
+				else if (tmp1 && tmp1->link && !ft_strcmp(tmp1->type, "EQUAL")
+					&& ft_strcmp(tmp1->link->type, "VALUE"))
+					ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(var),
+							ft_strdup("")));
+				else
+					ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(var),
+							NULL));
+			}
+			flag = 0;
+		}
+		free(value);
+		value = NULL;
 		free(var);
 		var = NULL;
 		while (tmp1 && ft_strcmp(tmp1->type, "SPACE"))
@@ -310,6 +463,7 @@ int	check_before_value(t_list **list)
 		if (tmp1)
 			tmp1 = tmp1->link;
 	}
+	print_export(*env);
 	return (0);
 }
 
@@ -319,14 +473,14 @@ int	export_parsing(char *input)
 	char	*new_input;
 
 	i = 0;
-	new_input = strnstr(input, "export ", ft_strlen(input));
+	new_input = ft_strnstr(input, "export ", ft_strlen(input));
 	if (new_input)
 		new_input += 7;
 	if (new_input)
 	{
 		while (new_input[i] && new_input[i] == ' ')
 			i++;
-		if (new_input[i] && new_input[i] == '=')
+		if (new_input[i] && (new_input[i] == '=' /* || new_input[i] == '+'*/))
 		{
 			printf("minishell: export: `");
 			while (new_input[i] && new_input[i] != ' ')
@@ -334,54 +488,53 @@ int	export_parsing(char *input)
 			printf("': not a valid identifier\n");
 			return (1);
 		}
-		// else if ()
 	}
 	return (0);
 }
 
-// void	export_parsing(t_list *list, t_env *env)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*tmp_key;
-// 	char	*tmp_value;
-// 	t_env	*tmp1;
-// 	t_env	*tmp2;
-// 	t_env	*tmp3;
+void	print_export(t_env *env)
+{
+	int		i;
+	int		j;
+	char	*tmp_key;
+	char	*tmp_value;
+	t_env	*tmp1;
+	t_env	*tmp2;
+	t_env	*tmp3;
 
-// 	i = 0;
-// 	j = 0;
-// 	tmp1 = env;
-// 	tmp3 = env;
-// 	if (!ft_strcmp(list->content, "export"))
-// 	{
-// 		while (tmp1)
-// 		{
-// 			tmp2 = env;
-// 			while (tmp2)
-// 			{
-// 				if (ft_strcmp(tmp1->key, tmp2->key) < 0)
-// 				{
-// 					tmp_key = ft_strdup(tmp1->key);
-// 					tmp_value = ft_strdup(tmp1->value);
-// 					free(tmp1->key);
-// 					free(tmp1->value);
-// 					tmp1->key = tmp2->key;
-// 					tmp1->value = tmp2->value;
-// 					tmp2->key = tmp_key;
-// 					tmp2->value = tmp_value;
-// 				}
-// 				tmp2 = tmp2->link;
-// 			}
-// 			tmp1 = tmp1->link;
-// 		}
-// 		while (tmp3)
-// 		{
-// 			printf("declare -x %s=\"%s\"\n", (tmp3)->key, (tmp3)->value);
-// 			tmp3 = (tmp3)->link;
-// 		}
-// 	}
-// }
+	i = 0;
+	j = 0;
+	tmp1 = env;
+	tmp3 = env;
+	while (tmp1)
+	{
+		tmp2 = env;
+		while (tmp2)
+		{
+			if (ft_strcmp(tmp1->key, tmp2->key) < 0)
+			{
+				tmp_key = ft_strdup(tmp1->key);
+				tmp_value = ft_strdup(tmp1->value);
+				free(tmp1->key);
+				free(tmp1->value);
+				tmp1->key = tmp2->key;
+				tmp1->value = tmp2->value;
+				tmp2->key = tmp_key;
+				tmp2->value = tmp_value;
+			}
+			tmp2 = tmp2->link;
+		}
+		tmp1 = tmp1->link;
+	}
+	while (tmp3)
+	{
+		if (!tmp3->value)
+			printf("declare -x %s\n", (tmp3)->key);
+		else
+			printf("declare -x %s=\"%s\"\n", (tmp3)->key, (tmp3)->value);
+		tmp3 = (tmp3)->link;
+	}
+}
 
 // void	list_join(t_list *list)
 // {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/14 19:37:55 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/17 19:35:47 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ int			check_syntax(t_list *lst);
 int			export_parsing(char *input);
 void		lexer(t_list **list);
 void		delete_node(t_list **list, int position);
-int			check_before_value(t_list **list);
+int			check_before_value(t_list **list, t_env **env);
+void		print_export(t_env *env);
 void		expand_var(t_list **list, t_env *envr);
 // int			ft_count_arguments(char *input);
 // int			ft_first_last_check(char *input);
