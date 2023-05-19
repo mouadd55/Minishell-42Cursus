@@ -52,7 +52,7 @@ t_list *del_node(t_list **list, t_list *del_node)
 	}
 	return (tmp1);
 }
-void remove_quotes(t_list **list)
+void remove_quotes_dollar(t_list **list)
 {
 	t_list *temp;
 
@@ -65,6 +65,13 @@ void remove_quotes(t_list **list)
 				temp->content = ft_strdup("");
 			else
 				temp->content = ft_substr(temp->content, 1, ft_strlen(temp->content)-2);
+		}
+		if (temp->content[0] == '$' && temp->link &&
+			temp->link->content[0] != 32)
+		{
+			temp = del_node(list, temp);
+			if (temp->link)
+				temp = del_node(list, temp->link);
 		}
 		temp = temp->link;
 	}
@@ -162,6 +169,6 @@ void expand_var(t_list **list, t_env *envr)
 		}
 		tmp = tmp->link;
 	}
-	remove_quotes(list);
+	remove_quotes_dollar(list);
 	expand_in_quotes(list, envr);
 }

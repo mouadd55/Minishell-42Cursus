@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/17 20:42:50 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/18 21:16:14 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,86 @@ t_env	*ft_builtins(char *input, t_env **env)
 void echo(t_list *list)
 {
 	t_list *tmp;
+	int flag;
 
 	tmp = list;
+	flag = 0;
 	if (tmp && tmp->link && !ft_strcmp(tmp->content, "echo"))
 	{
 		tmp = tmp->link->link;
+		if (tmp && !ft_strcmp(tmp->content, "-n"))
+		{
+			flag = 1;
+			if (tmp->link && tmp->link->link)
+				tmp = tmp->link->link;
+			else
+				return ;
+		}
 		while (tmp)
 		{
 			if (strstr("PIPE,HEREDOC,APPEND,OUTPUT,INPUT", tmp->type))
 				break;
-			printf("%s", tmp->content);
+			if (tmp)
+				printf("%s", tmp->content);
 			tmp = tmp->link;
 		}
 	}
-	if (!ft_strcmp(list->content, "echo"))
+	if (!flag && list && !ft_strcmp(list->content, "echo"))
 		printf("\n");
+}
+
+char *strlower(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] += 32;
+		i++;
+	}
+	return (str);	
+}
+
+void pwd(t_list *list)
+{
+	char *pwd;
+
+	if (list && !strcmp("pwd", strlower(list->content)))
+	{
+		pwd = getcwd(NULL, 0);
+		if (pwd)
+			printf("%s\n", pwd);
+	}
+}
+
+void change_dir(t_list *list, t_env **envr)
+{
+	char *pwd;
+	t_env *env = *envr;
+
+	if (list && !ft_strcmp(list->content, "cd"))
+	{
+		if (list && (!list->link || 
+			(list->link->link && (!ft_strcmp(list->link->link->content, "~")))))
+			list->content = ft_strdup(getenv("HOME"));
+		else if (list && list->link && list->link->link)
+			list = list->link->link;
+		pwd = getcwd(NULL, 0);
+		if (list && !chdir(list->content))
+		{
+			while (env)
+			{
+				if (!ft_strcmp(env->key, "PWD"))
+					env->value = ft_strdup(getcwd(NULL, 0));
+				if (!ft_strcmp(env->key, "OLDPWD"))
+					env->value = ft_strdup(pwd);
+				
+				env = env->link;
+			}
+		}
+	}
 }
 
 void	minihell(char *input, t_env **envr, t_list **lst)
@@ -66,7 +131,9 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 		// lexer(&lst);
 		expand_var(lst, *envr);
 		echo(*lst);
-		ft(*lst);
+		change_dir(*lst, envr);
+		pwd(*lst);
+		// ft(*lst);
 		// ft_destroy_list(&lst);
 	}
 	if (ft_strlen(input) && (export_parsing(input) || check_before_value(lst, envr)))
