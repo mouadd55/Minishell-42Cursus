@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/18 21:16:14 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/19 13:52:03 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,8 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 		// ft(*lst);
 		// ft_destroy_list(&lst);
 	}
+	if (ft_lstsize(*lst) == 1 && !ft_strcmp((*lst)->content, "export"))
+		print_export(*envr);
 	if (ft_strlen(input) && (export_parsing(input) || check_before_value(lst, envr)))
 		return ;
 }

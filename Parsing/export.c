@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/17 19:35:05 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/19 14:00:12 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,7 +383,12 @@ int	check_before_value(t_list **list, t_env **env)
 		while (tmp1 && !ft_strcmp(tmp1->type, "VAR"))
 		{
 			vars++;
-			var = ft_strjoin(var, ft_strtrim(tmp1->content, "\"\'"));
+			if (!ft_strcmp(tmp1->type, "DOUBLE_Q"))
+				var = ft_strjoin(var, ft_strtrim(tmp1->content, "\""));
+			else if (!ft_strcmp(tmp1->type, "SINGLE_Q"))
+				var = ft_strjoin(var, ft_strtrim(tmp1->content, "\'"));
+			else
+				var = ft_strjoin(var, tmp1->content);
 			tmp1 = tmp1->link;
 		}
 		if (check_valid_var(var) || (var && var[0] == '-'))
@@ -416,9 +421,10 @@ int	check_before_value(t_list **list, t_env **env)
 				printf("minishell: export: `': not a valid identifier\n");
 			else if (check_if_variable_exist(*env, var, &tmp2))
 			{
-				// if ((tmp1 && !ft_strcmp(tmp1->type, "SPACE")) || !tmp1)
-				// tmp2->value = ft_strjoin(tmp2->value, "");
-				if (flag == 1 && value)
+				if ((tmp3 && tmp3->link && !ft_strcmp(tmp3->type, "EQUAL") && !ft_strcmp(tmp3->link->type, "SPACE"))
+					|| (tmp3 && !tmp3->link && !ft_strcmp(tmp3->type, "EQUAL")))
+					tmp2->value = ft_strjoin(tmp2->value, "");
+				else if (flag == 1 && value)
 					tmp2->value = ft_strjoin(tmp2->value, value);
 				else if (value)
 				{
@@ -463,7 +469,6 @@ int	check_before_value(t_list **list, t_env **env)
 		if (tmp1)
 			tmp1 = tmp1->link;
 	}
-	print_export(*env);
 	return (0);
 }
 

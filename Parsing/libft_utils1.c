@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 17:37:17 by moudrib           #+#    #+#             */
-/*   Updated: 2023/04/28 18:36:25 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/18 21:11:31 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ char	*ft_strdup(const char *s1)
 	int		i;
 
 	i = 0;
+	if (!s1)
+		return (0);
 	len = ft_strlen(s1);
 	dst = malloc(sizeof(char) * len + 1);
 	if (!dst)
