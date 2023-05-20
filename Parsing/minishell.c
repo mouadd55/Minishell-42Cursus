@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/19 13:52:03 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/20 15:31:00 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ t_env	*ft_builtins(char *input, t_env **env)
 	return (*env);
 }
 
-void echo(t_list *list)
+void	echo(t_list *list)
 {
-	t_list *tmp;
-	int flag;
+	t_list	*tmp;
+	int		flag;
 
-	tmp = list;
 	flag = 0;
+	tmp = list;
 	if (tmp && tmp->link && !ft_strcmp(tmp->content, "echo"))
 	{
 		tmp = tmp->link->link;
@@ -56,7 +56,7 @@ void echo(t_list *list)
 		while (tmp)
 		{
 			if (strstr("PIPE,HEREDOC,APPEND,OUTPUT,INPUT", tmp->type))
-				break;
+				break ;
 			if (tmp)
 				printf("%s", tmp->content);
 			tmp = tmp->link;
@@ -66,9 +66,9 @@ void echo(t_list *list)
 		printf("\n");
 }
 
-char *strlower(char *str)
+char	*strlower(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -77,12 +77,12 @@ char *strlower(char *str)
 			str[i] += 32;
 		i++;
 	}
-	return (str);	
+	return (str);
 }
 
-void pwd(t_list *list)
+void	pwd(t_list *list)
 {
-	char *pwd;
+	char	*pwd;
 
 	if (list && !strcmp("pwd", strlower(list->content)))
 	{
@@ -92,15 +92,17 @@ void pwd(t_list *list)
 	}
 }
 
-void change_dir(t_list *list, t_env **envr)
+void	change_dir(t_list *list, t_env **envr)
 {
-	char *pwd;
-	t_env *env = *envr;
+	char	*pwd;
+	t_env	*env;
 
+	env = *envr;
 	if (list && !ft_strcmp(list->content, "cd"))
 	{
-		if (list && (!list->link || 
-			(list->link->link && (!ft_strcmp(list->link->link->content, "~")))))
+		if (list && (!list->link
+				|| (list->link->link
+					&& (!ft_strcmp(list->link->link->content, "~")))))
 			list->content = ft_strdup(getenv("HOME"));
 		else if (list && list->link && list->link->link)
 			list = list->link->link;
@@ -113,35 +115,56 @@ void change_dir(t_list *list, t_env **envr)
 					env->value = ft_strdup(getcwd(NULL, 0));
 				if (!ft_strcmp(env->key, "OLDPWD"))
 					env->value = ft_strdup(pwd);
-				
 				env = env->link;
 			}
 		}
 	}
 }
 
+t_env	*ft_copy_env_list(t_env *env)
+{
+	t_env	*copy;
+
+	copy = NULL;
+	while (env)
+	{
+		if (env->value)
+			ft_lstadd_back_env(&copy,
+				ft_lstnew_env(ft_strdup(env->key), ft_strdup(env->value)));
+		else
+			ft_lstadd_back_env(&copy, ft_lstnew_env(ft_strdup(env->key), NULL));
+		env = env->link;
+	}
+	return (copy);
+}
+
+/*if (ft_strlen(input) && (export_parsing(input)
+	|| check_before_value(lst, envr)))*/
 void	minihell(char *input, t_env **envr, t_list **lst)
 {
+	t_env	*env_copy;
+
 	if (check_syntax(*lst))
 		return ;
 	lexer(lst);
 	*envr = ft_builtins(input, envr);
 	if (lst)
 	{
-		// lexer(&lst);
 		expand_var(lst, *envr);
 		echo(*lst);
 		change_dir(*lst, envr);
 		pwd(*lst);
 		// ft(*lst);
-		// ft_destroy_list(&lst);
 	}
 	if (ft_lstsize(*lst) == 1 && !ft_strcmp((*lst)->content, "export"))
-		print_export(*envr);
-	if (ft_strlen(input) && (export_parsing(input) || check_before_value(lst, envr)))
+	{
+		env_copy = ft_copy_env_list(*envr);
+		sort_env(env_copy);
+		ft_destroy_list_env(&env_copy);
+	}
+	if (ft_strlen(input) && (check_before_value(lst, envr)))
 		return ;
 }
-
 
 int	main(int ac, char **av, char **env)
 {
@@ -163,7 +186,7 @@ int	main(int ac, char **av, char **env)
 			add_history(input);
 		lst = ft_split_input(input);
 		minihell(input, &envr, &lst);
-		// ft_destroy_list_env(&envr);
+		ft(lst);
 		free(input);
 	}
 	return (0);

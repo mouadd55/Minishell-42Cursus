@@ -6,15 +6,47 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 14:22:22 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/10 09:55:07 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/20 10:17:11 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// void	redirections(t_list *tmp)
-// {
-// }
+void	more_lexer_conditions(t_list *tmp)
+{
+	if (!ft_strcmp(tmp->content, "|"))
+		tmp->type = ft_strdup("PIPE");
+	else if (!ft_strcmp(tmp->content, " "))
+		tmp->type = ft_strdup("space");
+	else if (tmp->content[0] == '-')
+		tmp->type = ft_strdup("FLAG");
+	else if (tmp->content[0] == '\"')
+		tmp->type = ft_strdup("DOUBLE_Q");
+	else if (tmp->content[0] == '\'')
+		tmp->type = ft_strdup("SINGLE_Q");
+	else if (!ft_strcmp(tmp->content, "<<"))
+		tmp->type = ft_strdup("HEREDOC");
+	else if (!ft_strcmp(tmp->content, ">>"))
+		tmp->type = ft_strdup("APPEND");
+	else if (!ft_strcmp(tmp->content, ">"))
+		tmp->type = ft_strdup("OUTPUT");
+	else if (!ft_strcmp(tmp->content, "<"))
+		tmp->type = ft_strdup("INPUT");
+}
+
+void	moooore_conditions(t_list *tmp)
+{
+	if (tmp->prev && tmp->prev->prev
+		&& (!ft_strcmp(tmp->prev->content, "<")
+			|| !ft_strcmp(tmp->prev->prev->content, "<")
+			|| !ft_strcmp(tmp->prev->content, ">")
+			|| !ft_strcmp(tmp->prev->prev->content, ">")
+			|| !ft_strcmp(tmp->prev->content, ">>")
+			|| !ft_strcmp(tmp->prev->prev->content, ">>")))
+		tmp->type = ft_strdup("FILE");
+	else
+		tmp->type = ft_strdup("COMMAND");
+}
 
 void	lexer(t_list **list)
 {
@@ -27,36 +59,18 @@ void	lexer(t_list **list)
 			&& ft_strcmp(tmp->content, ">") && ft_strcmp(tmp->content, "<<")
 			&& tmp->content[0] != '\"' && tmp->content[0] != '\'')
 			tmp->type = ft_strdup("COMMAND");
-		else if (!ft_strcmp(tmp->content, "|"))
-			tmp->type = ft_strdup("PIPE");
-		else if (!ft_strcmp(tmp->content, " "))
-			tmp->type = ft_strdup("SPACE");
-		else if (tmp->content[0] == '-')
-			tmp->type = ft_strdup("FLAG");
-		else if (tmp->content[0] == '\"')
-			tmp->type = ft_strdup("DOUBLE_Q");
-		else if (tmp->content[0] == '\'')
-			tmp->type = ft_strdup("SINGLE_Q");
-		else if (!ft_strcmp(tmp->content, "<<"))
-			tmp->type = ft_strdup("HEREDOC");
-		else if (!ft_strcmp(tmp->content, ">>"))
-			tmp->type = ft_strdup("APPEND");
-		else if (!ft_strcmp(tmp->content, ">"))
-			tmp->type = ft_strdup("OUTPUT");
-		else if (!ft_strcmp(tmp->content, "<"))
-			tmp->type = ft_strdup("INPUT");
-		else if (tmp->prev && tmp->prev->prev && (!ft_strcmp(tmp->prev->content, "<")
-				|| !ft_strcmp(tmp->prev->prev->content, "<")
-				|| !ft_strcmp(tmp->prev->content, ">")
-				|| !ft_strcmp(tmp->prev->prev->content, ">")
-				|| !ft_strcmp(tmp->prev->content, ">>")
-				|| !ft_strcmp(tmp->prev->prev->content, ">>")))
-			tmp->type = ft_strdup("FILE");
-		else if (tmp->prev && tmp->prev->prev && (!ft_strcmp(tmp->prev->content, "<<")
+		else if (!ft_strcmp(tmp->content, "|") || !ft_strcmp(tmp->content, " ")
+			|| tmp->content[0] == '-' || tmp->content[0] == '\"'
+			|| tmp->content[0] == '\'' || !ft_strcmp(tmp->content, "<<")
+			|| !ft_strcmp(tmp->content, ">>") || !ft_strcmp(tmp->content, ">")
+			|| !ft_strcmp(tmp->content, "<"))
+			more_lexer_conditions(tmp);
+		else if (tmp->prev && tmp->prev->prev
+			&& (!ft_strcmp(tmp->prev->content, "<<")
 				|| !ft_strcmp(tmp->prev->prev->content, "<<")))
 			tmp->type = ft_strdup("DELIMITER");
 		else
-			tmp->type = ft_strdup("COMMAND");
+			moooore_conditions(tmp);
 		tmp = tmp->link;
 	}
 }

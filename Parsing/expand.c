@@ -1,12 +1,12 @@
 #include "../minishell.h"
 
-void index_list(t_list **list)
+void	index_list(t_list **list)
 {
-	t_list *tmp;
+	t_list	*tmp;
 	int		count;
 
-	tmp = *list;
 	count = 0;
+	tmp = *list;
 	while (tmp)
 	{
 		tmp->pos = count;
@@ -15,18 +15,19 @@ void index_list(t_list **list)
 	}
 }
 
-t_list *del_node(t_list **list, t_list *del_node)
+t_list	*del_node(t_list **list, t_list *del_node)
 {
-	t_list *tmp;
-	t_list *tmp1 = NULL;
+	t_list	*tmp;
+	t_list	*tmp1;
 
+	tmp1 = NULL;
 	tmp = *list;
 	if (del_node == tmp)
 	{
 		tmp = tmp->link;
 		free(tmp->prev);
 		tmp->prev = NULL;
-		return(tmp);
+		return (tmp);
 	}
 	else if (del_node == ft_lstlast(tmp))
 	{
@@ -52,22 +53,25 @@ t_list *del_node(t_list **list, t_list *del_node)
 	}
 	return (tmp1);
 }
-void remove_quotes_dollar(t_list **list)
+
+void	remove_quotes_dollar(t_list **list)
 {
-	t_list *temp;
+	t_list	*temp;
 
 	temp = *list;
 	while (temp)
 	{
-		if (!ft_strcmp("DOUBLE_Q", temp->type) || !ft_strcmp("SINGLE_Q", temp->type))
+		if (!ft_strcmp("DOUBLE_Q", temp->type) || !ft_strcmp("SINGLE_Q",
+				temp->type))
 		{
 			if (ft_strlen(temp->content) == 2)
 				temp->content = ft_strdup("");
 			else
-				temp->content = ft_substr(temp->content, 1, ft_strlen(temp->content)-2);
+				temp->content = ft_substr(temp->content, 1,
+						ft_strlen(temp->content) - 2);
 		}
-		if (temp->content[0] == '$' && temp->link &&
-			temp->link->content[0] != 32)
+		if (temp->content[0] == '$' && temp->link
+			&& temp->link->content[0] != 32)
 		{
 			temp = del_node(list, temp);
 			if (temp->link)
@@ -77,20 +81,22 @@ void remove_quotes_dollar(t_list **list)
 	}
 }
 
-void expand_in_quotes(t_list **list, t_env *envr)
+void	expand_in_quotes(t_list **list, t_env *envr)
 {
-	t_list *temp;
-	t_vars v;
-	char *save = NULL;
-	t_env *env;
+	t_list	*temp;
+	t_vars	v;
+	char	*save;
+	t_env	*env;
 
 	v.i = 0;
+	save = NULL;
 	temp = *list;
 	v.flag = 1;
 	while (temp)
 	{
 		v.i = 0;
-		if (check_char(temp->content, '$') && !ft_strcmp("DOUBLE_Q", temp->type))
+		if (check_char(temp->content, '$') && !ft_strcmp("DOUBLE_Q",
+				temp->type))
 		{
 			while (temp->content[v.i])
 			{
@@ -100,7 +106,8 @@ void expand_in_quotes(t_list **list, t_env *envr)
 					v.j = v.i;
 					while (temp->content[v.i] && temp->content[v.i] != '$')
 						v.i++;
-					save = ft_strjoin(save, ft_substr(temp->content, v.j, v.i-v.j));
+					save = ft_strjoin(save, ft_substr(temp->content, v.j, v.i
+								- v.j));
 					// printf("save == %s\n", save);
 				}
 				else if (temp->content[v.i] == '$')
@@ -108,10 +115,9 @@ void expand_in_quotes(t_list **list, t_env *envr)
 					v.i++;
 					v.j = v.i;
 					while (temp->content[v.i] && (ft_isalpha(temp->content[v.i])
-						|| check_char("0123456789", temp->content[v.i])))
+							|| check_char("0123456789", temp->content[v.i])))
 						v.i++;
-					
-					v.str = ft_substr(temp->content, v.j, v.i-v.j);
+					v.str = ft_substr(temp->content, v.j, v.i - v.j);
 					// printf("v.str == |%s|\n", v.str);
 					env = envr;
 					while (env)
@@ -120,14 +126,14 @@ void expand_in_quotes(t_list **list, t_env *envr)
 						{
 							save = ft_strjoin(save, env->value);
 							v.flag = 0;
-							break;
+							break ;
 						}
 						env = env->link;
 					}
 					if (v.flag == 1)
 					{
-						save = ft_strjoin(save, "$");
-						save = ft_strjoin(save, v.str);
+						save = ft_strjoin(save, "");
+						// save = ft_strjoin(save, v.str);
 					}
 				}
 			}
@@ -138,36 +144,37 @@ void expand_in_quotes(t_list **list, t_env *envr)
 	}
 }
 
-void expand_var(t_list **list, t_env *envr)
+void	expand_var(t_list **list, t_env *envr)
 {
-	t_list *tmp = *list;
+	t_vars	v;
 	// t_list *save_node;
-	t_env *tmp1 = envr;
-	t_vars v;
 	v.i = 0;
-	while (tmp)
+	v.tmp1 = *list;
+	v.temp2 = envr;
+	while (v.tmp1)
 	{
-		if (tmp && tmp->content[0] == '$' && tmp->link)
+		if (v.tmp1 && v.tmp1->content[0] == '$' && v.tmp1->link)
 		{
-			tmp = tmp->link;
-			while (ft_isalpha(tmp->content[v.i]) ||
-				check_char("0123456789", tmp->content[v.i]))
+			v.tmp1 = v.tmp1->link;
+			while (ft_isalpha(v.tmp1->content[v.i])
+				|| check_char("0123456789", v.tmp1->content[v.i]))
 				v.i++;
-			v.str = ft_substr(tmp->content, 0, v.i);
-			tmp1 = envr;
-			while (tmp1)
+			v.str = ft_substr(v.tmp1->content, 0, v.i);
+			v.temp2 = envr;
+			while (v.temp2)
 			{
-				if (tmp1 && !ft_strcmp(tmp1->key, v.str))
+				if (v.temp2 && !ft_strcmp(v.temp2->key, v.str))
 				{
-					tmp->prev->content = ft_strdup(tmp1->value);
-					tmp->prev->content = ft_strjoin(tmp->prev->content ,ft_strdup(&tmp->content[v.i]));
-					tmp =  del_node(list, tmp);
-					break;
+					v.tmp1->prev->content = ft_strdup(v.temp2->value);
+					v.tmp1->prev->content = ft_strjoin(v.tmp1->prev->content,
+							ft_strdup(&v.tmp1->content[v.i]));
+					v.tmp1 = del_node(list, v.tmp1);
+					break ;
 				}
-				tmp1 = tmp1->link;
+				v.temp2 = v.temp2->link;
 			}
 		}
-		tmp = tmp->link;
+		v.tmp1 = v.tmp1->link;
 	}
 	remove_quotes_dollar(list);
 	expand_in_quotes(list, envr);

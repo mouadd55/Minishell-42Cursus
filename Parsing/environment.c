@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/10 10:22:06 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/19 20:02:25 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	print_env(int i, int count, t_env *env)
 	{
 		while (env)
 		{
-			printf("%s=%s\n", env->key, env->value);
+			if (env->value)
+				printf("%s=%s\n", env->key, env->value);
 			env = env->link;
 		}
 	}	
@@ -48,33 +49,6 @@ void	env_parsing(char *input, t_env *env)
 	}
 	print_env(v.i, v.count, env);
 	ft_free_arr(v.arr);
-}
-
-t_env	*ft_lstlast_env(t_env *head)
-{
-	if (!head)
-		return (NULL);
-	while (head)
-	{
-		if (head->link == NULL)
-			return (head);
-		head = head->link;
-	}
-	return (NULL);
-}
-
-t_env	*ft_lstnew_env(char *key, char *value)
-{
-	t_env	*head;
-
-	head = (t_env *)malloc(sizeof(t_env));
-	if (!head)
-		return (NULL);
-	head->key = key;
-	head->value = value;
-	head->link = NULL;
-	head->prev = NULL;
-	return (head);
 }
 
 void	ft_lstadd_back_env(t_env **head, t_env *new)
