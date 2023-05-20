@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/20 17:21:33 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/20 21:40:50 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,6 @@ void	remove_quotes_dollar(t_list **list)
 			else
 				temp->content = ft_substr(temp->content, 1,
 						ft_strlen(temp->content) - 2);
-		}
-		if ((temp->content[0] == '$' && temp->link
-				&& temp->link->content[0] != 32))
-		{
-			temp = del_node(list, temp);
-			if (temp->link)
-				temp = del_node(list, temp->link);
 		}
 		temp = temp->link;
 	}
@@ -216,4 +209,16 @@ void	expand_var(t_list **list, t_env *envr)
 	}
 	remove_quotes_dollar(list);
 	expand_in_quotes(list, envr);
+	tmp = *list;
+	while (tmp)
+	{
+		if (tmp && (tmp->content[0] == '$' && tmp->link
+				&& tmp->link->content[0] != 32))
+		{
+			tmp = del_node(list, tmp);
+			if (tmp->link)
+				tmp = del_node(list, tmp->link);
+		}
+		tmp = tmp->link;
+	}
 }

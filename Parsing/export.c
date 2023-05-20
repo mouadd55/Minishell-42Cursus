@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 15:38:24 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/20 22:22:42 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	check_before_value(t_list **list, t_env **env)
 	lexer_for_export(&v.tmp1);
 	while (v.tmp1 && check_type(v.tmp1->type))
 	{
-		if (join_variable_names_and_check_if_valid(&v))
+		if (join_variable_names_and_check_if_valid(&v)) // error
 			return (1);
 		else
 			mooooore_steps(&v, env);
