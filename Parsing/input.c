@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/11 15:23:11 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/20 17:21:02 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,7 @@ t_list	*ft_split_input(char *input)
 		if (v.arr[v.i])
 			ft_lstadd_back(&lst, ft_lstnew(ft_strdup(" ")));
 	}
-	if (v.arr)
-		ft_free_arr(v.arr);
+	ft_free_arr(v.arr);
 	tmp = lst;
 	while (tmp)
 	{

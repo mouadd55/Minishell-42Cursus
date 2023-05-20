@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 15:38:43 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/20 16:48:06 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,9 @@ int			check_before_value(t_list **list, t_env **env);
 int			join_variable_names_and_check_if_valid(t_vars *v);
 t_list		*skip_whats_before_export(t_list *tmp, t_list *list);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
+void		chech_cmd(t_list **list, t_env **envr, char *input);
+size_t		ft_count_char(char *input, char c);
+t_env		*ft_copy_env_list(t_env *env);
 // int			export_parsing(char *input);
 // void		delete_node(t_list **list, int position);
 
