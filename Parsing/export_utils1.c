@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 18:22:13 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 22:19:56 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/21 14:17:18 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	join_variable_names_and_check_if_valid(t_vars *v)
+void	join_variable_names_and_check_if_valid(t_vars *v)
 {
 	while (v->tmp1 && v->tmp1->type[0] == 's')
 		v->tmp1 = v->tmp1->link;
@@ -27,13 +27,6 @@ int	join_variable_names_and_check_if_valid(t_vars *v)
 			v->var = ft_strjoin(v->var, v->tmp1->content);
 		v->tmp1 = v->tmp1->link;
 	}
-	if (check_valid_var(v->var) || (v->var && v->var[0] == '-'))
-	{
-		printf("minishell: export: `%s': not a valid identifier\n", v->var);
-		if (v->vars == 1 && v->var[0] == '-')
-			return (1);
-	}
-	return (0);
 }
 
 t_list	*skip_whats_before_export(t_list *tmp, t_list *list)

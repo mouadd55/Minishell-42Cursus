@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 21:43:11 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/21 13:53:03 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ int	main(int ac, char **av, char **env)
 		{
 			add_history(input);
 			lst = ft_split_input(input);
-			minihell(input, &envr, &lst);
+			if (lst)
+				minihell(input, &envr, &lst);
 		}
 		free(input);
 	}

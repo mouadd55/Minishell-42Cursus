@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 21:55:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 15:36:29 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/21 13:41:50 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ void	free_some_variables(t_vars *v)
 	v->val = NULL;
 	free(v->var);
 	v->var = NULL;
+	while (v->tmp1 && v->tmp1->type[0] != 's' && check_type(v->tmp1->type))
+		v->tmp1 = v->tmp1->link;
+	if (v->tmp1 && check_type(v->tmp1->type))
+		v->tmp1 = v->tmp1->link;
 }
 
 t_list	*plus_cases(t_list *tmp)

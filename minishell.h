@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 16:48:06 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/21 13:38:49 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void		env_parsing(char *input, t_env *env);
 void		expand_var(t_list **list, t_env *envr);
 void		mooooore_steps(t_vars *v, t_env **env);
 int			check_before_value(t_list **list, t_env **env);
-int			join_variable_names_and_check_if_valid(t_vars *v);
+void		join_variable_names_and_check_if_valid(t_vars *v);
 t_list		*skip_whats_before_export(t_list *tmp, t_list *list);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 void		chech_cmd(t_list **list, t_env **envr, char *input);
