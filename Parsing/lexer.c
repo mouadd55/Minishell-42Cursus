@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 14:22:22 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 16:00:53 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 16:21:02 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_lstsize_env(t_env *env)
 	return (count);
 }
 
-void	lexer_for_unset(t_list **list)
+t_list	*lexer_for_unset(t_list **list)
 {
 	t_list	*tmp;
 
@@ -40,6 +40,7 @@ void	lexer_for_unset(t_list **list)
 		}
 		tmp = tmp->link;
 	}
+	return ((*list)->link->link);
 }
 
 void	more_lexer_conditions(t_list *tmp)

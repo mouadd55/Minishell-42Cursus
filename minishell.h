@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 16:01:45 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 16:21:28 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ void		ft_lstadd_back_env(t_env **head, t_env *new);
 
 /***************************** Parsing functions ******************************/
 
+/********************* Builtins *********************/
+
 void		lexer(t_list **list);
 void		sort_env(t_env *env);
 int			check_type(char *type);
@@ -108,10 +110,10 @@ void		print_export(t_env *temp3);
 int			check_valid_var(char *var);
 t_list		*ft_split_input(char *input);
 t_env		*ft_copy_env_list(t_env *env);
-void		lexer_for_unset(t_list **list);
 void		syntax_error(char *s2, char e);
 void		free_some_variables(t_vars *v);
 void		join_variable_names(t_vars *v);
+t_list		*lexer_for_unset(t_list **list);
 void		lexer_for_export(t_list **list);
 int			check_valid_variable(char *input);
 void		unset(t_list **list, t_env **env);

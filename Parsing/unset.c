@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 12:48:36 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 16:00:50 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 16:22:33 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,21 +92,21 @@ void	unset(t_list **list, t_env **env)
 	t_vars	v;
 
 	v.tmp1 = *list;
+	v.vars = 0;
 	while (v.tmp1)
 	{
 		if (!ft_strcmp(v.tmp1->type, "PIPE"))
 			return ;
 		v.tmp1 = v.tmp1->link;
 	}
-	v.tmp1 = (*list)->link->link;
-	lexer_for_unset(list);
+	v.tmp1 = lexer_for_unset(list);
 	while (v.tmp1)
 	{
 		v.var = NULL;
 		join_variable_namess(&v);
 		if (check_valid_var(v.var) || (v.var && v.var[0] == '-'))
 		{
-			printf("minishell: export: `%s': not a valid identifier\n", v.var);
+			printf("minishell: unset: `%s': not a valid identifier\n", v.var);
 			if (v.vars == 1 && v.var[0] == '-')
 				return ;
 		}
