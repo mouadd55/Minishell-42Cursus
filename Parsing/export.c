@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 12:00:26 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 14:03:38 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,11 @@ int	check_before_value(t_list **list, t_env **env)
 	v.val = NULL;
 	v.temp2 = NULL;
 	v.tmp3 = NULL;
-	v.tmp1 = skip_whats_before_export(v.tmp1, *list);
+	v.tmp1 = skip_whats_before_the_first_var(v.tmp1, *list);
 	lexer_for_export(&v.tmp1);
 	while (v.tmp1 && check_type(v.tmp1->type))
 	{
-		join_variable_names_and_check_if_valid(&v);
+		join_variable_names(&v);
 		if (check_valid_var(v.var) || (v.var && v.var[0] == '-'))
 		{
 			printf("minishell: export: `%s': not a valid identifier\n", v.var);

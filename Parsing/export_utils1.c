@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 18:22:13 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 11:41:04 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 14:53:36 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	join_variable_names_and_check_if_valid(t_vars *v)
+void	join_variable_names(t_vars *v)
 {
 	while (v->tmp1 && v->tmp1->type[0] == 's')
 		v->tmp1 = v->tmp1->link;
@@ -29,7 +29,7 @@ void	join_variable_names_and_check_if_valid(t_vars *v)
 	}
 }
 
-t_list	*skip_whats_before_export(t_list *tmp, t_list *list)
+t_list	*skip_whats_before_the_first_var(t_list *tmp, t_list *list)
 {
 	int	count;
 
@@ -90,37 +90,3 @@ int	check_valid_variable(char *input)
 	}
 	return (0);
 }
-
-// void	delete_node(t_list **list, int position)
-// {
-// 	t_list	*tmp1;
-// 	t_list	*tmp2;
-
-// 	tmp1 = *list;
-// 	if (position == 1)
-// 	{
-// 		*list = (*list)->link;
-// 		free((*list)->prev);
-// 		(*list)->prev = NULL;
-// 	}
-// 	else if (position > 1 && position < ft_lstsize(*list))
-// 	{
-// 		while (position > 1)
-// 		{
-// 			tmp1 = tmp1->link;
-// 			position--;
-// 		}
-// 		tmp2 = tmp1->prev;
-// 		tmp2->link = tmp1->link;
-// 		tmp1->link->prev = tmp2;
-// 		free(tmp1);
-// 		tmp1 = NULL;
-// 	}
-// 	else if (position == ft_lstsize(*list))
-// 	{
-// 		tmp1 = ft_lstlast(*list);
-// 		tmp2 = tmp1->prev;
-// 		free(tmp1);
-// 		tmp2->link = NULL;
-// 	}
-// }

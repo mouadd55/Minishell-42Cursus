@@ -6,11 +6,41 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 14:22:22 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 10:17:11 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 16:00:53 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	ft_lstsize_env(t_env *env)
+{
+	int	count;
+
+	count = 0;
+	while (env)
+	{
+		count++;
+		env = env->link;
+	}
+	return (count);
+}
+
+void	lexer_for_unset(t_list **list)
+{
+	t_list	*tmp;
+
+	tmp = *list;
+	tmp = tmp->link->link;
+	while (tmp && check_type(tmp->type))
+	{
+		if (tmp->type[0] != 's')
+		{
+			free(tmp->type);
+			tmp->type = ft_strdup("VAR");
+		}
+		tmp = tmp->link;
+	}
+}
 
 void	more_lexer_conditions(t_list *tmp)
 {

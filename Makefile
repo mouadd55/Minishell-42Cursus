@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
+#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/20 16:41:57 by yonadry          ###   ########.fr        #
+#    Updated: 2023/05/22 14:50:52 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,9 @@ G		= \x1B[32m
 W		= \x1B[0m
 B		= \033[1m
 SRC		=	\
+			Parsing/echo.c \
 			Parsing/input.c \
+			Parsing/unset.c \
 			Parsing/lexer.c \
 			Parsing/export.c \
 			Parsing/expand.c \
@@ -35,7 +37,6 @@ SRC		=	\
 			Parsing/export_utils1.c \
 			Parsing/export_utils2.c \
 			Parsing/lexer_for_export.c \
-			Parsing/echo.c \
 
 OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))
 

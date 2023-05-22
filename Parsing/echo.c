@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/20 17:21:58 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/22 14:47:18 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ void	change_dir(t_list *list, t_env **envr)
 	change_dir_2(list, envr);
 }
 
-void	chech_cmd(t_list **list, t_env **envr, char *input)
+void	check_cmd(t_list **list, t_env **envr, char *input)
 {
 	t_env	*env_copy;
 
@@ -148,6 +148,9 @@ void	chech_cmd(t_list **list, t_env **envr, char *input)
 		change_dir(*list, envr);
 	else if (list && !strcmp("pwd", strlower((*list)->content)))
 		pwd();
+	else if (*list && !(*list)->prev && (*list)->link
+		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
+		unset(list, envr);
 	if (ft_lstsize(*list) == 1 && !ft_strcmp((*list)->content, "export"))
 	{
 		env_copy = ft_copy_env_list(*envr);
