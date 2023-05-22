@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/21 14:16:59 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 12:00:26 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	join_variable_values(t_vars *v)
 {
-	if (v->tmp1 && !ft_strcmp(v->tmp1->type, "PLUS"))
+	if (v->tmp1 && v->tmp1->type[0] == 'P')
 	{
 		v->flag = 1;
 		v->tmp1 = v->tmp1->link;
@@ -32,13 +32,14 @@ void	join_variable_values(t_vars *v)
 
 void	existed_variable(t_vars *v)
 {
-	if (v->tmp3 && !ft_strcmp(v->tmp3->type, "EQUAL") && !v->val)
+	printf("[%p]\n", v->temp2);
+	if (v->tmp3 && v->tmp3->type[0] == 'E' && !v->val)
 	{
 		free(v->temp2->value);
 		v->temp2->value = ft_strdup("");
 	}
 	else if ((v->tmp3 && v->tmp3->link && v->tmp3->type[0] == 'E'
-			&& !ft_strcmp(v->tmp3->link->type, "space"))
+			&& v->tmp3->link->type[0] == 's')
 		|| (v->tmp3 && !v->tmp3->link && v->tmp3->type[0] == 'E'))
 		v->temp2->value = ft_strjoin(v->temp2->value, "");
 	else if (v->flag == 1 && v->val)
@@ -61,6 +62,9 @@ void	add_variable_to_env(t_env **env, t_vars *v)
 			ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(v->var),
 					ft_strdup("")));
 	}
+	else if (v->tmp3 && v->tmp3->type[0] == 'E' && !v->val)
+		ft_lstadd_back_env(env, ft_lstnew_env(ft_strdup(v->var),
+				ft_strdup("")));
 	else if (!check_if_variable_exist(*env, v->var, &v->temp2))
 	{
 		if (v->tmp3 && v->tmp3->link && v->tmp3->type[0] == 'E'

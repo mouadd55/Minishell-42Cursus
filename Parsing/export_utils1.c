@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 18:22:13 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/21 14:17:18 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 11:41:04 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	join_variable_names_and_check_if_valid(t_vars *v)
 	while (v->tmp1 && v->tmp1->type[0] == 'V' && check_type(v->tmp1->type))
 	{
 		v->vars++;
-		if (!ft_strcmp(v->tmp1->type, "DOUBLE_Q"))
+		if (v->tmp1->type[0] == 'D')
 			v->var = ft_strjoin(v->var, ft_strtrim(v->tmp1->content, "\""));
-		else if (!ft_strcmp(v->tmp1->type, "SINGLE_Q"))
+		else if (v->tmp1->type[0] == 'S')
 			v->var = ft_strjoin(v->var, ft_strtrim(v->tmp1->content, "\'"));
 		else
 			v->var = ft_strjoin(v->var, v->tmp1->content);
