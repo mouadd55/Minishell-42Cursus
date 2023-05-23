@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 12:48:36 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 16:22:33 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 20:07:27 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	join_variable_namess(t_vars *v)
+void	join_nodes_of_type_var(t_vars *v)
 {
 	while (v->tmp1 && v->tmp1->type[0] == 's')
 		v->tmp1 = v->tmp1->link;
@@ -103,7 +103,7 @@ void	unset(t_list **list, t_env **env)
 	while (v.tmp1)
 	{
 		v.var = NULL;
-		join_variable_namess(&v);
+		join_nodes_of_type_var(&v);
 		if (check_valid_var(v.var) || (v.var && v.var[0] == '-'))
 		{
 			printf("minishell: unset: `%s': not a valid identifier\n", v.var);

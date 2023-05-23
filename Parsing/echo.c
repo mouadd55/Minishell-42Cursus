@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/22 14:47:18 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/23 16:22:44 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	echo(t_list *list)
 			tmp = tmp->link;
 		while (tmp)
 		{
-			if (strstr("PIPE,HEREDOC,APPEND,OUTPUT,INPUT", tmp->type))
+			if (ft_strnstr("PIPE,HEREDOC,APPEND,OUTPUT,INPUT", tmp->type, 32))
 				break ;
 			if (tmp)
 				printf("%s", tmp->content);
@@ -140,12 +140,23 @@ void	change_dir(t_list *list, t_env **envr)
 
 void	check_cmd(t_list **list, t_env **envr, char *input)
 {
+	t_list	*tmp;
 	t_env	*env_copy;
 
+	tmp = *list;
 	if (*list && !ft_strcmp((*list)->content, "echo"))
 		echo(*list);
 	else if (*list && !ft_strcmp((*list)->content, "cd"))
 		change_dir(*list, envr);
+	else if (ft_strnstr(input, "exit", ft_strlen(input)))
+	{
+		while (tmp)
+		{
+			if (!ft_strcmp(tmp->content, "exit"))
+				ft_exit(list);
+			tmp = tmp->link;
+		}
+	}
 	else if (list && !strcmp("pwd", strlower((*list)->content)))
 		pwd();
 	else if (*list && !(*list)->prev && (*list)->link
@@ -157,6 +168,6 @@ void	check_cmd(t_list **list, t_env **envr, char *input)
 		sort_env(env_copy);
 		ft_destroy_list_env(&env_copy);
 	}
-	if (ft_strlen(input) && (check_before_value(list, envr)))
+	if (ft_strlen(input) && (export_parsing(list, envr)))
 		return ;
 }

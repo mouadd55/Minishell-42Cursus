@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 16:21:28 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/22 17:30:06 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void		ft_lstadd_back_env(t_env **head, t_env *new);
 
 void		lexer(t_list **list);
 void		sort_env(t_env *env);
+void		ft_exit(t_list **list);
 int			check_type(char *type);
 int			check_syntax(t_list *lst);
 void		print_export(t_env *temp3);
@@ -123,7 +124,7 @@ void		env_parsing(char *input, t_env *env);
 void		expand_var(t_list **list, t_env *envr);
 void		mooooore_steps(t_vars *v, t_env **env);
 void		delete_node(t_env **env, int position);
-int			check_before_value(t_list **list, t_env **env);
+int			export_parsing(t_list **list, t_env **env);
 void		check_cmd(t_list **list, t_env **envr, char *input);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);

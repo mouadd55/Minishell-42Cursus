@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 18:22:13 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 14:53:36 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/23 16:22:15 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	check_valid_variable(char *input)
 	char	*new_input;
 
 	i = 0;
-	new_input = strnstr(input, "export ", ft_strlen(input));
+	new_input = ft_strnstr(input, "export ", ft_strlen(input));
 	if (new_input)
 		new_input += 7;
 	if (new_input)

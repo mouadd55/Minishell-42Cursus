@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 14:03:38 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/23 16:21:27 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	join_variable_values(t_vars *v)
 
 void	existed_variable(t_vars *v)
 {
-	printf("[%p]\n", v->temp2);
 	if (v->tmp3 && v->tmp3->type[0] == 'E' && !v->val)
 	{
 		free(v->temp2->value);
@@ -92,19 +91,18 @@ void	mooooore_steps(t_vars *v, t_env **env)
 	v->flag = 0;
 }
 
-int	check_before_value(t_list **list, t_env **env)
+int	export_parsing(t_list **list, t_env **env)
 {
 	t_vars	v;
 
 	v.vars = 0;
 	v.flag = 0;
 	v.count = 0;
-	v.tmp1 = *list;
 	v.var = NULL;
 	v.val = NULL;
 	v.temp2 = NULL;
 	v.tmp3 = NULL;
-	v.tmp1 = skip_whats_before_the_first_var(v.tmp1, *list);
+	v.tmp1 = skip_whats_before_the_first_var(*list, *list);
 	lexer_for_export(&v.tmp1);
 	while (v.tmp1 && check_type(v.tmp1->type))
 	{
