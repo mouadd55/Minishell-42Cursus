@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 14:22:22 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/23 16:37:41 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/24 18:49:09 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	more_lexer_conditions(t_list *tmp)
 	else if (!ft_strcmp(tmp->content, ">>"))
 		tmp->type = ft_strdup("APPEND");
 	else if (!ft_strcmp(tmp->content, ">"))
-		tmp->type = ft_strdup("OUTPUT");
+		tmp->type = ft_strdup("OUTFILE");
 	else if (!ft_strcmp(tmp->content, "<"))
-		tmp->type = ft_strdup("INPUT");
+		tmp->type = ft_strdup("INFILE");
 }
 
 void	moooore_conditions(t_list *tmp)
@@ -89,7 +89,9 @@ void	conditions(t_list *tmp)
 				|| !ft_strcmp(tmp->prev->content, ">>")
 				|| !ft_strcmp(tmp->prev->prev->content, ">>")))
 		|| (tmp->prev && !ft_strcmp(tmp->prev->type, "FILE")
-			&& tmp->type[0] != 's'))
+			&& tmp->type[0] != 's' && !ft_strcmp(tmp->prev->content, ">")
+			&& !ft_strcmp(tmp->prev->content, ">>")
+			&& !ft_strcmp(tmp->prev->content, "<") && !ft_strcmp(tmp->prev->content, "<<")))
 	{
 		free(tmp->type);
 		tmp->type = ft_strdup("FILE");

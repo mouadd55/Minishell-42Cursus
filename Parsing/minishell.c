@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/23 15:53:23 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/25 13:31:14 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,43 @@ t_env	*ft_copy_env_list(t_env *env)
 	return (copy);
 }
 
+void	open_files(t_list *list)
+{
+	int fd;
+	
+	while (list)
+	{
+		if (list->type[0] == 'F')
+		{
+			if (list->prev->type[0] == 'O')
+			{
+			    fd = open(list->content, O_CREAT | O_RDWR | O_TRUNC, 0777);
+    			if (fd == -1)
+    			    return ;
+			}
+			else if (list->prev->prev->type[0] == 'O')
+			{
+			    fd = open(list->content, O_CREAT | O_RDWR | O_TRUNC, 0777);
+    			if (fd == -1)
+    			    return ;
+			}
+			if (list->prev->type[0] == 'A')
+			{
+			    fd = open(list->content, O_CREAT | O_RDWR | O_APPEND, 0777);
+    			if (fd == -1)
+    			    return ;
+			}
+			else if (list->prev->prev->type[0] == 'A')
+			{
+			    fd = open(list->content, O_CREAT | O_RDWR | O_APPEND, 0777);
+    			if (fd == -1)
+    			    return ;
+			}
+		}
+		list = list->link;
+	}
+}
+
 void	minihell(char *input, t_env **envr, t_list **lst)
 {
 	if (check_syntax(*lst))
@@ -60,9 +97,10 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 	*envr = ft_builtins(input, envr);
 	if (lst)
 	{
-		// expand_var(lst, *envr);
-		// check_cmd(lst, envr, input);
-		ft(*lst);
+		expand_var(lst, *envr);
+		check_cmd(lst, envr, input);
+		open_files(*lst);
+		// ft(*lst);
 	}
 }
 

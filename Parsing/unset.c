@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 12:48:36 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 20:07:27 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/24 15:04:57 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ void	unset(t_list **list, t_env **env)
 			return ;
 		v.tmp1 = v.tmp1->link;
 	}
+	if (!env || !(*env) || ft_lstsize_env(*env) == 0)
+		return ;
 	v.tmp1 = lexer_for_unset(list);
 	while (v.tmp1)
 	{

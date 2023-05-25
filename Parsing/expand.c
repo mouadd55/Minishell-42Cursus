@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/23 16:00:06 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/23 17:15:32 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,8 +156,8 @@ void	expand_in_quotes(t_list **list, t_env *envr)
 	while (temp)
 	{
 		v.i = 0;
-		if (check_char(temp->content, '$') && !ft_strcmp("DOUBLE_Q",
-				temp->type))
+		if (check_char(temp->content, '$') && (!ft_strcmp("DOUBLE_Q",
+				temp->type) || (!ft_strcmp("FILE",temp->type) && temp->content[0] == '\"')))
 		{
 			expand_in_quotes_2(temp, envr, &v, &save);
 			temp->content = ft_strdup(save);
