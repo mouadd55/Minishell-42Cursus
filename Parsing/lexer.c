@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 14:22:22 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/24 18:49:09 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/25 21:03:27 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,17 +81,14 @@ void	moooore_conditions(t_list *tmp)
 
 void	conditions(t_list *tmp)
 {
-	if ((tmp->prev && tmp->prev->prev && !ft_strcmp(tmp->type, "DOUBLE_Q")
-			&& (!ft_strcmp(tmp->prev->content, "<")
-				|| !ft_strcmp(tmp->prev->prev->content, "<")
-				|| !ft_strcmp(tmp->prev->content, ">")
-				|| !ft_strcmp(tmp->prev->prev->content, ">")
-				|| !ft_strcmp(tmp->prev->content, ">>")
-				|| !ft_strcmp(tmp->prev->prev->content, ">>")))
-		|| (tmp->prev && !ft_strcmp(tmp->prev->type, "FILE")
-			&& tmp->type[0] != 's' && !ft_strcmp(tmp->prev->content, ">")
-			&& !ft_strcmp(tmp->prev->content, ">>")
-			&& !ft_strcmp(tmp->prev->content, "<") && !ft_strcmp(tmp->prev->content, "<<")))
+	if ((tmp->prev && tmp->prev->prev && (!ft_strcmp(tmp->type, "DOUBLE_Q") || !ft_strcmp(tmp->type, "SINGLE_Q"))
+			&& ((!ft_strcmp(tmp->prev->content, "<") || !ft_strcmp(tmp->prev->prev->content, "<"))
+			|| (!ft_strcmp(tmp->prev->content, ">") || !ft_strcmp(tmp->prev->prev->content, ">"))
+			|| (!ft_strcmp(tmp->prev->content, ">>") || !ft_strcmp(tmp->prev->prev->content, ">>"))))
+			
+			|| ((tmp->prev && !ft_strcmp(tmp->prev->type, "FILE")
+				&& ft_strcmp(tmp->content, ">") && ft_strcmp(tmp->content, "<")
+				&& ft_strcmp(tmp->content, ">>") && ft_strcmp(tmp->content, "<<") && ft_strcmp(tmp->content, " "))))
 	{
 		free(tmp->type);
 		tmp->type = ft_strdup("FILE");

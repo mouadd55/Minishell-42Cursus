@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/23 17:15:32 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/25 21:39:43 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void	remove_quotes_dollar(t_list **list)
 	while (temp)
 	{
 		if (!ft_strcmp("DOUBLE_Q", temp->type) || !ft_strcmp("SINGLE_Q",
-				temp->type))
+				temp->type) || (!ft_strcmp("FILE", temp->type)
+					&& temp->content[0] == '\"'))
 		{
 			if (ft_strlen(temp->content) == 2)
 				temp->content = ft_strdup("");

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/25 13:30:41 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/25 15:40:35 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ typedef struct s_env
 
 typedef struct s_command
 {
-	char			**cmd;// {"ls", "-la", NULL}
-	char			*fd_in; //0
-	char			*fd_out;//1
+	char			**cmd;   // {"ls", "-la", NULL}
+	char			*fd_in;  //0
+	char			*fd_out; //1
 	struct s_env	*link;
 	struct s_env	*prev;
 }	t_command;
