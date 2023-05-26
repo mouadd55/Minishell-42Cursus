@@ -20,6 +20,7 @@ W		= \x1B[0m
 B		= \033[1m
 SRC		=	\
 			Parsing/echo.c \
+			Parsing/ft_printf_fd.c \
 			Parsing/exit.c \
 			Parsing/input.c \
 			Parsing/unset.c \

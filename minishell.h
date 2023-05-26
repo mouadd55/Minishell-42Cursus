@@ -137,9 +137,10 @@ void		env_parsing(char *input, t_env *env);
 void		mooooore_steps(t_vars *v, t_env **env);
 void		delete_node(t_env **env, int position);
 int			export_parsing(t_list **list, t_env **env);
-void		check_cmd(t_list **list, t_env **envr, char *input);
+void		check_cmd(t_list **list, t_env **envr, char *input, int fd);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
-void			open_files(t_list *list);
+int			open_files(t_list *list);
+int			ft_printf_fd(const char *first, int fd, ...);
 
 #endif

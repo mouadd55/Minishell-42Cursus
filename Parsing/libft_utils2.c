@@ -57,10 +57,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 int	ft_strchr(char *str, int find)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = ft_strlen(str);
 	while (str[i])
 	{
 		if (str[i] == (char) find)

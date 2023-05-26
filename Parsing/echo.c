@@ -41,7 +41,7 @@ t_list	*skip_n_echo(t_list *tmp, int *flag)
 	return (tmp);
 }
 
-void	echo(t_list *list)
+void	echo(t_list *list, int fd)
 {
 	t_list	*tmp;
 	int		flag;
@@ -56,15 +56,15 @@ void	echo(t_list *list)
 			tmp = tmp->link;
 		while (tmp)
 		{
-			if (ft_strnstr("PIPE,HEREDOC,APPEND,OUTPUT,INPUT", tmp->type, 32))
+			if (ft_strnstr("PIPE,HEREDOC,APPEND,OUTFILE,INFILE", tmp->type, 32))
 				break ;
 			if (tmp)
-				printf("%s", tmp->content);
+				ft_putstr_fd(tmp->content, fd);
 			tmp = tmp->link;
 		}
 	}
 	if (!flag && list && !ft_strcmp(list->content, "echo"))
-		printf("\n");
+		ft_putstr_fd("\n", fd);
 }
 
 char	*strlower(char *str)
@@ -81,22 +81,25 @@ char	*strlower(char *str)
 	return (str);
 }
 
-void	pwd(void)
+void	pwd(int fd)
 {
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
 	if (pwd)
-		printf("%s\n", pwd);
+		ft_printf_fd("%s\n", fd, pwd);
+	free(pwd);
 }
 
-void	change_dir_2(t_list *list, t_env **envr)
+void	change_dir_2(t_list *list, t_env **envr, int fd)
 {
 	t_env	*env;
 	char	*pwd;
 
 	env = *envr;
 	pwd = getcwd(NULL, 0);
+	if (fd == -1)
+		fd = 2;
 	if (list && !chdir(list->content))
 	{
 		env = *envr;
@@ -111,12 +114,12 @@ void	change_dir_2(t_list *list, t_env **envr)
 	}
 	else
 	{
-		printf("minishel: cd: %s: No such file or directory\n", list->content);
+		ft_printf_fd("minishel: cd: %s: No such file or directory\n", fd, list->content);
 		return ;
 	}
 }
 
-void	change_dir(t_list *list, t_env **envr)
+void	change_dir(t_list *list, t_env **envr, int fd)
 {
 	t_env	*env;
 
@@ -135,19 +138,19 @@ void	change_dir(t_list *list, t_env **envr)
 	}
 	else if (list && list->link && list->link->link)
 		list = list->link->link;
-	change_dir_2(list, envr);
+	change_dir_2(list, envr, fd);
 }
 
-void	check_cmd(t_list **list, t_env **envr, char *input)
+void	check_cmd(t_list **list, t_env **envr, char *input, int fd)
 {
 	t_list	*tmp;
 	t_env	*env_copy;
 
 	tmp = *list;
 	if (*list && !ft_strcmp((*list)->content, "echo"))
-		echo(*list);
+		echo(*list, fd);
 	else if (*list && !ft_strcmp((*list)->content, "cd"))
-		change_dir(*list, envr);
+		change_dir(*list, envr, fd);
 	else if (ft_strnstr(input, "exit", ft_strlen(input)))
 	{
 		while (tmp)
@@ -158,7 +161,7 @@ void	check_cmd(t_list **list, t_env **envr, char *input)
 		}
 	}
 	else if (list && !strcmp("pwd", strlower((*list)->content)))
-		pwd();
+		pwd(fd);
 	else if (*list && !(*list)->prev && (*list)->link
 		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
 		unset(list, envr);

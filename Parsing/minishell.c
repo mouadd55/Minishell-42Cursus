@@ -52,13 +52,13 @@ t_env	*ft_copy_env_list(t_env *env)
 	return (copy);
 }
 
-int	open_file(t_list *list, char *file_name, char *type)
+int	open_file(char *file_name, char *type)
 {
 	int fd = 1;
 
-	if (!ft_strcmp(type, "OUTFILE"))
+	if (!ft_strcmp(type, ">"))
 	    fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	if (!ft_strcmp(type, "APPEND"))
+	if (!ft_strcmp(type, ">>"))
 	    fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 	if (fd == -1)
 	{
@@ -70,13 +70,21 @@ int	open_file(t_list *list, char *file_name, char *type)
 	return (fd);
 }
 
+char *is_redir(t_list *list)
+{
+	if (!ft_strcmp(list->type, "APPEND") || !ft_strcmp(list->type, "OUTFILE"))
+		return (list->content);
+	return (0);
+}
+
 int handle_file(t_list *list, char *file_name, char *i_file_name, char *type)
 {
 	int fd;
 	
+	fd = 1;
 	while (list)
 	{
-		if (!ft_strcmp(list->type, "APPEND"))
+		if (is_redir(list))
 			return (1);
 		if (list->type[0] == 'F')
 			file_name = ft_strjoin(file_name, list->content);
@@ -84,49 +92,58 @@ int handle_file(t_list *list, char *file_name, char *i_file_name, char *type)
 			i_file_name = ft_strjoin(i_file_name, list->content);
 		if (list->type[0] == 's' || !list->link)
 		{
-			fd = open_file(list, file_name, type);
+			fd = open_file(file_name, type);
 			if (fd == -1)
-				return (1);
+				return (-1);
 			if (i_file_name)
 			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(i_file_name, 2);
-				ft_putstr_fd(": No such file or directory\n", 2);
+				ft_printf_fd("minishell: %s: No such file or directory\n", 2, i_file_name);
+				// ft_putstr_fd("minishell: ", 2);
+				// ft_putstr_fd(i_file_name, 2);
+				// ft_putstr_fd(": No such file or directory\n", 2);
 				free(i_file_name);
 				i_file_name = NULL;
 			}
 		}
 		list = list->link;
 	}
+	return (fd);
 }
 
-void open_files(t_list *list)
+int open_files(t_list *list)
 {
 	char *file_name;
 	char *i_file_name;
 	char *type;
+	int fd;
 
+	fd = 1;
 	i_file_name = NULL;
 	while (list)
 	{
-		if (!ft_strcmp(list->type, "APPEND"))
+		if (is_redir(list))
 		{
 			file_name = NULL;
-			type = ft_strdup(list->type);
+			type = ft_strdup(is_redir(list));
 			if (list->link &&  !ft_strcmp(list->link->type, "space"))
 				list = list->link->link;
 			else if (list->link)
 				list = list->link;
-			handle_file(list, file_name, i_file_name, type);
+			fd = handle_file(list, file_name, i_file_name, type);
+			if (fd == -1)
+				return (-1);
 		}
 		if (!list)
 			break;
 		list = list->link;
 	}
+	return (fd);
 }
 
 void	minihell(char *input, t_env **envr, t_list **lst)
 {
+	int fd;
+
 	if (check_syntax(*lst))
 		return ;
 	lexer(lst);
@@ -134,9 +151,10 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 	if (lst)
 	{
 		expand_var(lst, *envr);
-		check_cmd(lst, envr, input);
-		open_files(*lst);
-		ft(*lst);
+		fd = open_files(*lst);
+		check_cmd(lst, envr, input, fd);
+		// open_files(*lst);
+		// ft(*lst);
 	}
 }
 
