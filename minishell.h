@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/27 14:10:04 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/27 17:04:35 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,14 @@ typedef struct s_env
 	struct s_env	*prev;
 }	t_env;
 
-
 typedef struct s_command
 {
 	char			**cmd;   // {"ls", "-la", NULL}
-	char			*fd_in;  //0
-	char			*fd_out; //1
-	struct s_env	*link;
-	struct s_env	*prev;
+	int				fd_in;  //0
+	int				fd_out; //1
+	struct s_command	*link;
+	struct s_command	*prev;
 }	t_command;
-
-
 
 typedef struct t_vars
 {
@@ -142,5 +139,12 @@ int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
 int			open_files(t_list *list);
 int			ft_printf_fd(const char *first, int fd, ...);
+
+int			count_commands(t_list *list);
+void		create_final_list(t_list *list, t_command **final_list);
+
+t_command	*lstnew_final(char **command, int fd_in, int fd_out);
+t_command	*lstlast_final(t_command *head);
+void		lstadd_back_final(t_command **head, t_command *new);
 
 #endif
