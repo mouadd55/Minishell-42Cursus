@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/27 17:16:21 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/27 19:46:31 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,7 @@ int	open_file(char *file_name, char *type)
 	    fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
 	if (fd == -1)
 	{
-		ft_putstr_fd("Minishell: ", 2);
-		ft_putstr_fd(file_name, 2);
-		ft_putstr_fd(": Permission denied\n", 2);
+		ft_printf_fd("Minishell: : Permission denied\n", 2, file_name);
 		return (-1);
 	}
 	return (fd);
@@ -100,37 +98,32 @@ int	open_file(char *file_name, char *type)
 
 char *is_redir(t_list *list)
 {
-	if (!ft_strcmp(list->type, "APPEND") || !ft_strcmp(list->type, "OUTFILE"))
+	if (!ft_strcmp(list->type, "APPEND")
+		|| !ft_strcmp(list->type, "OUTFILE"))
 		return (list->content);
 	return (0);
 }
 
-int handle_file(t_list *list, char *file_name, char *i_file_name, char *type)
+int handle_file(t_list *list, char *file_name, char *type)
 {
 	int fd;
 	
 	fd = 1;
 	while (list && !is_redir(list))
 	{
+		if (!ft_strcmp("VAR", list->type))
+		{
+			ft_printf_fd("Minishell: %s: ambiguous redirect", 2,list->content);
+			return(-1);
+		}
 		if (!ft_strcmp("FILE", list->type))
 			file_name = ft_strjoin(file_name, list->content);
-		else if (!ft_strcmp("COMMAND", list->type))
-			i_file_name = ft_strjoin(i_file_name, list->content);
 		if (list->type[0] == 's' || !list->link
 			||(list->link && is_special(list->link->content[0])))
 		{
 			fd = open_file(file_name, type);
 			if (fd == -1)
 				return (-1);
-			if (i_file_name)
-			{
-				ft_printf_fd("minishell: %s: No such file or directory\n", 2, i_file_name);
-				// ft_putstr_fd("minishell: ", 2);
-				// ft_putstr_fd(i_file_name, 2);
-				// ft_putstr_fd(": No such file or directory\n", 2);
-				free(i_file_name);
-				i_file_name = NULL;
-			}
 		}
 		list = list->link;
 	}
@@ -140,12 +133,10 @@ int handle_file(t_list *list, char *file_name, char *i_file_name, char *type)
 int open_files(t_list *list)
 {
 	char *file_name;
-	char *i_file_name;
 	char *type;
 	int fd;
 
 	fd = 1;
-	i_file_name = NULL;
 	while (list)
 	{
 		if (is_redir(list))
@@ -156,7 +147,7 @@ int open_files(t_list *list)
 				list = list->link->link;
 			else if (list->link)
 				list = list->link;
-			fd = handle_file(list, file_name, i_file_name, type);
+			fd = handle_file(list, file_name, type);
 			if (fd == -1)
 				return (-1);
 		}

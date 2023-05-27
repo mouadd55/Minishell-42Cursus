@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/27 14:26:57 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/27 19:43:15 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	remove_quotes_dollar(t_list **list)
 	{
 		if (!ft_strcmp("DOUBLE_Q", temp->type) || !ft_strcmp("SINGLE_Q",
 				temp->type) || (!ft_strcmp("FILE", temp->type)
-					&& temp->content[0] == '\"'))
+					&& (temp->content[0] == '\"' || temp->content[0] == '\'')))
 		{
 			if (ft_strlen(temp->content) == 2)
 				temp->content = ft_strdup("");
@@ -158,7 +158,8 @@ void	expand_in_quotes(t_list **list, t_env *envr)
 	{
 		v.i = 0;
 		if (check_char(temp->content, '$') && (!ft_strcmp("DOUBLE_Q",
-				temp->type) || !ft_strcmp("FILE",temp->type)))
+				temp->type) || (!ft_strcmp("FILE",temp->type)
+				&& temp->content[0] == '\"')))
 		{
 			expand_in_quotes_2(temp, envr, &v, &save);
 			temp->content = ft_strdup(save);
@@ -208,15 +209,16 @@ void	expand_var(t_list **list, t_env *envr)
 		expand_var_2(list, &tmp, envr, &v);
 		tmp = tmp->link;
 	}
-	remove_quotes_dollar(list);
 	expand_in_quotes(list, envr);
+	remove_quotes_dollar(list);
 	tmp = *list;
 	while (tmp)
 	{
 		if (tmp && (tmp->content[0] == '$' && tmp->link
 				&& tmp->link->content[0] != 32))
 		{
-			tmp = del_node(list, tmp);
+			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
+			tmp->type = ft_strdup("VAR");
 			if (tmp->link)
 				tmp = del_node(list, tmp->link);
 		}
