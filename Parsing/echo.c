@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/24 19:32:33 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/27 14:45:00 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ void	echo(t_list *list, int fd)
 			tmp = tmp->link;
 		while (tmp)
 		{
-			if (ft_strnstr("PIPE,HEREDOC,APPEND,OUTFILE,INFILE", tmp->type, 32))
+			if (ft_strnstr("PIPE,HEREDOC,APPEND,OUTFILE,INFILE", tmp->type, 32)
+				|| (!ft_strcmp(" ", tmp->content)
+					&& ft_strnstr("PIPE,HEREDOC,APPEND,OUTFILE,INFILE", tmp->link->type, 32)))
 				break ;
 			if (tmp)
 				ft_putstr_fd(tmp->content, fd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/25 22:27:29 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/27 14:47:28 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,14 @@ int handle_file(t_list *list, char *file_name, char *i_file_name, char *type)
 	int fd;
 	
 	fd = 1;
-	while (list)
+	while (list && !is_redir(list))
 	{
-		if (is_redir(list))
-			return (1);
-		if (list->type[0] == 'F')
+		if (!ft_strcmp("FILE", list->type))
 			file_name = ft_strjoin(file_name, list->content);
-		else if (list->type[0] == 'C')
+		else if (!ft_strcmp("COMMAND", list->type))
 			i_file_name = ft_strjoin(i_file_name, list->content);
-		if (list->type[0] == 's' || !list->link)
+		if (list->type[0] == 's' || !list->link
+			||(list->link && is_special(list->link->content[0])))
 		{
 			fd = open_file(file_name, type);
 			if (fd == -1)
@@ -125,7 +124,7 @@ int open_files(t_list *list)
 		{
 			file_name = NULL;
 			type = ft_strdup(is_redir(list));
-			if (list->link &&  !ft_strcmp(list->link->type, "space"))
+			if (list->link && !ft_strcmp(list->link->type, "space"))
 				list = list->link->link;
 			else if (list->link)
 				list = list->link;

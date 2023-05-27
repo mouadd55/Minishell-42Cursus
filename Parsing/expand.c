@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/25 21:39:43 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/27 14:26:57 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void	expand_in_quotes(t_list **list, t_env *envr)
 	{
 		v.i = 0;
 		if (check_char(temp->content, '$') && (!ft_strcmp("DOUBLE_Q",
-				temp->type) || (!ft_strcmp("FILE",temp->type) && temp->content[0] == '\"')))
+				temp->type) || !ft_strcmp("FILE",temp->type)))
 		{
 			expand_in_quotes_2(temp, envr, &v, &save);
 			temp->content = ft_strdup(save);
