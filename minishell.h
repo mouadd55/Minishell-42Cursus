@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/27 17:04:35 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/27 22:16:05 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct t_vars
 	int		start;
 	int		count;
 	int		d_quotes;
+	char	*tmp;
 	char	*str;
 	char	*var;
 	char	*val;
@@ -146,5 +147,6 @@ void		create_final_list(t_list *list, t_command **final_list);
 t_command	*lstnew_final(char **command, int fd_in, int fd_out);
 t_command	*lstlast_final(t_command *head);
 void		lstadd_back_final(t_command **head, t_command *new);
+void		switch_space(char *input, int x);
 
 #endif
