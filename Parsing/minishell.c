@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/29 15:56:01 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/29 17:41:28 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,84 +80,6 @@ t_env	*ft_copy_env_list(t_env *env)
 	return (copy);
 }
 
-int	open_file(char *file_name, char *type)
-{
-	int fd = 1;
-
-	if (!ft_strcmp(type, ">"))
-	    fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	if (!ft_strcmp(type, ">>"))
-	    fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
-	if (fd == -1)
-	{
-		ft_printf_fd("Minishell: : Permission denied\n", 2, file_name);
-		return (-1);
-	}
-	return (fd);
-}
-
-char *is_redir(t_list *list)
-{
-	if (!ft_strcmp(list->type, "APPEND")
-		|| !ft_strcmp(list->type, "OUTFILE"))
-		return (list->content);
-	return (0);
-}
-
-int handle_file(t_list *list, char *file_name, char *type)
-{
-	int fd;
-	
-	fd = 1;
-	while (list && !is_redir(list))
-	{
-		if (!ft_strcmp("VAR", list->type))
-		{
-			ft_printf_fd("Minishell: %s: ambiguous redirect", 2,list->content);
-			return(-1);
-		}
-		if (!ft_strcmp("FILE", list->type))
-			file_name = ft_strjoin(file_name, list->content);
-		if (list->type[0] == 's' || !list->link
-			||(list->link && is_special(list->link->content[0])))
-		{
-			fd = open_file(file_name, type);
-			if (fd == -1)
-				return (-1);
-		}
-		list = list->link;
-	}
-	return (fd);
-}
-
-int open_files(t_list *list)
-{
-	char *file_name;
-	char *type;
-	int fd;
-
-	fd = 1;
-	while (list)
-	{
-		if (is_redir(list))
-		{
-			file_name = NULL;
-			type = ft_strdup(is_redir(list));
-			if (list->link && !ft_strcmp(list->link->type, "space"))
-				list = list->link->link;
-			else if (list->link)
-				list = list->link;
-			fd = handle_file(list, file_name, type);
-			if (fd == -1)
-				return (-1);
-		}
-		if (!list)
-			break;
-		list = list->link;
-	}
-	return (fd);
-}
-
 void	recreate_list(t_command *final_list, char *input, t_env **envr)
 {
 	t_vars	v;
@@ -183,7 +105,6 @@ void	recreate_list(t_command *final_list, char *input, t_env **envr)
 
 void	minihell(char *input, t_env **envr, t_list **lst)
 {
-	int fd;
 	t_command	*final_list;
 
 	if (check_syntax(*lst))
@@ -194,13 +115,13 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 	if (lst)
 	{
 		expand_var(lst, *envr);
-		fd = open_files(*lst);
+		ft(*lst);
 		create_final_list(*lst, &final_list);
 		recreate_list(final_list, input, envr);
-		// check_cmd(lst, envr, input, fd);
 		final(final_list);
+		open_files(*lst, &final_list);
+		// check_cmd(lst, envr, input, fd);
 		// open_files(*lst);
-		ft(*lst);
 	}
 }
 
