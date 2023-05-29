@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/27 22:51:26 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/28 19:01:43 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,11 +172,11 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 	{
 		expand_var(lst, *envr);
 		fd = open_files(*lst);
-		check_cmd(lst, envr, input, fd);
 		create_final_list(*lst, &final_list);
+		check_cmd(lst, envr, input, fd);
 		final(final_list);
 		// open_files(*lst);
-		// ft(*lst);
+		ft(*lst);
 	}
 }
 

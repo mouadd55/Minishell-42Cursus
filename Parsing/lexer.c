@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 14:22:22 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/27 22:50:26 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/29 14:49:52 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,15 @@ void	moooore_conditions(t_list *tmp)
 
 void	conditions(t_list *tmp)
 {
-	if ((tmp->prev && tmp->prev->prev && (!ft_strcmp(tmp->type, "DOUBLE_Q")
-				|| !ft_strcmp(tmp->type, "SINGLE_Q"))
+	if ((tmp->prev && tmp->prev->prev && ft_strcmp(tmp->type, "PIPE") && (!ft_strcmp(tmp->type, "DOUBLE_Q")
+				|| !ft_strcmp(tmp->type, "SINGLE_Q") || !ft_strcmp(tmp->type, "FLAG"))
 			&& ((!ft_strcmp(tmp->prev->content, "<")
 					|| !ft_strcmp(tmp->prev->prev->content, "<"))
 				|| (!ft_strcmp(tmp->prev->content, ">")
 					|| !ft_strcmp(tmp->prev->prev->content, ">"))
 				|| (!ft_strcmp(tmp->prev->content, ">>")
 					|| !ft_strcmp(tmp->prev->prev->content, ">>"))))
-		|| ((tmp->prev && !ft_strcmp(tmp->prev->type, "FILE")
+		|| ((tmp->prev && ft_strcmp(tmp->type, "PIPE") && !ft_strcmp(tmp->prev->type, "FILE")
 					&& ft_strcmp(tmp->content, ">") && ft_strcmp(tmp->content,
 						"<") && ft_strcmp(tmp->content, ">>")
 					&& ft_strcmp(tmp->content, "<<") && ft_strcmp(tmp->content,
