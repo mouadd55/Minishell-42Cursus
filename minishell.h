@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/29 12:05:03 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/29 19:23:24 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ typedef struct s_env
 
 typedef struct s_command
 {
-	char			**cmd;   // {"ls", "-la", NULL}
-	int				fd_in;  //0
-	int				fd_out; //1
+	char				**cmd;
+	int					fd_in;
+	int					fd_out;
 	struct s_command	*link;
 	struct s_command	*prev;
 }	t_command;
@@ -119,7 +119,7 @@ void		expand_var(t_list **list, t_env *envr);
 /**************************** Builtins functions *****************************/
 
 void		sort_env(t_env *env);
-void		ft_exit(t_list **list);
+void		ft_exit(char **cmd, t_list *list);
 int			check_type(char *type);
 int			check_valid_var(char *var);
 void		print_export(t_env *temp3);
@@ -135,7 +135,7 @@ void		env_parsing(char *input, t_env *env);
 void		mooooore_steps(t_vars *v, t_env **env);
 void		delete_node(t_env **env, int position);
 int			export_parsing(t_list **list, t_env **env);
-void		check_cmd(t_list **list, t_env **envr, char *input, int fd);
+void		check_cmd(t_list **list, t_env **envr, char **cmd, int fd);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
 int			open_files(t_list *list, t_command **final_list);

@@ -6,90 +6,43 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/22 20:51:13 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/29 19:31:25 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_typee(char *type)
+int	ft_isdigit(char *str)
 {
-	if (ft_strcmp(type, "APPEND") && ft_strcmp(type, "INPUT")
-		&& ft_strcmp(type, "OUTPUT") && ft_strcmp(type, "HEREDOC")
-		&& ft_strcmp(type, "FILE") && ft_strcmp(type, "DELIMITER")
-		&& ft_strcmp(type, "space"))
-		return (1);
-	return (0);
+	int	i;
+
+	i = 0;
+	if (str[i] && (str[i] == '-' || str[i] == '+'))
+		if (!str[++i])
+			return (0);
+	while (str[i])
+		if (!(str[i] >= '0' && str[i++] <= '9'))
+			return (0);
+	return (1);
 }
 
-void	join_nodes_of_type_arg(t_vars *v)
+void	ft_exit(char **cmd, t_list *list)
 {
-	while (v->tmp1 && v->tmp1->type[0] == 's')
-		v->tmp1 = v->tmp1->link;
-	while (v->tmp1 && v->tmp1->type[0] == 'a' && check_type(v->tmp1->type))
-	{
-		v->vars++;
-		if (v->tmp1->type[0] == 'D')
-			v->var = ft_strjoin(v->var, ft_strtrim(v->tmp1->content, "\""));
-		else if (v->tmp1->type[0] == 'S')
-			v->var = ft_strjoin(v->var, ft_strtrim(v->tmp1->content, "\'"));
-		else
-			v->var = ft_strjoin(v->var, v->tmp1->content);
-		v->tmp1 = v->tmp1->link;
-	}
-}
+	int	i;
+	int	flag;
 
-t_list	*lexer_for_exit(t_list **list)
-{
-	t_list	*tmp;
-
-	tmp = *list;
-	tmp = tmp->link->link;
-	while (tmp && check_type(tmp->type))
+	i = 0;
+	flag = 0;
+	while (cmd[++i])
 	{
-		if (tmp->type[0] != 's')
+		if (ft_isdigit(cmd[i]))
+			flag++;
+		if (flag == 0)
 		{
-			free(tmp->type);
-			tmp->type = ft_strdup("arg");
+			printf("exit\nminishell: exit: %s: numeric argument required\n", cmd[i]);
+			exit (0);
 		}
-		tmp = tmp->link;
+		else if (flag == 2 && i == 2)
+			printf("exit\nminishell: exit: too many arguments\n");
 	}
-	return ((*list)->link->link);
 }
-
-
-void	ft_exit(t_list **list)
-{
-	t_vars	v;
-
-	v.tmp1 = *list;
-	v.vars = 0;
-	while (v.tmp1)
-	{
-		if (!ft_strcmp(v.tmp1->type, "PIPE"))
-			return ;
-		v.tmp1 = v.tmp1->link;
-	}
-	v.tmp1 = *list;
-	while (v.tmp1 && ft_strcmp(v.tmp1->content, "exit"))
-		v.tmp1 = v.tmp1->link;
-	v.tmp1 = v.tmp1->link;		
-	while (v.tmp1 && check_typee(v.tmp1->type))
-		v.tmp1 = v.tmp1->link;
-	// lexer_for_exit(&v.tmp1);
-	// while (v.tmp1)
-	// {
-	// 	v.var = NULL;
-	// 	join_nodes_of_type_arg(&v);
-	// }
-}
-
-// if (v.tmp1->link && v.tmp1->link->link
-// 	&& (!check_type(v.tmp1->link->type) || !check_type(v.tmp1->link->link->type)))
-// 	printf("exit\n");
-// else if (v.tmp1->link && v.tmp1->link->link)
-// 	printf("exit\nminishell: exit: %s: numeric argument required\n",
-// 		v.tmp1->link->link->content);
-// else
-// 	printf("exit\n");
-// exit(0);

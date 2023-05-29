@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/27 14:45:00 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/29 19:23:01 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	change_dir(t_list *list, t_env **envr, int fd)
 	change_dir_2(list, envr, fd);
 }
 
-void	check_cmd(t_list **list, t_env **envr, char *input, int fd)
+void	check_cmd(t_list **list, t_env **envr, char **cmd, int fd)
 {
 	t_list	*tmp;
 	t_env	*env_copy;
@@ -153,15 +153,8 @@ void	check_cmd(t_list **list, t_env **envr, char *input, int fd)
 		echo(*list, fd);
 	else if (*list && !ft_strcmp((*list)->content, "cd"))
 		change_dir(*list, envr, fd);
-	else if (ft_strnstr(input, "exit", ft_strlen(input)))
-	{
-		while (tmp)
-		{
-			if (!ft_strcmp(tmp->content, "exit"))
-				ft_exit(list);
-			tmp = tmp->link;
-		}
-	}
+	else if (!ft_strcmp(cmd[0], "exit"))
+		ft_exit(cmd, *list);
 	else if (list && !strcmp("pwd", strlower((*list)->content)))
 		pwd(fd);
 	else if (*list && !(*list)->prev && (*list)->link
@@ -173,6 +166,6 @@ void	check_cmd(t_list **list, t_env **envr, char *input, int fd)
 		sort_env(env_copy);
 		ft_destroy_list_env(&env_copy);
 	}
-	if (ft_strlen(input) && (export_parsing(list, envr)))
+	if (export_parsing(list, envr))
 		return ;
 }
