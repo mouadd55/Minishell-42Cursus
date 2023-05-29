@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:43 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/09 16:19:19 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/29 15:31:49 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,3 +22,4 @@ void	syntax_error(char *s2, char e)
 	ft_putchar('\n', 2);
 	return ;
 }
+

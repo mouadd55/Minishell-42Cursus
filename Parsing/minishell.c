@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/28 19:01:43 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/29 15:56:01 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,29 @@ int open_files(t_list *list)
 	return (fd);
 }
 
+void	recreate_list(t_command *final_list, char *input, t_env **envr)
+{
+	t_vars	v;
+
+	v.str = NULL;
+	while (final_list)
+	{
+		v.i = 0;
+		while (final_list->cmd[v.i])
+		{
+			v.str = ft_strjoin(v.str, final_list->cmd[v.i]);
+			v.str = ft_strjoin(v.str, " ");
+			v.i++;
+		}
+		v.tmp1 = ft_split_input(v.str);
+		lexer(&v.tmp1);
+		check_cmd(&v.tmp1, envr, input, 0);
+		free(v.str);
+		v.str = NULL;
+		final_list = final_list->link;
+	}
+}
+
 void	minihell(char *input, t_env **envr, t_list **lst)
 {
 	int fd;
@@ -173,7 +196,8 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 		expand_var(lst, *envr);
 		fd = open_files(*lst);
 		create_final_list(*lst, &final_list);
-		check_cmd(lst, envr, input, fd);
+		recreate_list(final_list, input, envr);
+		// check_cmd(lst, envr, input, fd);
 		final(final_list);
 		// open_files(*lst);
 		ft(*lst);
