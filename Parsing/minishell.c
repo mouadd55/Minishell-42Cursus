@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/31 14:23:55 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/31 15:18:08 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	recreate_list(t_command *final_list, t_env **envr)
 		{
 			v.tmp1 = ft_split_input(v.str);
 			lexer(&v.tmp1);
-			check_cmd(&v.tmp1, envr, -1);
+			check_cmd(&v.tmp1, envr, final_list);
 			free(v.str);
 			v.str = NULL;
 		}
@@ -125,9 +125,9 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 		expand_var(lst, *envr);
 		// ft(*lst);
 		create_final_list(*lst, &final_list);
-		recreate_list(final_list, envr);
 		open_files(*lst, &final_list);
-		final(final_list);
+		recreate_list(final_list, envr);
+		// final(final_list);
 	}
 }
 
