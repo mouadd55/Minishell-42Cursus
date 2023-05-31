@@ -6,11 +6,38 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/29 19:31:25 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/31 14:02:08 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+long long	ft_atoi(const char *str)
+{
+	long long	i;
+	long long	sign;
+	long long	res;
+
+	i = 0;
+	sign = 1;
+	res = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9' && str[i])
+	{
+		res *= 10;
+		res += str[i] - 48;
+		i++;
+	}
+	return (res * sign);
+}
 
 int	ft_isdigit(char *str)
 {
@@ -26,23 +53,38 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
-void	ft_exit(char **cmd, t_list *list)
+void	ft_exit(char **cmd, t_command *final)
 {
-	int	i;
-	int	flag;
+	t_vars	v;
 
-	i = 0;
-	flag = 0;
-	while (cmd[++i])
+	v.i = 0;
+	v.j = 0;
+	v.flag = 0;
+	while (cmd && cmd[++v.i])
 	{
-		if (ft_isdigit(cmd[i]))
-			flag++;
-		if (flag == 0)
+		if (ft_isdigit(cmd[v.i]))
 		{
-			printf("exit\nminishell: exit: %s: numeric argument required\n", cmd[i]);
+			v.flag++;
+			if (ft_atoi(cmd[v.i]) > LLONG_MAX || ft_atoi(cmd[v.i]) < LLONG_MIN)
+			{
+				printf("exit\nminishell: exit: %s: numeric argument required\n", cmd[v.i]);
+				exit (0);
+			}
+		}
+		if (v.flag == 0)
+		{
+			printf("exit\nminishell: exit: %s: numeric argument required\n", cmd[v.i]);
 			exit (0);
 		}
-		else if (flag == 2 && i == 2)
+		else if (v.flag == 2 && v.i == 2)
+		{
+			v.j++;
 			printf("exit\nminishell: exit: too many arguments\n");
+		}
+	}
+	if (final && !final->link && !final->prev && v.j == 0)
+	{
+		printf("exit\n");
+		exit (0);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/29 19:23:24 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/31 14:04:37 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include "string.h"
+# include "limits.h"
 # include <readline/history.h>
 # include <readline/readline.h>
 
@@ -119,7 +120,6 @@ void		expand_var(t_list **list, t_env *envr);
 /**************************** Builtins functions *****************************/
 
 void		sort_env(t_env *env);
-void		ft_exit(char **cmd, t_list *list);
 int			check_type(char *type);
 int			check_valid_var(char *var);
 void		print_export(t_env *temp3);
@@ -135,7 +135,8 @@ void		env_parsing(char *input, t_env *env);
 void		mooooore_steps(t_vars *v, t_env **env);
 void		delete_node(t_env **env, int position);
 int			export_parsing(t_list **list, t_env **env);
-void		check_cmd(t_list **list, t_env **envr, char **cmd, int fd);
+void		ft_exit(char **cmd, t_command *final);
+void		check_cmd(t_list **list, t_env **envr, int fd);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
 int			open_files(t_list *list, t_command **final_list);
@@ -146,5 +147,7 @@ t_command	*lstnew_final(char **command, int fd_in, int fd_out);
 t_command	*lstlast_final(t_command *head);
 void		lstadd_back_final(t_command **head, t_command *new);
 void		switch_space(char *input, int x);
+char	*spaces_in_quotes_utils(char *str, int idx);
+void	spaces_in_quotes(t_command **final_list);
 
 #endif

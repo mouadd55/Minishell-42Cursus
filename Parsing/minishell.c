@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/29 19:31:54 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/31 14:04:54 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,25 @@ void	recreate_list(t_command *final_list, t_env **envr)
 		v.i = 0;
 		while (final_list->cmd[v.i])
 		{
-			v.str = ft_strjoin(v.str, final_list->cmd[v.i]);
+			v.tmp = spaces_in_quotes_utils(final_list->cmd[v.i], 1);
+			v.str = ft_strjoin(v.str, v.tmp);
 			v.str = ft_strjoin(v.str, " ");
 			v.i++;
 		}
-		v.tmp1 = ft_split_input(v.str);
-		lexer(&v.tmp1);
-		check_cmd(&v.tmp1, envr, final_list->cmd, 0);
-		free(v.str);
-		v.str = NULL;
+		if (v.str)
+		{
+			v.tmp1 = ft_split_input(v.str);
+			lexer(&v.tmp1);
+			check_cmd(&v.tmp1, envr, -1);
+			free(v.str);
+			v.str = NULL;
+		}
+		// ft(v.tmp1);
+		if (!ft_strcmp(final_list->cmd[0], "exit"))
+			ft_exit(final_list->cmd, final_list);
 		final_list = final_list->link;
 	}
+	spaces_in_quotes(&final_list);
 }
 
 void	minihell(char *input, t_env **envr, t_list **lst)
