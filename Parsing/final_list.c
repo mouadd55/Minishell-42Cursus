@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   final_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 20:43:41 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/29 17:39:07 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/31 18:39:08 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	spaces_in_quotes(t_command **final_list)
 	{
 		j = 0;
 		i = -1;
-		while (tmp->cmd[++i])
+		while (tmp->cmd && tmp->cmd[++i])
 			tmp->cmd[i] = spaces_in_quotes_utils(tmp->cmd[i], 0);
 		tmp = tmp->link;
 	}

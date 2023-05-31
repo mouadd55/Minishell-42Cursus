@@ -6,11 +6,54 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/31 14:02:08 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/31 16:29:23 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	nbr_len(long nbr)
+{
+	int	len;
+
+	len = 0;
+	if (nbr <= 0)
+		len++;
+	while (nbr != 0)
+	{
+		len++;
+		nbr /= 10;
+	}
+	return (len);
+}
+
+char	*ft_itoa(long long n)
+{
+	int		len;
+	char	*str;
+	long long	nb;
+
+	nb = n;
+	len = nbr_len(nb);
+	str = malloc(len * sizeof(char) + 1);
+	if (!str)
+		return (NULL);
+	if (nb < 0)
+	{
+		str[0] = '-';
+		nb *= (-1);
+	}
+	if (nb == 0)
+		str[0] = '0';
+	str[len--] = '\0';
+	while (nb != 0)
+	{
+		str[len--] = nb % 10 + 48;
+		nb /= 10;
+	}
+	return (str);
+}
+
 
 long long	ft_atoi(const char *str)
 {
@@ -62,10 +105,15 @@ void	ft_exit(char **cmd, t_command *final)
 	v.flag = 0;
 	while (cmd && cmd[++v.i])
 	{
+		if (!ft_strcmp("-9223372036854775808", cmd[v.i]))
+		{
+			printf("exit\n");
+			exit (0);
+		}
 		if (ft_isdigit(cmd[v.i]))
 		{
 			v.flag++;
-			if (ft_atoi(cmd[v.i]) > LLONG_MAX || ft_atoi(cmd[v.i]) < LLONG_MIN)
+			if (ft_strcmp(cmd[v.i], ft_itoa(ft_atoi(cmd[v.i]))))
 			{
 				printf("exit\nminishell: exit: %s: numeric argument required\n", cmd[v.i]);
 				exit (0);
@@ -76,7 +124,7 @@ void	ft_exit(char **cmd, t_command *final)
 			printf("exit\nminishell: exit: %s: numeric argument required\n", cmd[v.i]);
 			exit (0);
 		}
-		else if (v.flag == 2 && v.i == 2)
+		else if ((v.flag == 2 && v.i == 2) || (v.flag == 1 && v.i == 2))
 		{
 			v.j++;
 			printf("exit\nminishell: exit: too many arguments\n");

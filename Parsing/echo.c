@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/31 15:20:52 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/31 15:35:31 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	change_dir(t_env **envr, t_command *f_list)
 void	check_cmd(t_list **list, t_env **envr, t_command *f_list)
 {
 	t_list	*tmp;
-	// t_env	*env_copy;
+	t_env	*env_copy;
 
 	tmp = *list;
 	if (f_list && !ft_strcmp(f_list->cmd[0], "echo"))
@@ -119,17 +119,15 @@ void	check_cmd(t_list **list, t_env **envr, t_command *f_list)
 		change_dir(envr, f_list);
 	else if (f_list && !ft_strcmp("pwd", strlower(f_list->cmd[0])))
 		pwd(f_list);
-	// // else if (!ft_strcmp(cmd[0], "exit"))
-	// 	// ft_exit(cmd, *list, 0);
-	// else if (*list && !(*list)->prev && (*list)->link
-	// 	&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
-	// 	unset(list, envr);
-	// if (ft_lstsize(*list) == 1 && !ft_strcmp((*list)->content, "export"))
-	// {
-	// 	env_copy = ft_copy_env_list(*envr);
-	// 	sort_env(env_copy);
-	// 	ft_destroy_list_env(&env_copy);
-	// }
-	// if (export_parsing(list, envr))
-	// 	return ;
+	else if (*list && !(*list)->prev && (*list)->link
+		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
+		unset(list, envr);
+	if (ft_lstsize(*list) == 1 && !ft_strcmp((*list)->content, "export"))
+	{
+		env_copy = ft_copy_env_list(*envr);
+		sort_env(env_copy);
+		ft_destroy_list_env(&env_copy);
+	}
+	if (export_parsing(list, envr))
+		return ;
 }

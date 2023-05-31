@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
+#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/29 12:05:42 by yonadry          ###   ########.fr        #
+#    Updated: 2023/05/31 20:33:03 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -g -O1 #-fsanitize=address
+CFLAGS	= -Wall -Wextra -g -O1 -fsanitize=address
 OBJDIR	= Object_files/
 R		= \x1B[91m
 G		= \x1B[32m
@@ -20,7 +20,6 @@ W		= \x1B[0m
 B		= \033[1m
 SRC		=	\
 			Parsing/echo.c \
-			Parsing/ft_printf_fd.c \
 			Parsing/exit.c \
 			Parsing/input.c \
 			Parsing/unset.c \
@@ -32,14 +31,15 @@ SRC		=	\
 			Parsing/minishell.c \
 			Parsing/final_list.c \
 			Parsing/list_utils.c \
+			Parsing/open_files.c \
 			Parsing/environment.c \
+			Parsing/ft_printf_fd.c \
 			Parsing/libft_utils1.c \
 			Parsing/libft_utils2.c \
 			Parsing/libft_utils3.c \
 			Parsing/libft_utils4.c \
 			Parsing/export_utils1.c \
 			Parsing/export_utils2.c \
-			Parsing/open_files.c \
 			Parsing/lexer_for_export.c \
 
 OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))

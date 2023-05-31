@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/31 15:18:08 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/31 18:47:18 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	recreate_list(t_command *final_list, t_env **envr)
 	while (final_list)
 	{
 		v.i = 0;
-		while (final_list->cmd[v.i])
+		while (final_list->cmd && final_list->cmd[v.i])
 		{
 			v.tmp = spaces_in_quotes_utils(final_list->cmd[v.i], 1);
 			v.str = ft_strjoin(v.str, v.tmp);
@@ -104,7 +104,7 @@ void	recreate_list(t_command *final_list, t_env **envr)
 			v.str = NULL;
 		}
 		// ft(v.tmp1);
-		if (!ft_strcmp(final_list->cmd[0], "exit"))
+		if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "exit"))
 			ft_exit(final_list->cmd, final_list);
 		final_list = final_list->link;
 	}
@@ -123,7 +123,7 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 	if (lst)
 	{
 		expand_var(lst, *envr);
-		// ft(*lst);
+		ft(*lst);
 		create_final_list(*lst, &final_list);
 		open_files(*lst, &final_list);
 		recreate_list(final_list, envr);

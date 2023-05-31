@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/30 15:31:06 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/31 15:32:51 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	switch_space(char *input, int x)
 {
 	t_vars	v;
 
-	v.i = -1;
-	while (input[++v.i] && x)
+	v.i = 0;
+	while (input[v.i] && x)
 	{
 		if (input[v.i] == '\'')
 		{
@@ -38,11 +38,13 @@ void	switch_space(char *input, int x)
 				if (is_space(input[v.i]))
 					input[v.i] *= -1;
 		}
+		v.i++;
 	}
-	while (input[++v.i] && !x)
+	while (input[v.i] && !x)
 	{
 		if (input[v.i] < 0)
 			input[v.i] *= -1;
+		v.i++;
 	}
 }
 

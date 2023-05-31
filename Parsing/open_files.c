@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/31 14:19:49 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/31 20:31:40 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void open_files(t_list *list, t_command **final_list)
 				list = list->link;
 			if (!ft_strcmp("VAR", list->type))
 			{
-				ft_printf_fd("Minishell: %s: ambiguous redirect\n", 2,list->content);
+				ft_printf_fd("minishell: %s: ambiguous redirect\n", 2,list->content);
 				tmp->fd_out = -1;
 				tmp->fd_in = -1;
 				while (list && ft_strcmp("PIPE", list->type))
