@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/31 14:04:37 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/05/31 14:22:17 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void		ft_exit(char **cmd, t_command *final);
 void		check_cmd(t_list **list, t_env **envr, int fd);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
-int			open_files(t_list *list, t_command **final_list);
+void		open_files(t_list *list, t_command **final_list);
 int			ft_printf_fd(const char *first, int fd, ...);
 int			count_commands(t_list *list);
 void		create_final_list(t_list *list, t_command **final_list);
@@ -147,7 +147,7 @@ t_command	*lstnew_final(char **command, int fd_in, int fd_out);
 t_command	*lstlast_final(t_command *head);
 void		lstadd_back_final(t_command **head, t_command *new);
 void		switch_space(char *input, int x);
-char	*spaces_in_quotes_utils(char *str, int idx);
-void	spaces_in_quotes(t_command **final_list);
+char		*spaces_in_quotes_utils(char *str, int idx);
+void		spaces_in_quotes(t_command **final_list);
 
 #endif
