@@ -122,11 +122,11 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 	*envr = ft_builtins(input, envr);
 	if (lst)
 	{
-		expand_var(lst, *envr);
+		expand_var(lst, *envr, 1);
 		create_final_list(*lst, &final_list);
 		open_files(*lst, &final_list, envr);
 		// recreate_list(final_list, envr);
-		// ft(*lst);
+		ft(*lst);
 		// final(final_list);
 	}
 }

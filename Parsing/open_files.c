@@ -36,44 +36,26 @@ char *is_redir(t_list *list)
 	return (0);
 }
  
-// t_list *handle_file(t_list *list, t_command *f_lst, char *file_name, char *type)
-// {
-// 	int fd;
-
-// 	while (list)
-// 	{
-// 		if (!ft_strcmp("FILE", list->type))
-// 			file_name = ft_strjoin(file_name, list->content);
-// 		if (file_name && (list->type[0] == 's' || (!list->link)))
-// 		{
-// 			fd = open_file(file_name, type);
-// 			file_name = NULL;
-// 		}
-// 		list = list->link;
-// 	}
-// 	if ((!ft_strcmp(type, ">>") || !ft_strcmp(type, ">")))
-// 		f_lst->fd_out = fd;
-// 	else if (!ft_strcmp(type, "<"))
-// 		f_lst->fd_in = fd;
-// 	if (list && !ft_strcmp(list->content, "|"))
-// 		return (list);
-// 	return (list);
-// }
-void expand_in_here_doc(char *input, t_env **envr)
+char *expand_in_here_doc(char *input, t_env **envr, int istrue)
 {
 	t_vars v;
 
+	v.str = NULL;
 	if (!input)
 		return;
 	v.tmp1 = ft_split_input(input);
 	lexer(&v.tmp1);
-	expand_in_quotes(&v.tmp1, *envr);
+	if (!istrue)
+	{
+		expand_in_quotes(&v.tmp1, *envr, "SINGLE_Q");
+		expand_var(&v.tmp1, *envr, 0);
+	}
 	while (v.tmp1)
 	{
-		printf("%s -", v.tmp1->content);
+		v.str = ft_strjoin(v.str, v.tmp1->content);
 		v.tmp1 = v.tmp1->link;
 	}
-	printf("\n");
+	return (v.str);
 }
 
 void open_heredoc(t_list *list, t_command **final_list, t_env **envr)
@@ -81,6 +63,7 @@ void open_heredoc(t_list *list, t_command **final_list, t_env **envr)
 	t_vars v;
 
 	v.val = NULL;
+	v.flag = 0;
 	while (list)
 	{
 		if (!ft_strcmp(list->type, "HEREDOC"))
@@ -105,19 +88,20 @@ void open_heredoc(t_list *list, t_command **final_list, t_env **envr)
 				list = list->link;
 			}
 			v.fd = open(".heredoc", O_CREAT | O_RDWR | O_APPEND, 0777);
-			printf("|| %d ||\n", v.fd);
 			while (1)
 			{
 				v.str = readline("Heredoc> ");
-				if (!ft_strcmp(v.str, v.val))
+				if (!v.str || !ft_strcmp(v.str, v.val))
 				{
+					if (!v.str)
+						ft_printf_fd("Minishell: warning: here-document delimited by end-of-file (wanted '%s')", 2, v.val);
 					free(v.str);
+					free(v.val);
 					close(v.fd);
 					break;
 				}
 				if (check_char(v.str, '$'))
-					expand_in_here_doc(v.str, envr);
-				// else if ()
+					v.str = expand_in_here_doc(v.str, envr, v.flag);
 				ft_printf_fd("%s\n", v.fd, v.str);
 				free(v.str);
 			}
@@ -127,7 +111,6 @@ void open_heredoc(t_list *list, t_command **final_list, t_env **envr)
 			break;
 		list = list->link;
 	}
-	
 }
 
 void open_files(t_list *list, t_command **final_list, t_env **envr)

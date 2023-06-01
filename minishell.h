@@ -21,6 +21,7 @@
 # include "limits.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 
 typedef struct s_list
 {
@@ -108,7 +109,7 @@ void		*ft_destroy_list_env(t_env **head);
 t_env		*ft_lstnew_env(char *key, char *value);
 void		ft_lstadd_back(t_list **head, t_list *new);
 void		ft_lstadd_back_env(t_env **head, t_env *new);
-
+#include <signal.h>
 /***************************** Parsing functions ******************************/
 
 void		lexer(t_list **list);
@@ -116,7 +117,7 @@ int			check_syntax(t_list *lst);
 t_list		*ft_split_input(char *input);
 void		syntax_error(char *s2, char e);
 size_t		ft_count_char(char *input, char c);
-void		expand_var(t_list **list, t_env *envr);
+void		expand_var(t_list **list, t_env *envr, int rm_quotes);
 
 /**************************** Builtins functions *****************************/
 
@@ -150,6 +151,6 @@ void		lstadd_back_final(t_command **head, t_command *new);
 void		switch_space(char *input, int x);
 char		*spaces_in_quotes_utils(char *str, int idx);
 void		spaces_in_quotes(t_command **final_list);
-void		expand_in_quotes(t_list **list, t_env *envr);
+void		expand_in_quotes(t_list **list, t_env *envr, char *type);
 
 #endif

@@ -144,7 +144,7 @@ void	expand_in_quotes_2(t_list *temp, t_env *envr, t_vars *v, char **save)
 	}
 }
 
-void	expand_in_quotes(t_list **list, t_env *envr)
+void	expand_in_quotes(t_list **list, t_env *envr, char *type)
 {
 	t_list	*temp;
 	t_vars	v;
@@ -157,7 +157,7 @@ void	expand_in_quotes(t_list **list, t_env *envr)
 	while (temp)
 	{
 		v.i = 0;
-		if (check_char(temp->content, '$') && (!ft_strcmp("DOUBLE_Q",
+		if (check_char(temp->content, '$') && (!ft_strcmp(type,
 				temp->type) || (!ft_strcmp("FILE", temp->type)
 				&& temp->content[0] == '\"')))
 		{
@@ -197,7 +197,7 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 	}
 }
 
-void	expand_var(t_list **list, t_env *envr)
+void	expand_var(t_list **list, t_env *envr, int rm_quotes)
 {
 	t_list	*tmp;
 	t_vars	v;
@@ -209,8 +209,9 @@ void	expand_var(t_list **list, t_env *envr)
 		expand_var_2(list, &tmp, envr, &v);
 		tmp = tmp->link;
 	}
-	expand_in_quotes(list, envr);
-	remove_quotes_dollar(list);
+	expand_in_quotes(list, envr, "DOUBLE_Q");
+	if (rm_quotes)
+		remove_quotes_dollar(list);
 	tmp = *list;
 	while (tmp)
 	{
