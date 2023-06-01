@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/27 19:43:15 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/05/31 22:47:18 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void	expand_in_quotes(t_list **list, t_env *envr)
 	{
 		v.i = 0;
 		if (check_char(temp->content, '$') && (!ft_strcmp("DOUBLE_Q",
-				temp->type) || (!ft_strcmp("FILE",temp->type)
+				temp->type) || (!ft_strcmp("FILE", temp->type)
 				&& temp->content[0] == '\"')))
 		{
 			expand_in_quotes_2(temp, envr, &v, &save);

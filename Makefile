@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
+#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/31 20:33:03 by moudrib          ###   ########.fr        #
+#    Updated: 2023/05/31 21:57:06 by yonadry          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -g -O1 -fsanitize=address
+CFLAGS	= -Wall -Wextra -g #-O1 -fsanitize=address
 OBJDIR	= Object_files/
 R		= \x1B[91m
 G		= \x1B[32m
