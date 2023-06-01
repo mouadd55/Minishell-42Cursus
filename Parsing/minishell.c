@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/31 22:34:14 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/01 14:05:35 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,8 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 		expand_var(lst, *envr, 1);
 		create_final_list(*lst, &final_list);
 		open_files(*lst, &final_list, envr);
-		// recreate_list(final_list, envr);
-		ft(*lst);
+		recreate_list(final_list, envr);
+		// ft(*lst);
 		// final(final_list);
 	}
 }

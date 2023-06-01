@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/31 22:44:00 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/01 14:27:53 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strnstr(const char *str, const char *to_find, size_t len);
 char		is_special(char c);
+char		*ft_itoa(long long n);
 /********************************* List utils *********************************/
 
 int			ft_lstsize(t_list *lst);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/05/31 15:35:31 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/01 15:03:45 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	change_dir_2(t_env **envr, t_command *f_list)
 
 	env = *envr;
 	pwd = getcwd(NULL, 0);
-	if (f_list->cmd[1] && ~chdir(f_list->cmd[1]))
+	if (f_list->cmd[1] && chdir(f_list->cmd[1]))
 	{
 		env = *envr;
 		while (env)
