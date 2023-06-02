@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/01 14:27:53 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/02 15:18:39 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,8 @@ void		switch_space(char *input, int x);
 char		*spaces_in_quotes_utils(char *str, int idx);
 void		spaces_in_quotes(t_command **final_list);
 void		expand_in_quotes(t_list **list, t_env *envr, char *type);
+
+void	catching_signals(int sig);
+void	*ft_destroy_final(t_command **head);
 
 #endif

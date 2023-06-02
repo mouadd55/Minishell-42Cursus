@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 16:45:14 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/19 13:52:40 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/02 15:19:15 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_list	*ft_lstnew(char *content)
 	if (!head)
 		return (NULL);
 	head->content = content;
+	head->type = NULL;
 	head->link = NULL;
 	head->prev = NULL;
 	return (head);
@@ -63,7 +64,8 @@ void	*ft_destroy_list(t_list **head)
 	{
 		tmp = (*head)->link;
 		free((*head)->content);
-		free((*head)->type);
+		if ((*head)->type)
+			free((*head)->type);
 		free(*head);
 		(*head) = tmp;
 	}

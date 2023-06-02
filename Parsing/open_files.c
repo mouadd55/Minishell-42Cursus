@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/01 14:59:42 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/02 18:37:46 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,15 @@ void open_files(t_list *list, t_command **final_list, t_env **envr)
 				}
 				list = v.tmp1;
 				if (v.str)
+				{
 					v.fd = open_file(v.str, type);
+					free(v.str);
+					if (v.fd == -1)
+					{
+						while (list && ft_strcmp("PIPE", list->type))
+							list = list->link;
+					}
+				}
 			}
 		}
 		if (type && tmp)

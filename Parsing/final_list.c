@@ -6,11 +6,29 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 20:43:41 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/31 18:39:08 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/02 18:29:38 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	*ft_destroy_final(t_command **head)
+{
+	t_command	*tmp;
+
+	if (!head || !*head)
+		return (0);
+	tmp = *head;
+	while (tmp)
+	{
+		tmp = (*head)->link;
+		if ((*head)->cmd)
+			ft_free_arr((*head)->cmd);
+		free(*head);
+		(*head) = tmp;
+	}
+	return (0);
+}
 
 t_command	*lstnew_final(char **command, int fd_in, int fd_out)
 {
@@ -103,19 +121,19 @@ char	*spaces_in_quotes_utils(char *str, int idx)
 		i++;
 	}
 	updated_str[i] = '\0';
+	if (idx == 0)
+		free(str);
 	return (updated_str);
 }
 
 void	spaces_in_quotes(t_command **final_list)
 {
 	int			i;
-	int			j;
 	t_command	*tmp;
 
 	tmp = *final_list;
 	while (tmp)
 	{
-		j = 0;
 		i = -1;
 		while (tmp->cmd && tmp->cmd[++i])
 			tmp->cmd[i] = spaces_in_quotes_utils(tmp->cmd[i], 0);
@@ -133,10 +151,12 @@ void	create_final_list(t_list *list, t_command **final_list)
 	{
 		while (list && ft_strcmp(list->type, "PIPE"))
 		{
-			if (list->type[0] == 'S' || list->type[0] == 'D')
+			if (list->type[0] == 'S' || !ft_strcmp(list->type, "DOUBLE_Q"))
 			{
 				v.tmp = spaces_in_quotes_utils(list->content, 1);
 				v.str = ft_strjoin(v.str, v.tmp);
+				free(v.tmp);
+				v.tmp = NULL;
 			}
 			if (list->type[0] == 'C' || !ft_strcmp(list->type, "FLAG"))
 				v.str = ft_strjoin(v.str, list->content);

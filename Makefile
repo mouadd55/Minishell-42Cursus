@@ -3,21 +3,23 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
+#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/05/31 21:57:06 by yonadry          ###   ########.fr        #
+#    Updated: 2023/06/01 20:05:39 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -g #-O1 -fsanitize=address
+CFLAGS	= -Wall -Wextra -g -O1 #-fsanitize=address #-Werror
 OBJDIR	= Object_files/
 R		= \x1B[91m
 G		= \x1B[32m
 W		= \x1B[0m
 B		= \033[1m
+LIB 	= $(shell brew --prefix readline)/lib 
+INC 	= $(shell brew --prefix readline)/include
 SRC		=	\
 			Parsing/echo.c \
 			Parsing/exit.c \
@@ -26,6 +28,7 @@ SRC		=	\
 			Parsing/lexer.c \
 			Parsing/export.c \
 			Parsing/expand.c \
+			Parsing/signals.c \
 			Parsing/parsing1.c \
 			Parsing/parsing2.c \
 			Parsing/minishell.c \
@@ -47,7 +50,7 @@ OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lreadline -L $(LIB)
 #@clear
 #@echo
 #@echo "$(G)Minishell compilation done ✔️"
@@ -64,7 +67,7 @@ $(NAME): $(OBJ)
 
 $(OBJDIR)%.o: %.c minishell.h
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -I $(INC) -c $< -o $@
 	@echo "$(G)Compiling: $(W)$<"
 
 clean:

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/23 16:21:27 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/02 16:58:53 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@ void	join_variable_values(t_vars *v)
 		v->tmp1 = v->tmp1->link;
 	while (v->tmp1 && v->tmp1->type[0] == 'v' && check_type(v->tmp1->type))
 	{
-		v->val = ft_strjoin(v->val, ft_strtrim(v->tmp1->content, "\"\'"));
+		v->tmp = ft_strtrim(v->tmp1->content, "\"\'");
+		v->val = ft_strjoin(v->val, v->tmp);
 		v->tmp1 = v->tmp1->link;
+		free(v->tmp);
+		v->tmp = NULL;
 	}
 	if (v->tmp1 && v->tmp1->type[0] == 'E' && check_type(v->tmp1->type))
 		v->tmp1 = v->tmp1->link;

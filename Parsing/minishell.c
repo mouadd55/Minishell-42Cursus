@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/01 14:05:35 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/02 18:35:17 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	final(t_command *list)
 	int			i;
 	t_command	*tmp;
 
+	if (!list)
+		return ;
 	tmp = list;
 	printf("\n\e[1m\e[93m-----------------------------------------------------------------------\n");
 	printf("|                            Final List                               |\n");
@@ -44,7 +46,7 @@ void	final(t_command *list)
 		printf("|    ---------------------------------------                          |\n");
 		printf("|    |               Command               |                          |\n");
 		printf("|    ---------------------------------------                          |\n");
-		while (tmp->cmd[i])
+		while (tmp->cmd && tmp->cmd[i])
 		{
 			printf("|    |%37s|                          |\n", tmp->cmd[i]);
 			i++;
@@ -84,14 +86,15 @@ void	recreate_list(t_command *final_list, t_env **envr)
 {
 	t_vars	v;
 
-	v.str = NULL;
 	while (final_list)
 	{
 		v.i = 0;
+		v.str = NULL;
 		while (final_list->cmd && final_list->cmd[v.i])
 		{
 			v.tmp = spaces_in_quotes_utils(final_list->cmd[v.i], 1);
 			v.str = ft_strjoin(v.str, v.tmp);
+			free(v.tmp);
 			v.str = ft_strjoin(v.str, " ");
 			v.i++;
 		}
@@ -100,10 +103,10 @@ void	recreate_list(t_command *final_list, t_env **envr)
 			v.tmp1 = ft_split_input(v.str);
 			lexer(&v.tmp1);
 			check_cmd(&v.tmp1, envr, final_list);
+			ft_destroy_list(&v.tmp1);
 			free(v.str);
 			v.str = NULL;
 		}
-		// ft(v.tmp1);
 		if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "exit"))
 			ft_exit(final_list->cmd, final_list);
 		final_list = final_list->link;
@@ -126,13 +129,20 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 		create_final_list(*lst, &final_list);
 		open_files(*lst, &final_list, envr);
 		recreate_list(final_list, envr);
-		// ft(*lst);
-		// final(final_list);
+		ft(*lst);
+		final(final_list);
 	}
+	ft_destroy_final(&final_list);
+}
+
+void	l()
+{
+	system ("leaks minishell");
 }
 
 int	main(int ac, char **av, char **env)
 {
+	atexit(l);
 	char	*input;
 	t_env	*envr;
 	t_list	*lst;
@@ -140,8 +150,13 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 	if (ac != 1)
 		return (0);
+	lst = NULL;
 	envr = NULL;
 	envr = ft_split_environment(env);
+	// signal(SIGINT, &catching_signals);
+	// signal(SIGQUIT,SIG_IGN);
+	// signal(SIGQUIT,SIG_DFL);
+	// rl_catch_signals = 0;
 	while (1)
 	{
 		input = readline("➜  Minishell ");
@@ -154,7 +169,11 @@ int	main(int ac, char **av, char **env)
 			if (lst)
 				minihell(input, &envr, &lst);
 		}
-		// free(input);
+		ft_destroy_list(&lst);
+		free(input);
+
 	}
+	ft_destroy_list_env(&envr);
+	printf("exit");
 	return (0);
 }
