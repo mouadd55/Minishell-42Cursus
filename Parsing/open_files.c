@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/02 20:09:37 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/02 20:45:41 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	open_heredoc_2(t_vars *v, t_env **envr)
 	open_heredoc_3(v, envr);
 }
 
-void	open_heredoc(t_list *list, t_command **final_list, t_env **envr)
+void	open_heredoc(t_list *list, t_env **envr)
 {
 	t_vars	v;
 
@@ -156,6 +156,7 @@ t_list	*open_the_file(t_vars *v, t_list *list, t_command **tmp)
 			}
 		}
 	}
+	return (list);
 }
 
 t_list	*open_var_error(t_vars *v, t_list *list, t_command **tmp)
@@ -194,10 +195,11 @@ void	open_files(t_list *list, t_command **final_list, t_env **envr)
 
 	tmp = *final_list;
 	v.str = NULL;
+	v.tmp_str = NULL;
 	while (list)
 	{
 		if (!ft_strcmp(list->type, "HEREDOC"))
-			open_heredoc(list, final_list, envr);
+			open_heredoc(list, envr);
 		list = open_var_error(&v, list, &tmp);
 		if (v.tmp_str && tmp)
 		{

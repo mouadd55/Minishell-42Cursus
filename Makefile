@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
+#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/02 18:38:44 by yonadry          ###   ########.fr        #
+#    Updated: 2023/06/02 20:19:54 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,6 @@ SRC		=	\
 OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
 all: $(NAME)
-	clear
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -lreadline -L $(LIB)
