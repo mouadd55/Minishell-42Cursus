@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/02 15:18:39 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/02 18:53:39 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct t_vars
 	int		count;
 	int		d_quotes;
 	char	*tmp;
+	char	*tmp_str;
 	char	*str;
 	char	*var;
 	char	*val;
@@ -153,8 +154,8 @@ void		switch_space(char *input, int x);
 char		*spaces_in_quotes_utils(char *str, int idx);
 void		spaces_in_quotes(t_command **final_list);
 void		expand_in_quotes(t_list **list, t_env *envr, char *type);
-
-void	catching_signals(int sig);
-void	*ft_destroy_final(t_command **head);
+char		*is_redir(t_list *list);
+void		catching_signals(int sig);
+void		*ft_destroy_final(t_command **head);
 
 #endif

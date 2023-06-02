@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/01 20:24:10 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/02 20:13:28 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_list	*del_node(t_list **list, t_list *del_node)
 	return (tmp1);
 }
 
-void	remove_quotes_dollar(t_list **list)
+void	remove_quotes(t_list **list)
 {
 	t_list	*temp;
 
@@ -196,6 +196,28 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 		}
 	}
 }
+void remove_dollar(t_list **list)
+{
+	t_list *tmp;
+
+	tmp = *list;
+	while (tmp)
+	{
+		if (tmp && (tmp->content[0] == '$' && tmp->link
+				&& tmp->link->content[0] != 32))
+		{
+			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
+			if (!ft_strcmp(tmp->prev->content, "<<")
+				|| !ft_strcmp(tmp->prev->prev->content, "<<"))
+				tmp->type = ft_strdup("DELIMITER");
+			else
+				tmp->type = ft_strdup("VAR");
+			if (tmp->link)
+				tmp = del_node(list, tmp->link);
+		}
+		tmp = tmp->link;
+	}
+}
 
 void	expand_var(t_list **list, t_env *envr, int rm_quotes)
 {
@@ -204,25 +226,13 @@ void	expand_var(t_list **list, t_env *envr, int rm_quotes)
 
 	v.i = 0;
 	tmp = *list;
-	while (tmp)
+	while (tmp && ft_strcmp(tmp->type, "DELIMITER"))
 	{
 		expand_var_2(list, &tmp, envr, &v);
 		tmp = tmp->link;
 	}
 	expand_in_quotes(list, envr, "DOUBLE_Q");
 	if (rm_quotes)
-		remove_quotes_dollar(list);
+		remove_quotes(list);
 	tmp = *list;
-	while (tmp)
-	{
-		if (tmp && (tmp->content[0] == '$' && tmp->link
-				&& tmp->link->content[0] != 32))
-		{
-			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
-			tmp->type = ft_strdup("VAR");
-			if (tmp->link)
-				tmp = del_node(list, tmp->link);
-		}
-		tmp = tmp->link;
-	}
 }

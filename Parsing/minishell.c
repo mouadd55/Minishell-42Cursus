@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/02 18:35:17 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/02 18:45:48 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,14 +135,14 @@ void	minihell(char *input, t_env **envr, t_list **lst)
 	ft_destroy_final(&final_list);
 }
 
-void	l()
-{
-	system ("leaks minishell");
-}
+// void	l()
+// {
+// 	system ("leaks minishell");
+// }
 
 int	main(int ac, char **av, char **env)
 {
-	atexit(l);
+	// atexit(l);
 	char	*input;
 	t_env	*envr;
 	t_list	*lst;
