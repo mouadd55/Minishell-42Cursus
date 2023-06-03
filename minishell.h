@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/02 18:53:39 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/03 11:39:20 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <stdlib.h>
 # include "string.h"
 # include "limits.h"
+# include <signal.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <signal.h>
 
 typedef struct s_list
 {
@@ -80,6 +80,8 @@ typedef struct t_vars
 
 int			is_space(int c);
 int			ft_isalpha(int ch);
+char		is_special(char c);
+char		*ft_itoa(long long n);
 char		**ft_free_arr(char **str);
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(const char *s1);
@@ -97,8 +99,6 @@ char		**ft_split(char const *s, char *c);
 int			ft_strcmp(const char *s1, const char *s2);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strnstr(const char *str, const char *to_find, size_t len);
-char		is_special(char c);
-char		*ft_itoa(long long n);
 /********************************* List utils *********************************/
 
 int			ft_lstsize(t_list *lst);
@@ -111,7 +111,7 @@ void		*ft_destroy_list_env(t_env **head);
 t_env		*ft_lstnew_env(char *key, char *value);
 void		ft_lstadd_back(t_list **head, t_list *new);
 void		ft_lstadd_back_env(t_env **head, t_env *new);
-#include <signal.h>
+
 /***************************** Parsing functions ******************************/
 
 void		lexer(t_list **list);
@@ -125,37 +125,37 @@ void		expand_var(t_list **list, t_env *envr, int rm_quotes);
 
 void		sort_env(t_env *env);
 int			check_type(char *type);
+char		*is_redir(t_list *list);
+void		catching_signals(int sig);
 int			check_valid_var(char *var);
 void		print_export(t_env *temp3);
+int			count_commands(t_list *list);
 t_env		*ft_copy_env_list(t_env *env);
 void		free_some_variables(t_vars *v);
 void		join_variable_names(t_vars *v);
+t_command	*lstlast_final(t_command *head);
 t_list		*lexer_for_unset(t_list **list);
 void		lexer_for_export(t_list **list);
+void		switch_space(char *input, int x);
 int			check_valid_variable(char *input);
 void		unset(t_list **list, t_env **env);
 t_env		*ft_split_environment(char **env);
-void		env_parsing(char *input, t_env *env);
+void		*ft_destroy_final(t_command **head);
+void		env_parsing(char **cmd, t_env *env);
+void		ft_exit(char **cmd, t_command *final);
 void		mooooore_steps(t_vars *v, t_env **env);
 void		delete_node(t_env **env, int position);
+void		spaces_in_quotes(t_command **final_list);
 int			export_parsing(t_list **list, t_env **env);
-void		ft_exit(char **cmd, t_command *final);
+char		*spaces_in_quotes_utils(char *str, int idx);
+int			ft_printf_fd(const char *first, int fd, ...);
+void		lstadd_back_final(t_command **head, t_command *new);
+t_command	*lstnew_final(char **command, int fd_in, int fd_out);
+void		create_final_list(t_list *list, t_command **final_list);
+void		expand_in_quotes(t_list **list, t_env *envr, char *type);
 void		check_cmd(t_list **list, t_env **envr, t_command *f_list);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
 void		open_files(t_list *list, t_command **final_list, t_env **envr);
-int			ft_printf_fd(const char *first, int fd, ...);
-int			count_commands(t_list *list);
-void		create_final_list(t_list *list, t_command **final_list);
-t_command	*lstnew_final(char **command, int fd_in, int fd_out);
-t_command	*lstlast_final(t_command *head);
-void		lstadd_back_final(t_command **head, t_command *new);
-void		switch_space(char *input, int x);
-char		*spaces_in_quotes_utils(char *str, int idx);
-void		spaces_in_quotes(t_command **final_list);
-void		expand_in_quotes(t_list **list, t_env *envr, char *type);
-char		*is_redir(t_list *list);
-void		catching_signals(int sig);
-void		*ft_destroy_final(t_command **head);
 
 #endif

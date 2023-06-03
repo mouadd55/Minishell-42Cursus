@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/19 20:02:25 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/03 11:13:17 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,28 @@ void	print_env(int i, int count, t_env *env)
 	}	
 }
 
-void	env_parsing(char *input, t_env *env)
+void	env_parsing(char **cmd, t_env *env)
 {
 	t_vars	v;
 
 	v.i = -1;
 	v.count = 0;
-	v.arr = ft_split(input, " \t\n\v\f\r");
-	while (v.arr[++v.i])
+	while (cmd[++v.i])
 	{
-		if (ft_strcmp(v.arr[v.i], "env") == 0)
+		if (ft_strcmp(cmd[v.i], "env") == 0)
 			v.count++;
-		else if (v.count && v.arr[v.i][0] == '-' && ft_strlen(v.arr[v.i]) > 1)
+		else if (v.count && cmd[v.i][0] == '-' && ft_strlen(cmd[v.i]) > 1)
 		{
-			printf("env: illegal option -- %c\n", v.arr[v.i][1]);
+			printf("env: illegal option -- %c\n", cmd[v.i][1]);
 			return ;
 		}
-		else if (v.count && v.arr[v.i][0] != '-')
+		else if (v.count && cmd[v.i][0] != '-')
 		{
-			printf("env: %s: No such file or directory\n", v.arr[v.i]);
+			printf("env: %s: No such file or directory\n", cmd[v.i]);
 			return ;
 		}
 	}
 	print_env(v.i, v.count, env);
-	ft_free_arr(v.arr);
 }
 
 void	ft_lstadd_back_env(t_env **head, t_env *new)

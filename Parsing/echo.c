@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/01 15:03:45 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/03 15:14:51 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,49 +62,59 @@ void	pwd(t_command *f_list)
 	free(pwd);
 }
 
-void	change_dir_2(t_env **envr, t_command *f_list)
+void	change_dir_2(t_env **envr, t_vars *v)
 {
 	t_env	*env;
-	char	*pwd;
 
 	env = *envr;
-	pwd = getcwd(NULL, 0);
-	if (f_list->cmd[1] && chdir(f_list->cmd[1]))
+	if (v->tmp_str && !chdir(v->tmp_str))
 	{
 		env = *envr;
 		while (env)
 		{
 			if (!ft_strcmp(env->key, "PWD"))
-				env->value = ft_strdup(getcwd(NULL, 0));
+			{
+				v->tmp_value = getcwd(NULL, 0);
+				free(env->value);
+				env->value = ft_strdup(v->tmp_value);
+			}
 			if (!ft_strcmp(env->key, "OLDPWD"))
-				env->value = ft_strdup(pwd);
+			{
+				free(env->value);
+				env->value = ft_strdup(v->val);
+			}
 			env = env->link;
 		}
 	}
 	else
-		perror(f_list->cmd[1]);
+		perror(v->tmp_str);
 }
 
 void	change_dir(t_env **envr, t_command *f_list)
 {
 	t_env	*env;
+	t_vars v;
 
 	env = *envr;
+	v.tmp_str = NULL;
 	if (!f_list->cmd[1] || !ft_strcmp(f_list->cmd[1], "~"))
-	{
-		chdir(getenv("HOME"));
-		return;
-	}
+		v.tmp_str = ft_strdup(getenv("HOME"));
 	else if (!ft_strcmp(f_list->cmd[1], "-"))
 	{
 		while (env)
 		{
 			if (!ft_strcmp(env->key, "OLDPWD"))
-				f_list->cmd[1] = ft_strdup(env->value);
+				v.tmp_str = ft_strdup(env->value);
 			env = env->link;
 		}
 	}
-	change_dir_2(envr, f_list);
+	else
+		v.tmp_str = ft_strdup(f_list->cmd[1]);
+	v.val = getcwd(NULL, 0);
+	change_dir_2(envr, &v);
+	free(v.tmp_str);
+	free(v.tmp_value);
+	free(v.val);
 }
 
 void	check_cmd(t_list **list, t_env **envr, t_command *f_list)

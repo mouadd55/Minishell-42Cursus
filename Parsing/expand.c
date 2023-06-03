@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/02 20:13:28 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/03 15:12:59 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	del_node_2(t_list **tmp, t_list **tmp1, t_list *del_node)
 			*tmp1 = (*tmp)->prev;
 			(*tmp1)->link = (*tmp)->link;
 			(*tmp)->link->prev = *tmp1;
+			free((*tmp)->type);
+			free((*tmp)->content);
 			free(*tmp);
 			*tmp = *tmp1;
 		}
@@ -53,6 +55,8 @@ t_list	*del_node(t_list **list, t_list *del_node)
 	if (del_node == tmp)
 	{
 		tmp = tmp->link;
+		free(tmp->prev->type);
+		free(tmp->prev->content);
 		free(tmp->prev);
 		tmp->prev = NULL;
 		return (tmp);
@@ -61,6 +65,8 @@ t_list	*del_node(t_list **list, t_list *del_node)
 	{
 		tmp1 = ft_lstlast(tmp);
 		tmp1 = tmp1->prev;
+		free(tmp1->link->type);
+		free(tmp1->link->content);
 		free(tmp1->link);
 		tmp1->link = NULL;
 	}
@@ -80,6 +86,7 @@ void	remove_quotes(t_list **list)
 				temp->type) || (!ft_strcmp("FILE", temp->type)
 					&& (temp->content[0] == '\"' || temp->content[0] == '\'')))
 		{
+			free(temp->content);
 			if (ft_strlen(temp->content) == 2)
 				temp->content = ft_strdup("");
 			else
@@ -207,6 +214,7 @@ void remove_dollar(t_list **list)
 				&& tmp->link->content[0] != 32))
 		{
 			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
+			free(tmp->type);
 			if (!ft_strcmp(tmp->prev->content, "<<")
 				|| !ft_strcmp(tmp->prev->prev->content, "<<"))
 				tmp->type = ft_strdup("DELIMITER");
@@ -235,4 +243,5 @@ void	expand_var(t_list **list, t_env *envr, int rm_quotes)
 	if (rm_quotes)
 		remove_quotes(list);
 	tmp = *list;
+	remove_dollar(&tmp);
 }
