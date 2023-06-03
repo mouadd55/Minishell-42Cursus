@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/03 15:14:51 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/03 15:58:35 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void	check_cmd(t_list **list, t_env **envr, t_command *f_list)
 	if (ft_lstsize(*list) == 1 && !ft_strcmp((*list)->content, "export"))
 	{
 		env_copy = ft_copy_env_list(*envr);
-		sort_env(env_copy);
+		sort_env(env_copy, f_list->fd_out);
 		ft_destroy_list_env(&env_copy);
 	}
 	if (export_parsing(list, envr))

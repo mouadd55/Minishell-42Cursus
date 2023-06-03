@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/03 11:39:20 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/03 15:59:08 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,12 +123,10 @@ void		expand_var(t_list **list, t_env *envr, int rm_quotes);
 
 /**************************** Builtins functions *****************************/
 
-void		sort_env(t_env *env);
 int			check_type(char *type);
 char		*is_redir(t_list *list);
 void		catching_signals(int sig);
 int			check_valid_var(char *var);
-void		print_export(t_env *temp3);
 int			count_commands(t_list *list);
 t_env		*ft_copy_env_list(t_env *env);
 void		free_some_variables(t_vars *v);
@@ -136,19 +134,21 @@ void		join_variable_names(t_vars *v);
 t_command	*lstlast_final(t_command *head);
 t_list		*lexer_for_unset(t_list **list);
 void		lexer_for_export(t_list **list);
+void		sort_env(t_env *env, int fd_out);
 void		switch_space(char *input, int x);
 int			check_valid_variable(char *input);
 void		unset(t_list **list, t_env **env);
 t_env		*ft_split_environment(char **env);
 void		*ft_destroy_final(t_command **head);
-void		env_parsing(char **cmd, t_env *env);
 void		ft_exit(char **cmd, t_command *final);
+void		print_export(t_env *temp3, int fd_out);
 void		mooooore_steps(t_vars *v, t_env **env);
 void		delete_node(t_env **env, int position);
 void		spaces_in_quotes(t_command **final_list);
 int			export_parsing(t_list **list, t_env **env);
 char		*spaces_in_quotes_utils(char *str, int idx);
 int			ft_printf_fd(const char *first, int fd, ...);
+void		env_parsing(char **cmd, t_env *env, int fd_out);
 void		lstadd_back_final(t_command **head, t_command *new);
 t_command	*lstnew_final(char **command, int fd_in, int fd_out);
 void		create_final_list(t_list *list, t_command **final_list);

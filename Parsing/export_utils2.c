@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 12:02:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/20 15:38:07 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/03 16:00:19 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,20 @@ int	check_valid_var(char *var)
 	return (0);
 }
 
-void	print_export(t_env *temp3)
+void	print_export(t_env *temp3, int fd_out)
 {
 	while (temp3)
 	{
 		if (!temp3->value)
-			printf("declare -x %s\n", (temp3)->key);
+			ft_printf_fd("declare -x %s\n", fd_out, (temp3)->key);
 		else
-			printf("declare -x %s=\"%s\"\n", (temp3)->key, (temp3)->value);
+			ft_printf_fd("declare -x %s=\"%s\"\n", fd_out,
+			(temp3)->key, (temp3)->value);
 		temp3 = (temp3)->link;
 	}
 }
 
-void	sort_env(t_env *env)
+void	sort_env(t_env *env, int fd_out)
 {
 	t_vars	v;
 
@@ -90,5 +91,5 @@ void	sort_env(t_env *env)
 		}
 		v.temp1 = v.temp1->link;
 	}
-	print_export(v.temp3);
+	print_export(v.temp3, fd_out);
 }

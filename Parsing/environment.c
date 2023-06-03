@@ -6,26 +6,26 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/03 11:13:17 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/03 15:56:23 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_env(int i, int count, t_env *env)
+void	print_env(int i, int count, t_env *env, int fd_out)
 {
 	if (i && i == count)
 	{
 		while (env)
 		{
 			if (env->value)
-				printf("%s=%s\n", env->key, env->value);
+				ft_printf_fd("%s=%s\n", fd_out, env->key, env->value);
 			env = env->link;
 		}
 	}	
 }
 
-void	env_parsing(char **cmd, t_env *env)
+void	env_parsing(char **cmd, t_env *env, int fd_out)
 {
 	t_vars	v;
 
@@ -46,7 +46,7 @@ void	env_parsing(char **cmd, t_env *env)
 			return ;
 		}
 	}
-	print_env(v.i, v.count, env);
+	print_env(v.i, v.count, env, fd_out);
 }
 
 void	ft_lstadd_back_env(t_env **head, t_env *new)
