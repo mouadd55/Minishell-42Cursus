@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/03 18:57:10 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/04 20:46:18 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	final(t_command *list)
 			i++;
 		}
 		printf("|    ---------------------------------------                          |\n");
-		printf("|%29s %d                                      |\n", "fd_in:", tmp->fd_in);
-		printf("|%30s %d                                     |\n", "fd_out:", tmp->fd_out);
+		printf("|%29s %2d                                     |\n", "fd_in:", tmp->fd_in);
+		printf("| %29s %2d                                    |\n", "fd_out:", tmp->fd_out);
 		tmp = tmp->link;
 	}
 	printf("-----------------------------------------------------------------------\x1B[0m\n\n");
@@ -115,30 +115,6 @@ void	recreate_list(t_command *final_list, t_env **envr)
 	spaces_in_quotes(&final_list);
 }
 
-void	execution(t_command *final_list)
-{
-	int childPid;
-	int pipefd[2];
-
-	childPid = fork();
-	while (final_list)
-	{
-		if (childPid == 0)
-		{
-			if (ft_strnstr("echo, pwd, cd, export, env, exit, unset", final_list->cmd[0], 40))
-				exit (0);
-			char *command = ft_strjoin(ft_strdup("/bin/"), final_list->cmd[0]);
-			// close(pipefd[0]);
-			// dup2(pipefd[1], 1);
-			// close(pipefd[1]);
-			if (execv(command, final_list->cmd) == -1)
-				printf("\nminishell: %s: command not found", final_list->cmd[0]);
-			exit(0);
-		}
-		final_list = final_list->link;
-	}
-}
-
 void	minihell(t_env **envr, t_list **lst)
 {
 	t_command	*final_list;
@@ -155,7 +131,7 @@ void	minihell(t_env **envr, t_list **lst)
 		recreate_list(final_list, envr);
 		execution(final_list);
 		// ft(*lst);
-		// final(final_list);
+		final(final_list);
 	}
 	// ft_destroy_final(&final_list);
 }

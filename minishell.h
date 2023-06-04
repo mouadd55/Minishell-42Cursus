@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/03 15:59:08 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/04 20:21:55 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,5 +157,10 @@ void		check_cmd(t_list **list, t_env **envr, t_command *f_list);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
 void		open_files(t_list *list, t_command **final_list, t_env **envr);
+
+/**************************** Execution Part *****************************/
+
+char		*get_paths(char *cmd);
+void		execution(t_command *final_list);
 
 #endif
