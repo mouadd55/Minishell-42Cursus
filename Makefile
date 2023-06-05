@@ -6,7 +6,7 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/04 20:37:12 by moudrib          ###   ########.fr        #
+#    Updated: 2023/06/05 11:58:00 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,4 +82,3 @@ re: fclean all
 .PHONY: all clean fclean re
 
 #< infile ls > outfile -a << here -l | wc -l >> outfile
-# -fsanitize=address

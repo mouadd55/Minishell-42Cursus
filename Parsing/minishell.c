@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/04 20:46:18 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/05 19:17:02 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void	minihell(t_env **envr, t_list **lst)
 		recreate_list(final_list, envr);
 		execution(final_list);
 		// ft(*lst);
-		final(final_list);
+		// final(final_list);
 	}
 	// ft_destroy_final(&final_list);
 }
@@ -154,10 +154,10 @@ int	main(int ac, char **av, char **env)
 	lst = NULL;
 	envr = NULL;
 	envr = ft_split_environment(env);
-	// signal(SIGINT, &catching_signals);
-	// signal(SIGQUIT,SIG_IGN);
+	signal(SIGINT, &catching_signals);
+	signal(SIGQUIT,SIG_IGN);
 	// signal(SIGQUIT,SIG_DFL);
-	// rl_catch_signals = 0;
+	rl_catch_signals = 0;
 	while (1)
 	{
 		input = readline("➜  Minishell ");
