@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/05 19:17:02 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/08 15:39:15 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ void	minihell(t_env **envr, t_list **lst)
 {
 	t_command	*final_list;
 
-	if (check_syntax(*lst))
-		return ;
+	// if (check_syntax(*lst))
+	// 	return ;
 	lexer(lst);
 	final_list = NULL;
 	if (lst)
@@ -129,7 +129,7 @@ void	minihell(t_env **envr, t_list **lst)
 		create_final_list(*lst, &final_list);
 		open_files(*lst, &final_list, envr);
 		recreate_list(final_list, envr);
-		execution(final_list);
+		execution(final_list, *envr);
 		// ft(*lst);
 		// final(final_list);
 	}
@@ -175,6 +175,6 @@ int	main(int ac, char **av, char **env)
 
 	}
 	ft_destroy_list_env(&envr);
-	printf("exit");
+	printf("exit\n");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/03 15:58:35 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/08 15:58:02 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,9 @@ void	change_dir(t_env **envr, t_command *f_list)
 		v.tmp_str = ft_strdup(f_list->cmd[1]);
 	v.val = getcwd(NULL, 0);
 	change_dir_2(envr, &v);
-	free(v.tmp_str);
-	free(v.tmp_value);
-	free(v.val);
+	// free(v.tmp_str);
+	// free(v.tmp_value);
+	// free(v.val);
 }
 
 void	check_cmd(t_list **list, t_env **envr, t_command *f_list)

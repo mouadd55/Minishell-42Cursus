@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/03 11:23:58 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/08 15:49:56 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	ft_exit(char **cmd, t_command *final)
 		if (!ft_strcmp("-9223372036854775808", cmd[v.i]))
 		{
 			printf("exit\n");
-			exit(0);
+			exit(255);
 		}
 		if (ft_isdigit(cmd[v.i]))
 		{
@@ -116,14 +116,14 @@ void	ft_exit(char **cmd, t_command *final)
 			{
 				printf("exit\nminishell: exit: %s: numeric argument required\n",
 					cmd[v.i]);
-				exit(0);
+				exit(255);
 			}
 		}
 		if (v.flag == 0)
 		{
 			printf("exit\nminishell: exit: %s: numeric argument required\n",
 				cmd[v.i]);
-			exit(0);
+			exit(255);
 		}
 		else if ((v.flag == 2 && v.i == 2) || (v.flag == 1 && v.i == 2))
 		{
@@ -134,6 +134,6 @@ void	ft_exit(char **cmd, t_command *final)
 	if (final && !final->link && !final->prev && v.j == 0)
 	{
 		printf("exit\n");
-		exit(0);
+		exit(255);
 	}
 }

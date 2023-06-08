@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/02 20:45:41 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/08 15:47:12 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 	}
 	return (v.str);
 }
+
+
 
 void	open_heredoc_3(t_vars *v, t_env **envr)
 {
@@ -130,88 +132,153 @@ void	open_heredoc(t_list *list, t_env **envr)
 	open_heredoc_2(&v, envr);
 }
 
-t_list	*open_the_file(t_vars *v, t_list *list, t_command **tmp)
-{
-	if (list && !ft_strcmp("FILE", list->type))
-	{
-		v->str = NULL;
-		while (list && !ft_strcmp("FILE", list->type))
-		{
-			v->str = ft_strjoin(v->str, list->content);
-			v->tmp1 = list;
-			list = list->link;
-		}
-		list = v->tmp1;
-		if (v->str)
-		{
-			v->fd = open_file(v->str, v->tmp_str);
-			free(v->str);
-			if (v->fd == -1)
-			{
-				(*tmp)->fd_in = -1;
-				(*tmp)->fd_out = -1;
-				while (list && ft_strcmp("PIPE", list->type))
-					list = list->link;
-				return (list);
-			}
-		}
-	}
-	return (list);
-}
+// t_list	*open_the_file(t_vars *v, t_list *list, t_command **tmp)
+// {
+// 	if (list && !ft_strcmp("FILE", list->type))
+// 	{
+// 		v->str = NULL;
+// 		while (list && !ft_strcmp("FILE", list->type))
+// 		{
+// 			v->str = ft_strjoin(v->str, list->content);
+// 			v->tmp1 = list;
+// 			list = list->link;
+// 		}
+// 		list = v->tmp1;
+// 		if (v->str)
+// 		{
+// 			v->fd = open_file(v->str, v->tmp_str);
+// 			free(v->str);
+// 			if (v->fd == -1)
+// 			{
+// 				(*tmp)->fd_in = -1;
+// 				(*tmp)->fd_out = -1;
+// 				while (list && ft_strcmp("PIPE", list->type))
+// 					list = list->link;
+// 				return (list);
+// 			}
+// 		}
+// 	}
+// 	return (list);
+// }
 
-t_list	*open_var_error(t_vars *v, t_list *list, t_command **tmp)
-{
-	if (is_redir(list))
-	{
-		v->str = NULL;
-		v->tmp_str = ft_strdup(is_redir(list));
-		if (list->link && !ft_strcmp(list->link->type, "space"))
-			list = list->link->link;
-		else if (list->link)
-			list = list->link;
-		if (!ft_strcmp("VAR", list->type))
-		{
-			ft_printf_fd("minishell: %s: ambiguous redirect\n", 2,
-					list->content);
-			(*tmp)->fd_out = -1;
-			(*tmp)->fd_in = -1;
-			while (list && ft_strcmp("PIPE", list->type))
-				list = list->link;
-			free(v->tmp_str);
-			v->tmp_str = NULL;
-			return (list);
-		}
-		else
-			list = open_the_file(v, list, tmp);
-		free(v->tmp_str);
-	}
-	return (list);
-}
+// t_list	*open_var_error(t_vars *v, t_list *list, t_command **tmp)
+// {
+// 	if (is_redir(list))
+// 	{
+// 		v->str = NULL;
+// 		v->tmp_str = ft_strdup(is_redir(list));
+// 		if (list->link && !ft_strcmp(list->link->type, "space"))
+// 			list = list->link->link;
+// 		else if (list->link)
+// 			list = list->link;
+// 		if (!ft_strcmp("VAR", list->type))
+// 		{
+// 			ft_printf_fd("minishell: %s: ambiguous redirect\n", 2,
+// 					list->content);
+// 			(*tmp)->fd_out = -1;
+// 			(*tmp)->fd_in = -1;
+// 			while (list && ft_strcmp("PIPE", list->type))
+// 				list = list->link;
+// 			free(v->tmp_str);
+// 			v->tmp_str = NULL;
+// 			return (list);
+// 		}
+// 		else
+// 			list = open_the_file(v, list, tmp);
+// 		free(v->tmp_str);
+// 	}
+// 	return (list);
+// }
 
-void	open_files(t_list *list, t_command **final_list, t_env **envr)
-{
-	t_vars		v;
-	t_command	*tmp;
+// void	open_files(t_list *list, t_command **final_list, t_env **envr)
+// {
+// 	t_vars		v;
+// 	t_command	*tmp;
 
+// 	tmp = *final_list;
+// 	v.str = NULL;
+// 	v.tmp_str = NULL;
+// 	while (list)
+// 	{
+// 		if (!ft_strcmp(list->type, "HEREDOC"))
+// 			open_heredoc(list, envr);
+// 		list = open_var_error(&v, list, &tmp);
+// 		if (v.tmp_str && tmp)
+// 		{
+// 			if (!ft_strcmp(v.tmp_str, ">") || !ft_strcmp(v.tmp_str, ">>"))
+// 				tmp->fd_out = v.fd;
+// 			else if (!ft_strcmp(v.tmp_str, "<"))
+// 				tmp->fd_in = v.fd;
+// 			v.tmp_str = NULL;
+// 			v.fd = -1;
+// 		}
+// 		if (!list)
+// 			break ;
+// 		list = list->link;
+// 	}
+// }
+
+void open_files(t_list *list, t_command **final_list, t_env **envr)
+{
+	t_vars v;
+	char *type;
+	t_command *tmp;
+
+	type = NULL;
 	tmp = *final_list;
 	v.str = NULL;
-	v.tmp_str = NULL;
+	
 	while (list)
 	{
 		if (!ft_strcmp(list->type, "HEREDOC"))
 			open_heredoc(list, envr);
-		list = open_var_error(&v, list, &tmp);
-		if (v.tmp_str && tmp)
+		else if (is_redir(list))
 		{
-			if (!ft_strcmp(v.tmp_str, ">") || !ft_strcmp(v.tmp_str, ">>"))
+			type = ft_strdup(is_redir(list));
+			if (list->link && !ft_strcmp(list->link->type, "space"))
+				list = list->link->link;
+			else if (list->link)
+				list = list->link;
+			if (!ft_strcmp("VAR", list->type))
+			{
+				ft_printf_fd("minishell: %s: ambiguous redirect\n", 2,list->content);
+				tmp->fd_out = -1;
+				tmp->fd_in = -1;
+				while (list && ft_strcmp("PIPE", list->type))
+					list = list->link;
+				if (list && list->link)
+					list = list->link;
+				if (tmp->link)
+					tmp = tmp->link;
+				type = NULL;
+			}
+			else if (list && !ft_strcmp("FILE", list->type))
+			{
+				v.str = NULL;
+				while (list && !ft_strcmp("FILE", list->type))
+				{
+					v.str = ft_strjoin(v.str, list->content);
+					v.tmp1 = list;
+					list = list->link;
+				}
+				list = v.tmp1;
+				if (v.str)
+					v.fd = open_file(v.str, type);
+			}
+		}
+		if (type && tmp)
+		{
+			if (!ft_strcmp(type, ">") || !ft_strcmp(type, ">>"))
 				tmp->fd_out = v.fd;
-			else if (!ft_strcmp(v.tmp_str, "<"))
+			else if (!ft_strcmp(type, "<"))
 				tmp->fd_in = v.fd;
-			v.tmp_str = NULL;
+			type = NULL;
 			v.fd = -1;
 		}
+		if (list && !ft_strcmp(list->type , "PIPE"))
+			tmp = tmp->link;
 		if (!list)
-			break ;
+			break;
 		list = list->link;
 	}
 }

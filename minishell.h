@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/04 20:21:55 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/07 20:00:18 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,8 @@ void		open_files(t_list *list, t_command **final_list, t_env **envr);
 
 /**************************** Execution Part *****************************/
 
-char		*get_paths(char *cmd);
-void		execution(t_command *final_list);
+int	lstsize(t_command *lst);
+char		*get_paths(char *cmd, t_env *env);
+void		execution(t_command *final_list, t_env *envr);
 
 #endif
