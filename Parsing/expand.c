@@ -52,13 +52,13 @@ t_list	*del_node(t_list **list, t_list *del_node)
 
 	tmp1 = NULL;
 	tmp = *list;
-	if (ft_lstsize(tmp) == 1)
-	{
-		free(tmp->content);
-		free(tmp->type);
-		free(tmp);
-		return (NULL);
-	}
+	// if (ft_lstsize(tmp) == 1)
+	// {
+	// 	free(tmp->content);
+	// 	free(tmp->type);
+	// 	free(tmp);
+	// 	return (NULL);
+	// }
 	if (del_node == tmp)
 	{
 		tmp = tmp->link;
@@ -90,15 +90,12 @@ void	remove_quotes(t_list **list)
 	while (temp)
 	{
 		if (!ft_strcmp("DOUBLE_Q", temp->type) || !ft_strcmp("SINGLE_Q",
-				temp->type) || (!ft_strcmp("FILE", temp->type)
-					&& (temp->content[0] == '\"' || temp->content[0] == '\'')))
+				temp->type) || (!ft_strcmp("FILE", temp->type)))
 		{
-			free(temp->content);
-			if (ft_strlen(temp->content) == 2)
-				temp->content = ft_strdup("");
-			else
-				temp->content = ft_substr(temp->content, 1,
-						ft_strlen(temp->content) - 2);
+			if (temp->content[0] == '\"')
+				temp->content = ft_strtrim(temp->content, "\"");
+			else if (temp->content[0] == '\'')
+				temp->content = ft_strtrim(temp->content, "\'");
 		}
 		temp = temp->link;
 	}
@@ -191,7 +188,7 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 	if ((*tmp) && (*tmp)->content[0] == '$' && (*tmp)->link)
 	{
 		(*tmp) = (*tmp)->link;
-		while (ft_isalpha((*tmp)->content[v->i]) || check_char("0123456789",
+		while (ft_isalpha((*tmp)->content[v->i]) || check_char("0123456789_",
 				(*tmp)->content[v->i]))
 			v->i++;
 		v->str = ft_substr((*tmp)->content, 0, v->i);
@@ -217,10 +214,14 @@ void remove_dollar(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		if ((tmp->content[0] == '$' && (!ft_strcmp(tmp->link->type, "DOUBLE_Q")
+		if ((tmp->content[0] == '$' && tmp->link && (!ft_strcmp(tmp->link->type, "DOUBLE_Q")
 				|| !ft_strcmp(tmp->link->type, "SINGLE_Q"))))
-					tmp = del_node(list, tmp);
-		else if ((tmp->content[0] == '$' && tmp->link
+				{
+					free(tmp->content);
+					tmp->content = ft_strdup(tmp->link->content);
+					tmp = del_node(list, tmp->link);
+				}
+		 else if ((tmp->content[0] == '$' && tmp->link
 				&& tmp->link->content[0] != 32))
 		{
 			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
