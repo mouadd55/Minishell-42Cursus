@@ -59,6 +59,7 @@ void	pwd(t_command *f_list)
 	pwd = getcwd(NULL, 0);
 	if (pwd)
 		ft_printf_fd("%s\n", f_list->fd_out, pwd);
+	close(f_list->fd_out);
 	free(pwd);
 }
 
@@ -112,9 +113,9 @@ void	change_dir(t_env **envr, t_command *f_list)
 		v.tmp_str = ft_strdup(f_list->cmd[1]);
 	v.val = getcwd(NULL, 0);
 	change_dir_2(envr, &v);
-	// free(v.tmp_str);
-	// free(v.tmp_value);
-	// free(v.val);
+	free(v.tmp_str);
+	free(v.tmp_value);
+	free(v.val);
 }
 
 void	check_cmd(t_list **list, t_env **envr, t_command *f_list)

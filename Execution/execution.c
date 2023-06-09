@@ -108,23 +108,28 @@ void	simple_command(t_command *final_list, t_env *env, char *command, char **env
 		printf("minishell: %s: No such file or directory\n", final_list->cmd[0]);
 		exit(1);
 	}
-	if (final_list->fd_out != STDOUT_FILENO)
+	if (final_list->fd_in != -1 && final_list->fd_out != -1)
 	{
-		dup2(final_list->fd_out, STDOUT_FILENO);
-		close(final_list->fd_out);
+		if (final_list->fd_out != STDOUT_FILENO)
+		{
+			dup2(final_list->fd_out, STDOUT_FILENO);
+			close(final_list->fd_out);
+		}
+		if (final_list->fd_in != STDIN_FILENO)
+		{
+			dup2(final_list->fd_in, STDIN_FILENO);
+			close(final_list->fd_in);
+		}
+		if (execve(command, final_list->cmd, env_arr) == -1)
+		{
+			printf("minishell: %s: command not found\n", final_list->cmd[0]);
+			free(command);
+			ft_free_arr(env_arr);
+			exit(1);
+		}
 	}
-	if (final_list->fd_in != STDIN_FILENO)
-	{
-		dup2(final_list->fd_in, STDIN_FILENO);
-		close(final_list->fd_in);
-	}
-	if (execve(command, final_list->cmd, env_arr) == -1)
-	{
-		printf("minishell: %s: command not found\n", final_list->cmd[0]);
-		free(command);
-		ft_free_arr(env_arr);
-		exit(1);
-	}
+	close(final_list->fd_in);
+	close(final_list->fd_out);
 	free(command);
 	ft_free_arr(env_arr);
 	exit(0);

@@ -49,9 +49,11 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 	}
 	while (v.tmp1)
 	{
-		v.str = ft_strjoin(v.str, v.tmp1->content);
+		if (ft_strcmp(v.tmp1->type, "VAR"))
+			v.str = ft_strjoin(v.str, v.tmp1->content);
 		v.tmp1 = v.tmp1->link;
 	}
+	ft_destroy_list(v.tmp1);
 	return (v.str);
 }
 
@@ -65,12 +67,6 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 		v->str = readline("Heredoc> ");
 		if (!v->str || !ft_strcmp(v->str, v->tmp_str))
 		{
-			if (!v->str)
-			{
-				ft_printf_fd("\nMinishell: warning: ", 2);
-				ft_printf_fd("here-document delimited by end-of-file (wanted '%s')\n",
-					2, v->tmp_str);
-			}
 			close(v->fd);
 			unlink(v->val);
 			free(v->str);
@@ -80,7 +76,8 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 		}
 		if (check_char(v->str, '$'))
 			v->str = expand_in_here_doc(v->str, envr, v->flag);
-		ft_printf_fd("%s\n", v->fd, v->str);
+		if(v->str)
+			ft_printf_fd("%s\n", v->fd, v->str);
 		free(v->str);
 	}
 }
@@ -132,92 +129,6 @@ void	open_heredoc(t_list *list, t_env **envr)
 	open_heredoc_2(&v, envr);
 }
 
-// t_list	*open_the_file(t_vars *v, t_list *list, t_command **tmp)
-// {
-// 	if (list && !ft_strcmp("FILE", list->type))
-// 	{
-// 		v->str = NULL;
-// 		while (list && !ft_strcmp("FILE", list->type))
-// 		{
-// 			v->str = ft_strjoin(v->str, list->content);
-// 			v->tmp1 = list;
-// 			list = list->link;
-// 		}
-// 		list = v->tmp1;
-// 		if (v->str)
-// 		{
-// 			v->fd = open_file(v->str, v->tmp_str);
-// 			free(v->str);
-// 			if (v->fd == -1)
-// 			{
-// 				(*tmp)->fd_in = -1;
-// 				(*tmp)->fd_out = -1;
-// 				while (list && ft_strcmp("PIPE", list->type))
-// 					list = list->link;
-// 				return (list);
-// 			}
-// 		}
-// 	}
-// 	return (list);
-// }
-
-// t_list	*open_var_error(t_vars *v, t_list *list, t_command **tmp)
-// {
-// 	if (is_redir(list))
-// 	{
-// 		v->str = NULL;
-// 		v->tmp_str = ft_strdup(is_redir(list));
-// 		if (list->link && !ft_strcmp(list->link->type, "space"))
-// 			list = list->link->link;
-// 		else if (list->link)
-// 			list = list->link;
-// 		if (!ft_strcmp("VAR", list->type))
-// 		{
-// 			ft_printf_fd("minishell: %s: ambiguous redirect\n", 2,
-// 					list->content);
-// 			(*tmp)->fd_out = -1;
-// 			(*tmp)->fd_in = -1;
-// 			while (list && ft_strcmp("PIPE", list->type))
-// 				list = list->link;
-// 			free(v->tmp_str);
-// 			v->tmp_str = NULL;
-// 			return (list);
-// 		}
-// 		else
-// 			list = open_the_file(v, list, tmp);
-// 		free(v->tmp_str);
-// 	}
-// 	return (list);
-// }
-
-// void	open_files(t_list *list, t_command **final_list, t_env **envr)
-// {
-// 	t_vars		v;
-// 	t_command	*tmp;
-
-// 	tmp = *final_list;
-// 	v.str = NULL;
-// 	v.tmp_str = NULL;
-// 	while (list)
-// 	{
-// 		if (!ft_strcmp(list->type, "HEREDOC"))
-// 			open_heredoc(list, envr);
-// 		list = open_var_error(&v, list, &tmp);
-// 		if (v.tmp_str && tmp)
-// 		{
-// 			if (!ft_strcmp(v.tmp_str, ">") || !ft_strcmp(v.tmp_str, ">>"))
-// 				tmp->fd_out = v.fd;
-// 			else if (!ft_strcmp(v.tmp_str, "<"))
-// 				tmp->fd_in = v.fd;
-// 			v.tmp_str = NULL;
-// 			v.fd = -1;
-// 		}
-// 		if (!list)
-// 			break ;
-// 		list = list->link;
-// 	}
-// }
-
 void open_files(t_list *list, t_command **final_list, t_env **envr)
 {
 	t_vars v;
@@ -227,7 +138,7 @@ void open_files(t_list *list, t_command **final_list, t_env **envr)
 	type = NULL;
 	tmp = *final_list;
 	v.str = NULL;
-	
+	v.fd = -1;
 	while (list)
 	{
 		if (!ft_strcmp(list->type, "HEREDOC"))
@@ -263,7 +174,20 @@ void open_files(t_list *list, t_command **final_list, t_env **envr)
 				}
 				list = v.tmp1;
 				if (v.str)
+				{
+					if (v.fd >= 3)
+						close(v.fd);
 					v.fd = open_file(v.str, type);
+					if (v.fd == -1)
+					{
+						tmp->fd_out = -1;
+						while (list && ft_strcmp(list->type, "PIPE"))
+							list = list->link;
+						if (tmp->link)
+							tmp = tmp->link;
+					}
+
+				}
 			}
 		}
 		if (type && tmp)
@@ -272,8 +196,9 @@ void open_files(t_list *list, t_command **final_list, t_env **envr)
 				tmp->fd_out = v.fd;
 			else if (!ft_strcmp(type, "<"))
 				tmp->fd_in = v.fd;
+			free(type);
+			free(v.str);
 			type = NULL;
-			v.fd = -1;
 		}
 		if (list && !ft_strcmp(list->type , "PIPE"))
 			tmp = tmp->link;

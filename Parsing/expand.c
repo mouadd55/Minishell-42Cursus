@@ -52,6 +52,13 @@ t_list	*del_node(t_list **list, t_list *del_node)
 
 	tmp1 = NULL;
 	tmp = *list;
+	if (ft_lstsize(tmp) == 1)
+	{
+		free(tmp->content);
+		free(tmp->type);
+		free(tmp);
+		return (NULL);
+	}
 	if (del_node == tmp)
 	{
 		tmp = tmp->link;
@@ -215,8 +222,8 @@ void remove_dollar(t_list **list)
 		{
 			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
 			free(tmp->type);
-			if (!ft_strcmp(tmp->prev->content, "<<")
-				|| !ft_strcmp(tmp->prev->prev->content, "<<"))
+			if (tmp->prev && (!ft_strcmp(tmp->prev->content, "<<")
+				|| (tmp->prev->prev && !ft_strcmp(tmp->prev->prev->content, "<<"))))
 				tmp->type = ft_strdup("DELIMITER");
 			else
 				tmp->type = ft_strdup("VAR");
