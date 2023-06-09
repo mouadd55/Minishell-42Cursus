@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/07 20:00:18 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 18:16:56 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct t_vars
 	int		start;
 	int		count;
 	int		d_quotes;
+	pid_t	child;
 	char	*tmp;
 	char	*tmp_str;
 	char	*str;
@@ -67,6 +68,7 @@ typedef struct t_vars
 	char	*val;
 	char	**arr;
 	char	*tmp_key;
+	char	*command;
 	char	*tmp_value;
 	t_list	*tmp1;
 	t_list	*tmp2;
@@ -74,6 +76,7 @@ typedef struct t_vars
 	t_env	*temp1;
 	t_env	*temp2;
 	t_env	*temp3;
+	t_command	*final_list;
 }	t_vars;
 
 /********************************* Libft utils ********************************/

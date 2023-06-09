@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/08 17:29:58 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 20:58:33 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ void	simple_command(t_command *final_list, t_env *env, char *command, char **env
 		printf("minishell: %s: No such file or directory\n", final_list->cmd[0]);
 		exit(1);
 	}
-	if (final_list->fd_in != -1 && final_list->fd_out != -1)
-	{
+	if (final_list->fd_out != -1 && final_list->fd_in != -1)
+	{	
 		if (final_list->fd_out != STDOUT_FILENO)
 		{
 			dup2(final_list->fd_out, STDOUT_FILENO);
@@ -128,103 +128,162 @@ void	simple_command(t_command *final_list, t_env *env, char *command, char **env
 			exit(1);
 		}
 	}
-	close(final_list->fd_in);
-	close(final_list->fd_out);
 	free(command);
 	ft_free_arr(env_arr);
 	exit(0);
 }
 
+void	execute_first_command(t_vars *v, t_env *env, char **env_arr, int pipefd[2])
+{
+	v->command = get_paths(v->final_list->cmd[0], env);
+	if (!v->command)
+	{
+		ft_free_arr(env_arr);
+		printf("minishell: %s: No such file or directory\n", v->final_list->cmd[0]);
+		exit(1);
+	}
+	if (v->final_list->fd_in != STDIN_FILENO)
+	{
+		dup2(v->final_list->fd_in, STDIN_FILENO);
+		close (v->final_list->fd_in);
+	}
+	if (v->final_list->fd_out != STDOUT_FILENO)
+	{
+		dup2(v->final_list->fd_out, STDOUT_FILENO);
+		close (v->final_list->fd_out);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	else
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+	}
+	if (execve(v->command, v->final_list->cmd, env_arr) == -1)
+	{
+		free(v->command);
+		ft_free_arr(env_arr);
+		printf("minishell: %s: command not found\n", v->final_list->cmd[0]);
+		exit(1);
+	}
+	free(v->command);
+	ft_free_arr(env_arr);
+	exit(0);
+}
+
+void	execute_middle_commands(t_vars *v, t_env *env, char **env_arr, int pipefd[2])
+{
+	v->command = get_paths(v->final_list->cmd[0], env);
+	if (!v->command)
+	{
+		ft_free_arr(env_arr);
+		printf("minishell: %s: No such file or directory\n", v->final_list->cmd[0]);
+		exit(1);
+	}
+	if (v->final_list->fd_in != STDIN_FILENO)
+	{
+		dup2(v->final_list->fd_in, STDIN_FILENO);
+		close(v->final_list->fd_in);
+	}
+	if (v->final_list->fd_out == STDOUT_FILENO)
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+	}
+	else
+	{
+		dup2(v->final_list->fd_out, STDOUT_FILENO);
+		close(v->final_list->fd_out);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	if (execve(v->command, v->final_list->cmd, env_arr) == -1)
+	{
+		free(v->command);
+		ft_free_arr(env_arr);
+		printf("minishell: %s: command not found\n", v->final_list->cmd[0]);
+		exit(1);
+	}
+	free(v->command);
+	ft_free_arr(env_arr);
+	exit(0);
+}
+
+void	execute_last_command(t_vars *v, t_env *env, char **env_arr, int pipefd[2])
+{
+	v->command = get_paths(v->final_list->cmd[0], env);
+	if (!v->command)
+	{
+		ft_free_arr(env_arr);
+		printf("minishell: %s: No such file or directory\n", v->final_list->cmd[0]);
+		exit(1);
+	}
+	if (v->final_list->fd_out != STDOUT_FILENO)
+	{
+		dup2(v->final_list->fd_out, STDOUT_FILENO);
+		close(v->final_list->fd_out);
+	}
+	if (v->final_list->fd_in != STDIN_FILENO)
+	{
+		dup2(v->final_list->fd_in, STDIN_FILENO);
+		close(v->final_list->fd_in);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	else
+	{
+		close(pipefd[1]);
+		dup2(pipefd[0], v->final_list->fd_in);
+		close(pipefd[0]);
+	}
+	if (execve(v->command, v->final_list->cmd, env_arr) == -1)
+	{
+		free(v->command);
+		ft_free_arr(env_arr);
+		printf("minishell: %s: command not found\n", v->final_list->cmd[0]);
+		exit(1);
+	}
+	free(v->command);
+	ft_free_arr(env_arr);
+	exit(0);
+}
 
 void	execution(t_command *final_list, t_env *env)
 {
+	t_vars	v;
 	pid_t	child1;
-	char	*command;
 	int		pipefd[2];
 	char	**env_arr;
 	int	stdin = dup(STDIN_FILENO);
 	int	stdout = dup(STDOUT_FILENO);
-	while (final_list)
+	v.final_list = final_list;
+	while (v.final_list)
 	{
 		pipe(pipefd);
 		env_arr = create_2d_array_from_env_list(env);
 		child1 = fork();
 		if (child1 == 0)
 		{
-			if (check_if_builtin(final_list))
+			if (check_if_builtin(v.final_list))
 				exit (0);
-			if (lstsize(final_list) == 1)
-			{
-				command = get_paths(final_list->cmd[0], env);
-				simple_command(final_list, env, command, env_arr);
-			}
-			// if (!final_list->prev && final_list->link)
-			// {
-			// 	command = get_paths(final_list->cmd[0], env);
-			// 	if (!command)
-			// 	{
-			// 		ft_free_arr(env_arr);
-			// 		printf("minishell: %s: No such file or directory\n", final_list->cmd[0]);
-			// 		exit(1);
-			// 	}
-			// 	if (final_list->fd_in != STDIN_FILENO)
-			// 		dup2(final_list->fd_in, STDIN_FILENO);
-			// 	if (final_list->fd_out != STDOUT_FILENO)
-			// 		dup2(final_list->fd_out, STDOUT_FILENO);
-			// 	else
-			// 	{
-			// 		close(pipefd[0]);
-			// 		dup2(pipefd[1], STDOUT_FILENO);
-			// 	}
-			// 	if (execve(command, final_list->cmd, env_arr) == -1)
-			// 	{
-			// 		free(command);
-			// 		ft_free_arr(env_arr);
-			// 		printf("minishell: %s: command not found\n", final_list->cmd[0]);
-			// 		exit(1);
-			// 	}
-			// 	free(command);
-			// 	ft_free_arr(env_arr);
-			// 	exit(0);
-			// }
-			// else
-			// {
-			// 	command = get_paths(final_list->cmd[0], env);
-			// 	if (!command)
-			// 	{
-			// 		ft_free_arr(env_arr);
-			// 		printf("minishell: %s: No such file or directory\n", final_list->cmd[0]);
-			// 		exit(1);
-			// 	}
-			// 	if (final_list->fd_out != STDOUT_FILENO)
-			// 		dup2(final_list->fd_out, STDOUT_FILENO);
-			// 	if (final_list->fd_in != STDIN_FILENO)
-			// 		dup2(final_list->fd_in, STDIN_FILENO);
-			// 	else
-			// 	{
-			// 		close(pipefd[1]);
-			// 		dup2(pipefd[0], final_list->fd_in);
-			// 		close(pipefd[0]);
-			// 	}
-			// 	if (execve(command, final_list->cmd, env_arr) == -1)
-			// 	{
-			// 		free(command);
-			// 		ft_free_arr(env_arr);
-			// 		printf("minishell: %s: command not found\n", final_list->cmd[0]);
-			// 		exit(1);
-			// 	}
-			// 	free(command);
-			// 	ft_free_arr(env_arr);
-			// 	exit(0);
-			// }
+			if (lstsize(v.final_list) == 1)
+				simple_command(v.final_list, env, v.command, env_arr);
+			if (!v.final_list->prev && v.final_list->link)
+				execute_first_command(&v, env, env_arr, pipefd);
+			else if (v.final_list->prev && v.final_list->link)
+				execute_middle_commands(&v, env, env_arr, pipefd);
+			else
+				execute_last_command(&v, env, env_arr, pipefd);
 		}
 		else if (child1 < 0)
-			printf("\nFork failed. Unable to execute command: %s", final_list->cmd[0]);
+			printf("\nFork failed. Unable to execute command: %s", v.final_list->cmd[0]);
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[0]);
 		ft_free_arr(env_arr);
-		final_list = final_list->link;
+		v.final_list = v.final_list->link;
 	}
 	while(wait(NULL) != -1);
 	close(pipefd[0]);

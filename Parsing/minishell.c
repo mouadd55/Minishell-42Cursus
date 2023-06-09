@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/08 15:39:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 21:46:08 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ void	minihell(t_env **envr, t_list **lst)
 {
 	t_command	*final_list;
 
-	// if (check_syntax(*lst))
-	// 	return ;
+	if (check_syntax(*lst))
+		return ;
 	lexer(lst);
 	final_list = NULL;
 	if (lst)

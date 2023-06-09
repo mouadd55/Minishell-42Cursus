@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/08 15:47:12 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 20:06:10 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 			v.str = ft_strjoin(v.str, v.tmp1->content);
 		v.tmp1 = v.tmp1->link;
 	}
-	ft_destroy_list(v.tmp1);
+	ft_destroy_list(&v.tmp1);
 	return (v.str);
 }
 
@@ -175,8 +175,8 @@ void open_files(t_list *list, t_command **final_list, t_env **envr)
 				list = v.tmp1;
 				if (v.str)
 				{
-					if (v.fd >= 3)
-						close(v.fd);
+					// if (v.fd >= 3)
+						// close(v.fd);
 					v.fd = open_file(v.str, type);
 					if (v.fd == -1)
 					{

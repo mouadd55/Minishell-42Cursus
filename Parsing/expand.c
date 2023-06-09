@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/03 15:12:59 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 21:52:04 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,10 @@ void remove_dollar(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		if (tmp && (tmp->content[0] == '$' && tmp->link
+		if ((tmp->content[0] == '$' && (!ft_strcmp(tmp->link->type, "DOUBLE_Q")
+				|| !ft_strcmp(tmp->link->type, "SINGLE_Q"))))
+					tmp = del_node(list, tmp);
+		else if ((tmp->content[0] == '$' && tmp->link
 				&& tmp->link->content[0] != 32))
 		{
 			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
