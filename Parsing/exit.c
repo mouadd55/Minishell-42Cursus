@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/08 15:49:56 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/10 18:03:06 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,8 @@ void	ft_exit(char **cmd, t_command *final)
 	}
 	if (final && !final->link && !final->prev && v.j == 0)
 	{
+		if (v.flag == 1)
+			exit(ft_atoi(cmd[1]));
 		printf("exit\n");
 		exit(255);
 	}

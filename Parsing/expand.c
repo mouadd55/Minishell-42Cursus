@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/09 21:52:04 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/10 19:18:32 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,7 @@ void remove_dollar(t_list **list)
 	while (tmp)
 	{
 		if ((tmp->content[0] == '$' && tmp->link && (!ft_strcmp(tmp->link->type, "DOUBLE_Q")
-				|| !ft_strcmp(tmp->link->type, "SINGLE_Q"))))
+				|| !ft_strcmp(tmp->link->type, "SINGLE_Q") || !ft_strcmp(tmp->link->type, "FILE"))))
 				{
 					free(tmp->content);
 					tmp->content = ft_strdup(tmp->link->content);

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/09 18:16:56 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/10 17:58:21 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ int			export_parsing(t_list **list, t_env **env);
 char		*spaces_in_quotes_utils(char *str, int idx);
 int			ft_printf_fd(const char *first, int fd, ...);
 void		env_parsing(char **cmd, t_env *env, int fd_out);
+void		ft_builtins(char **cmd, t_env **env, int fd_out);
 void		lstadd_back_final(t_command **head, t_command *new);
 t_command	*lstnew_final(char **command, int fd_in, int fd_out);
 void		create_final_list(t_list *list, t_command **final_list);
@@ -163,8 +164,8 @@ void		open_files(t_list *list, t_command *final_list, t_env **envr);
 
 /**************************** Execution Part *****************************/
 
-int	lstsize(t_command *lst);
+int			lstsize(t_command *lst);
 char		*get_paths(char *cmd, t_env *env);
-void		execution(t_command *final_list, t_env *envr);
+void		execution(t_list **lst, t_command *final_list, t_env **envr);
 
 #endif

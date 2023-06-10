@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/09 20:06:10 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/10 17:07:03 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,14 @@
 int	open_file(char *file_name, char *type)
 {
 	int	fd;
-	if (file_name)
-	{
-		if (!ft_strcmp(type, ">"))
-			fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
-		if (!ft_strcmp(type, ">>"))
-			fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
-		if (!ft_strcmp(type, "<"))
-			fd = open(file_name, O_RDONLY, 0777);
-		if (fd == -1)
-			perror(file_name);
-	}
+	if (!ft_strcmp(type, ">"))
+		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
+	if (!ft_strcmp(type, ">>"))
+		fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
+	if (!ft_strcmp(type, "<"))
+		fd = open(file_name, O_RDONLY, 0777);
+	if (fd == -1)
+		perror(file_name);
 	return (fd);
 }
 
@@ -164,9 +161,17 @@ t_command *add_fd(t_vars *v, t_command *tmp, t_list *list)
 	if (v->tmp_value && tmp)
 	{
 		if (!ft_strcmp(v->tmp_value, ">") || !ft_strcmp(v->tmp_value, ">>"))
+		{
+			if (tmp->fd_out >= 3)
+				close(tmp->fd_out);
 			tmp->fd_out = v->fd;
+		}
 		else if (!ft_strcmp(v->tmp_value, "<"))
+		{
+			if (tmp->fd_in >= 3)
+				close(tmp->fd_in);
 			tmp->fd_in = v->fd;
+		}
 		free(v->tmp_value);
 		free(v->str);
 		v->tmp_value = NULL;
