@@ -159,7 +159,7 @@ void		expand_in_quotes(t_list **list, t_env *envr, char *type);
 void		check_cmd(t_list **list, t_env **envr, t_command *f_list);
 int			check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list		*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
-void		open_files(t_list *list, t_command **final_list, t_env **envr);
+void		open_files(t_list *list, t_command *final_list, t_env **envr);
 
 /**************************** Execution Part *****************************/
 

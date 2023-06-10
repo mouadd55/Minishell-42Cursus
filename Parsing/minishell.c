@@ -127,11 +127,11 @@ void	minihell(t_env **envr, t_list **lst)
 	{
 		expand_var(lst, *envr, 1);
 		create_final_list(*lst, &final_list);
-		open_files(*lst, &final_list, envr);
+		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
 		execution(final_list, *envr);
 		// ft(*lst);
-		// final(final_list);
+		final(final_list);
 	}
 	// ft_destroy_final(&final_list);
 }

@@ -15,15 +15,17 @@
 int	open_file(char *file_name, char *type)
 {
 	int	fd;
-
-	if (!ft_strcmp(type, ">"))
-		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	if (!ft_strcmp(type, ">>"))
-		fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
-	if (!ft_strcmp(type, "<"))
-		fd = open(file_name, O_RDONLY, 0777);
-	if (fd == -1)
-		perror(file_name);
+	if (file_name)
+	{
+		if (!ft_strcmp(type, ">"))
+			fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
+		if (!ft_strcmp(type, ">>"))
+			fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
+		if (!ft_strcmp(type, "<"))
+			fd = open(file_name, O_RDONLY, 0777);
+		if (fd == -1)
+			perror(file_name);
+	}
 	return (fd);
 }
 
@@ -129,79 +131,73 @@ void	open_heredoc(t_list *list, t_env **envr)
 	open_heredoc_2(&v, envr);
 }
 
-void open_files(t_list *list, t_command **final_list, t_env **envr)
+int var_redirect(t_list *list, t_vars *v)
+{
+	v->tmp_value = NULL;
+	v->tmp_value = ft_strdup(is_redir(list));
+	if (list->link && !ft_strcmp(list->link->type, "space"))
+		list = list->link->link;
+	else if (list->link)
+		list = list->link;
+	v->str = NULL;
+	if (!ft_strcmp("VAR", list->type))
+	{
+		ft_printf_fd("minishell: %s: ambiguous redirect\n", 2,list->content);
+		return (1);
+	}
+	else if (!ft_strcmp("FILE", list->type))
+	{
+		while (list && !ft_strcmp("FILE", list->type))
+		{
+			v->str = ft_strjoin(v->str, list->content);
+			list = list->link;
+		}
+		v->fd = open_file(v->str, v->tmp_value);
+		if (v->fd == -1)
+			return (1);
+	}
+	return (0);
+}
+
+t_command *add_fd(t_vars *v, t_command *tmp, t_list *list)
+{
+	if (v->tmp_value && tmp)
+	{
+		if (!ft_strcmp(v->tmp_value, ">") || !ft_strcmp(v->tmp_value, ">>"))
+			tmp->fd_out = v->fd;
+		else if (!ft_strcmp(v->tmp_value, "<"))
+			tmp->fd_in = v->fd;
+		free(v->tmp_value);
+		free(v->str);
+		v->tmp_value = NULL;
+	}
+	if (list && !ft_strcmp(list->type , "PIPE")
+		&& tmp && tmp->link)
+		tmp = tmp->link;
+	return (tmp);
+}
+
+void open_files(t_list *list, t_command *tmp, t_env **envr)
 {
 	t_vars v;
-	char *type;
-	t_command *tmp;
 
-	type = NULL;
-	tmp = *final_list;
-	v.str = NULL;
-	v.fd = -1;
+	v.tmp_value = NULL;
 	while (list)
 	{
 		if (!ft_strcmp(list->type, "HEREDOC"))
 			open_heredoc(list, envr);
-		else if (is_redir(list))
+		else if (is_redir(list) && var_redirect(list, &v))
 		{
-			type = ft_strdup(is_redir(list));
-			if (list->link && !ft_strcmp(list->link->type, "space"))
-				list = list->link->link;
-			else if (list->link)
+			tmp->fd_in = -1;
+			tmp->fd_out = -1;
+			while (list && ft_strcmp(list->type, "PIPE"))
 				list = list->link;
-			if (!ft_strcmp("VAR", list->type))
-			{
-				ft_printf_fd("minishell: %s: ambiguous redirect\n", 2,list->content);
-				tmp->fd_out = -1;
-				tmp->fd_in = -1;
-				while (list && ft_strcmp("PIPE", list->type))
-					list = list->link;
-				if (list && list->link)
-					list = list->link;
-				if (tmp->link)
-					tmp = tmp->link;
-				type = NULL;
-			}
-			else if (list && !ft_strcmp("FILE", list->type))
-			{
-				v.str = NULL;
-				while (list && !ft_strcmp("FILE", list->type))
-				{
-					v.str = ft_strjoin(v.str, list->content);
-					v.tmp1 = list;
-					list = list->link;
-				}
-				list = v.tmp1;
-				if (v.str)
-				{
-					// if (v.fd >= 3)
-						// close(v.fd);
-					v.fd = open_file(v.str, type);
-					if (v.fd == -1)
-					{
-						tmp->fd_out = -1;
-						while (list && ft_strcmp(list->type, "PIPE"))
-							list = list->link;
-						if (tmp->link)
-							tmp = tmp->link;
-					}
-
-				}
-			}
+			if (tmp && tmp->link)
+				tmp = tmp->link;
+			free(v.tmp_value);
+			v.tmp_value = NULL;
 		}
-		if (type && tmp)
-		{
-			if (!ft_strcmp(type, ">") || !ft_strcmp(type, ">>"))
-				tmp->fd_out = v.fd;
-			else if (!ft_strcmp(type, "<"))
-				tmp->fd_in = v.fd;
-			free(type);
-			free(v.str);
-			type = NULL;
-		}
-		if (list && !ft_strcmp(list->type , "PIPE"))
-			tmp = tmp->link;
+		tmp = add_fd(&v, tmp, list);
 		if (!list)
 			break;
 		list = list->link;

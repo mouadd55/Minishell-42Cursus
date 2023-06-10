@@ -259,35 +259,38 @@ void	execution(t_command *final_list, t_env *env)
 	int	stdin = dup(STDIN_FILENO);
 	int	stdout = dup(STDOUT_FILENO);
 	v.final_list = final_list;
-	while (v.final_list)
-	{
-		pipe(pipefd);
-		env_arr = create_2d_array_from_env_list(env);
-		child1 = fork();
-		if (child1 == 0)
+	// if (v.final_list->fd_in != -1 && v.final_list->fd_out != -1)
+	// {
+		while (v.final_list)
 		{
-			if (check_if_builtin(v.final_list))
-				exit (0);
-			if (lstsize(v.final_list) == 1)
-				simple_command(v.final_list, env, v.command, env_arr);
-			if (!v.final_list->prev && v.final_list->link)
-				execute_first_command(&v, env, env_arr, pipefd);
-			else if (v.final_list->prev && v.final_list->link)
-				execute_middle_commands(&v, env, env_arr, pipefd);
-			else
-				execute_last_command(&v, env, env_arr, pipefd);
+			pipe(pipefd);
+			env_arr = create_2d_array_from_env_list(env);
+			child1 = fork();
+			if (child1 == 0)
+			{
+				if (check_if_builtin(v.final_list))
+					exit (0);
+				if (lstsize(v.final_list) == 1)
+					simple_command(v.final_list, env, v.command, env_arr);
+				if (!v.final_list->prev && v.final_list->link)
+					execute_first_command(&v, env, env_arr, pipefd);
+				else if (v.final_list->prev && v.final_list->link)
+					execute_middle_commands(&v, env, env_arr, pipefd);
+				else
+					execute_last_command(&v, env, env_arr, pipefd);
+			}
+			else if (child1 < 0)
+				printf("\nFork failed. Unable to execute command: %s", v.final_list->cmd[0]);
+			close(pipefd[1]);
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[0]);
+			ft_free_arr(env_arr);
+			v.final_list = v.final_list->link;
 		}
-		else if (child1 < 0)
-			printf("\nFork failed. Unable to execute command: %s", v.final_list->cmd[0]);
-		close(pipefd[1]);
-		dup2(pipefd[0], STDIN_FILENO);
+		while(wait(NULL) != -1);
 		close(pipefd[0]);
-		ft_free_arr(env_arr);
-		v.final_list = v.final_list->link;
-	}
-	while(wait(NULL) != -1);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	dup2(stdin, STDIN_FILENO);
-	dup2(stdout, STDOUT_FILENO);
+		close(pipefd[1]);
+		dup2(stdin, STDIN_FILENO);
+		dup2(stdout, STDOUT_FILENO);
+	// }
 }
