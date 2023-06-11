@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/09 18:16:56 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/11 19:44:07 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ int			is_space(int c);
 int			ft_isalpha(int ch);
 char		is_special(char c);
 char		*ft_itoa(long long n);
+long long	ft_atoi(const char *str);
 char		**ft_free_arr(char **str);
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(const char *s1);

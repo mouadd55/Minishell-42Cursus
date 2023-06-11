@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/09 21:46:08 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/11 20:20:14 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,9 @@ t_env	*ft_copy_env_list(t_env *env)
 void	recreate_list(t_command *final_list, t_env **envr)
 {
 	t_vars	v;
+	int		size;
 
+	size = lstsize(final_list);
 	while (final_list)
 	{
 		v.i = 0;
@@ -102,14 +104,15 @@ void	recreate_list(t_command *final_list, t_env **envr)
 		{
 			v.tmp1 = ft_split_input(v.str);
 			lexer(&v.tmp1);
-			check_cmd(&v.tmp1, envr, final_list);
+			if (size == 1)
+				check_cmd(&v.tmp1, envr, final_list);
 			ft_destroy_list(&v.tmp1);
 			free(v.str);
 			v.str = NULL;
 		}
 		if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "exit"))
 			ft_exit(final_list->cmd, final_list);
-		else if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "env"))
+		else if (lstsize(final_list) == 1 && !ft_strcmp(final_list->cmd[0], "env"))
 			ft_builtins(final_list->cmd, envr, final_list->fd_out);
 		final_list = final_list->link;
 	}
@@ -137,6 +140,24 @@ void	minihell(t_env **envr, t_list **lst)
 	ft_destroy_final(&final_list);
 }
 
+void	shell_level(t_env **env)
+{
+	t_vars	v;
+	int		shlvl;
+
+	v.temp1 = *env;
+	while (v.temp1)
+	{
+		if (!ft_strcmp(v.temp1->key, "SHLVL"))
+		{
+			shlvl = (int)ft_atoi(v.temp1->value);
+			free(v.temp1->value);
+			shlvl++;
+			v.temp1->value = ft_itoa(shlvl);
+		}
+		v.temp1 = v.temp1->link;
+	}
+}
 // void	l()
 // {
 // 	system ("leaks minishell");
@@ -155,6 +176,7 @@ int	main(int ac, char **av, char **env)
 	lst = NULL;
 	envr = NULL;
 	envr = ft_split_environment(env);
+	shell_level(&envr);
 	signal(SIGINT, &catching_signals);
 	signal(SIGQUIT,SIG_IGN);
 	// signal(SIGQUIT,SIG_DFL);

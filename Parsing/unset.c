@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 12:48:36 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/24 15:04:57 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/11 19:05:32 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,19 @@ void	remove_variable(t_vars *v, t_env **env)
 {
 	v->i = 0;
 	v->temp1 = *env;
+	if (ft_lstsize_env(*env) == 1)
+	{
+		ft_destroy_list_env(env);
+		return ;
+	}
 	while (v->temp1)
 	{
 		v->i++;
 		if (v->temp1 && !ft_strcmp(v->var, v->temp1->key))
+		{
 			delete_node(env, v->i);
+			return ;
+		}
 		v->temp1 = v->temp1->link;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/09 20:58:33 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/11 19:39:06 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ int	check_if_builtin(t_command *final_list)
 	arr = ft_split("echo pwd cd export env exit unset", " ");
 	while (arr[++i])
 	{
-		if (!ft_strcmp(final_list->cmd[0], arr[i]))
+		if (final_list->cmd && final_list->cmd[0]
+			&& !ft_strcmp(final_list->cmd[0], arr[i]))
 		{
 			ft_free_arr(arr);
 			return (1);
@@ -101,31 +102,36 @@ int	check_if_builtin(t_command *final_list)
 
 void	simple_command(t_command *final_list, t_env *env, char *command, char **env_arr)
 {
-	command = get_paths(final_list->cmd[0], env);
-	if (!command)
+	if (final_list->cmd && final_list->cmd[0])
 	{
-		ft_free_arr(env_arr);
-		printf("minishell: %s: No such file or directory\n", final_list->cmd[0]);
-		exit(1);
-	}
-	if (final_list->fd_out != -1 && final_list->fd_in != -1)
-	{	
-		if (final_list->fd_out != STDOUT_FILENO)
+		if (check_if_builtin(final_list))
+			exit (0);
+		command = get_paths(final_list->cmd[0], env);
+		if (!command)
 		{
-			dup2(final_list->fd_out, STDOUT_FILENO);
-			close(final_list->fd_out);
-		}
-		if (final_list->fd_in != STDIN_FILENO)
-		{
-			dup2(final_list->fd_in, STDIN_FILENO);
-			close(final_list->fd_in);
-		}
-		if (execve(command, final_list->cmd, env_arr) == -1)
-		{
-			printf("minishell: %s: command not found\n", final_list->cmd[0]);
-			free(command);
 			ft_free_arr(env_arr);
+			printf("minishell: %s: No such file or directory\n", final_list->cmd[0]);
 			exit(1);
+		}
+		if (final_list->fd_out != -1 && final_list->fd_in != -1)
+		{	
+			if (final_list->fd_out != STDOUT_FILENO)
+			{
+				dup2(final_list->fd_out, STDOUT_FILENO);
+				close(final_list->fd_out);
+			}
+			if (final_list->fd_in != STDIN_FILENO)
+			{
+				dup2(final_list->fd_in, STDIN_FILENO);
+				close(final_list->fd_in);
+			}
+			if (execve(command, final_list->cmd, env_arr) == -1)
+			{
+				printf("minishell: %s: command not found\n", final_list->cmd[0]);
+				free(command);
+				ft_free_arr(env_arr);
+				exit(1);
+			}
 		}
 	}
 	free(command);
@@ -266,10 +272,11 @@ void	execution(t_command *final_list, t_env *env)
 			pipe(pipefd);
 			env_arr = create_2d_array_from_env_list(env);
 			child1 = fork();
-			if (child1 == 0)
+			v.command = NULL;
+			if (child1 < 0)
+				printf("minishell: fork: Resource temporarily unavailable\n");
+			else if (child1 == 0)
 			{
-				if (check_if_builtin(v.final_list))
-					exit (0);
 				if (lstsize(v.final_list) == 1)
 					simple_command(v.final_list, env, v.command, env_arr);
 				if (!v.final_list->prev && v.final_list->link)
@@ -279,8 +286,6 @@ void	execution(t_command *final_list, t_env *env)
 				else
 					execute_last_command(&v, env, env_arr, pipefd);
 			}
-			else if (child1 < 0)
-				printf("\nFork failed. Unable to execute command: %s", v.final_list->cmd[0]);
 			close(pipefd[1]);
 			dup2(pipefd[0], STDIN_FILENO);
 			close(pipefd[0]);
