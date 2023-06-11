@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/10 19:18:32 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 21:52:04 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,9 +182,7 @@ void	expand_in_quotes(t_list **list, t_env *envr, char *type)
 
 void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 {
-	t_env	*tmp1;
-
-	tmp1 = envr;
+	v->temp1 = envr;
 	if ((*tmp) && (*tmp)->content[0] == '$' && (*tmp)->link)
 	{
 		(*tmp) = (*tmp)->link;
@@ -192,18 +190,18 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 				(*tmp)->content[v->i]))
 			v->i++;
 		v->str = ft_substr((*tmp)->content, 0, v->i);
-		tmp1 = envr;
-		while (tmp1)
+		while (v->temp1)
 		{
-			if (tmp1 && !ft_strcmp(tmp1->key, v->str))
+			if (v->temp1  && !ft_strcmp(v->temp1->key, v->str))
 			{
-				(*tmp)->prev->content = ft_strdup(tmp1->value);
-				(*tmp)->prev->content = ft_strjoin((*tmp)->prev->content,
-						ft_strdup(&(*tmp)->content[v->i]));
+				(*tmp)->prev->content = ft_strdup(v->temp1->value);
+				v->command = ft_strdup(&(*tmp)->content[v->i]);
+				(*tmp)->prev->content = ft_strjoin((*tmp)->prev->content, v->command);
 				*tmp = del_node(list, *tmp);
+				free(v->command);
 				break ;
 			}
-			tmp1 = tmp1->link;
+			v->temp1 = v->temp1->link;
 		}
 	}
 }
@@ -215,7 +213,7 @@ void remove_dollar(t_list **list)
 	while (tmp)
 	{
 		if ((tmp->content[0] == '$' && tmp->link && (!ft_strcmp(tmp->link->type, "DOUBLE_Q")
-				|| !ft_strcmp(tmp->link->type, "SINGLE_Q") || !ft_strcmp(tmp->link->type, "FILE"))))
+				|| !ft_strcmp(tmp->link->type, "SINGLE_Q"))))
 				{
 					free(tmp->content);
 					tmp->content = ft_strdup(tmp->link->content);
@@ -245,9 +243,15 @@ void	expand_var(t_list **list, t_env *envr, int rm_quotes)
 
 	v.i = 0;
 	tmp = *list;
+	v.str = NULL;
 	while (tmp && ft_strcmp(tmp->type, "DELIMITER"))
 	{
 		expand_var_2(list, &tmp, envr, &v);
+		if (v.str)
+		{
+			free(v.str);
+			v.str = NULL;
+		}
 		tmp = tmp->link;
 	}
 	expand_in_quotes(list, envr, "DOUBLE_Q");

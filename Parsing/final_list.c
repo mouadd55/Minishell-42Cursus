@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 20:43:41 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/10 17:05:41 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/02 18:29:38 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,15 @@ void	*ft_destroy_final(t_command **head)
 		tmp = (*head)->link;
 		if ((*head)->cmd)
 			ft_free_arr((*head)->cmd);
+		if ((*head)->fd_in >= 3)
+			close((*head)->fd_in);
+		if ((*head)->fd_out >= 3)
+			close((*head)->fd_out);
+		if ((*head)->file_name)
+		{
+			unlink((*head)->file_name);
+			free((*head)->file_name);
+		}
 		free(*head);
 		(*head) = tmp;
 	}
@@ -42,6 +51,7 @@ t_command	*lstnew_final(char **command, int fd_in, int fd_out)
 	head->fd_out = fd_out;
 	head->link = NULL;
 	head->prev = NULL;
+	head->file_name = NULL;
 	return (head);
 }
 

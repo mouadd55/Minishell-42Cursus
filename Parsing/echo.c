@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/10 18:03:40 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/08 15:58:02 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	check_cmd(t_list **list, t_env **envr, t_command *f_list)
 	else if (*list && !(*list)->prev && (*list)->link
 		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
 		unset(list, envr);
-	if (f_list->cmd[1] == 0 && !ft_strcmp(f_list->cmd[0], "export"))
+	if (ft_lstsize(*list) == 1 && !ft_strcmp((*list)->content, "export"))
 	{
 		env_copy = ft_copy_env_list(*envr);
 		sort_env(env_copy, f_list->fd_out);

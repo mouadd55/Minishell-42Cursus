@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/10 20:29:48 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 21:46:08 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,18 @@ void	final(t_command *list)
 	while (tmp)
 	{
 		i = 0;
-		printf("|    ------------------------------------------                       |\n");
-		printf("|    |               Command                  |                       |\n");
-		printf("|    ------------------------------------------                       |\n");
+		printf("|    ---------------------------------------                          |\n");
+		printf("|    |               Command               |                          |\n");
+		printf("|    ---------------------------------------                          |\n");
 		while (tmp->cmd && tmp->cmd[i])
 		{
-			printf("|    |%40s|                       |\n", tmp->cmd[i]);
+			printf("|    |%37s|                          |\n", tmp->cmd[i]);
 			i++;
 		}
-		printf("|    ------------------------------------------                       |\n");
+		printf("|    ---------------------------------------                          |\n");
 		printf("|%29s %2d                                     |\n", "fd_in:", tmp->fd_in);
 		printf("| %29s %2d                                    |\n", "fd_out:", tmp->fd_out);
+		printf("| %29s %2s                                    |\n", "file_name:", tmp->file_name);
 		tmp = tmp->link;
 	}
 	printf("-----------------------------------------------------------------------\x1B[0m\n\n");
@@ -84,9 +85,7 @@ t_env	*ft_copy_env_list(t_env *env)
 void	recreate_list(t_command *final_list, t_env **envr)
 {
 	t_vars	v;
-	int		size;
 
-	size = lstsize(final_list);
 	while (final_list)
 	{
 		v.i = 0;
@@ -103,15 +102,14 @@ void	recreate_list(t_command *final_list, t_env **envr)
 		{
 			v.tmp1 = ft_split_input(v.str);
 			lexer(&v.tmp1);
-			if (size == 1)
-				check_cmd(&v.tmp1, envr, final_list);
+			check_cmd(&v.tmp1, envr, final_list);
 			ft_destroy_list(&v.tmp1);
 			free(v.str);
 			v.str = NULL;
 		}
 		if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "exit"))
 			ft_exit(final_list->cmd, final_list);
-		else if (lstsize(final_list) == 1 && final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "env"))
+		else if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "env"))
 			ft_builtins(final_list->cmd, envr, final_list->fd_out);
 		final_list = final_list->link;
 	}
@@ -132,11 +130,11 @@ void	minihell(t_env **envr, t_list **lst)
 		create_final_list(*lst, &final_list);
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
-		execution(lst, final_list, envr);
+		execution(final_list, *envr);
 		// ft(*lst);
 		// final(final_list);
 	}
-	// ft_destroy_final(&final_list);
+	ft_destroy_final(&final_list);
 }
 
 // void	l()
@@ -181,5 +179,3 @@ int	main(int ac, char **av, char **env)
 	printf("exit\n");
 	return (0);
 }
-
-// << a >b cat

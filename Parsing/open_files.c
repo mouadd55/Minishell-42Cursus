@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/10 17:07:03 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/09 20:06:10 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,18 @@
 int	open_file(char *file_name, char *type)
 {
 	int	fd;
-	if (!ft_strcmp(type, ">"))
-		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	if (!ft_strcmp(type, ">>"))
-		fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
-	if (!ft_strcmp(type, "<"))
-		fd = open(file_name, O_RDONLY, 0777);
-	if (fd == -1)
-		perror(file_name);
+
+	if (file_name)
+	{
+		if (!ft_strcmp(type, ">"))
+			fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
+		if (!ft_strcmp(type, ">>"))
+			fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
+		if (!ft_strcmp(type, "<"))
+			fd = open(file_name, O_RDONLY, 0777);
+		if (fd == -1)
+			perror(file_name);
+	}
 	return (fd);
 }
 
@@ -58,7 +62,7 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 
 
 
-void	open_heredoc_3(t_vars *v, t_env **envr)
+void	open_heredoc_3(t_vars *v, t_env **envr, char *old_file)
 {
 	v->fd = open(v->val, O_CREAT | O_RDWR | O_APPEND, 0777);
 	while (1)
@@ -67,7 +71,6 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 		if (!v->str || !ft_strcmp(v->str, v->tmp_str))
 		{
 			close(v->fd);
-			unlink(v->val);
 			free(v->str);
 			free(v->val);
 			free(v->tmp_str);
@@ -81,7 +84,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 	}
 }
 
-void	open_heredoc_2(t_vars *v, t_env **envr)
+void	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
 {
 	char	*save;
 
@@ -97,15 +100,15 @@ void	open_heredoc_2(t_vars *v, t_env **envr)
 		v->val = ft_strjoin(v->val, save);
 		free(save);
 	}
-	open_heredoc_3(v, envr);
+	p->val = ft_strdup(v->val);
+	open_heredoc_3(v, envr, p->tmp_value);
 }
 
-void	open_heredoc(t_list *list, t_env **envr)
+int	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
 {
 	t_vars	v;
 
 	v.val = NULL;
-	v.flag = 0;
 	if (list->link && !ft_strcmp(list->link->type, "space"))
 		list = list->link->link;
 	else if (list->link)
@@ -119,18 +122,17 @@ void	open_heredoc(t_list *list, t_env **envr)
 			else if (list->content[0] == '\"')
 				v.var = ft_strdup("\"");
 			list->content = ft_strtrim(list->content, v.var);
-			v.flag = 1;
 			free(v.var);
 		}
 		v.val = ft_strjoin(v.val, list->content);
 		list = list->link;
 	}
-	open_heredoc_2(&v, envr);
+	open_heredoc_2(&v, envr, p);
+	p->fd = v.fd;
 }
 
 int var_redirect(t_list *list, t_vars *v)
 {
-	v->tmp_value = NULL;
 	v->tmp_value = ft_strdup(is_redir(list));
 	if (list->link && !ft_strcmp(list->link->type, "space"))
 		list = list->link->link;
@@ -161,20 +163,19 @@ t_command *add_fd(t_vars *v, t_command *tmp, t_list *list)
 	if (v->tmp_value && tmp)
 	{
 		if (!ft_strcmp(v->tmp_value, ">") || !ft_strcmp(v->tmp_value, ">>"))
-		{
-			if (tmp->fd_out >= 3)
-				close(tmp->fd_out);
 			tmp->fd_out = v->fd;
-		}
-		else if (!ft_strcmp(v->tmp_value, "<"))
+		else if (!ft_strcmp(v->tmp_value, "<") || !ft_strcmp(v->tmp_value, "<<"))
 		{
-			if (tmp->fd_in >= 3)
-				close(tmp->fd_in);
 			tmp->fd_in = v->fd;
+			if (!ft_strcmp(v->tmp_value, "<<"))
+			{
+				tmp->file_name = ft_strdup(v->command);
+				free(v->command);
+			}
 		}
 		free(v->tmp_value);
-		free(v->str);
 		v->tmp_value = NULL;
+		free(v->str);
 	}
 	if (list && !ft_strcmp(list->type , "PIPE")
 		&& tmp && tmp->link)
@@ -182,25 +183,62 @@ t_command *add_fd(t_vars *v, t_command *tmp, t_list *list)
 	return (tmp);
 }
 
+void if_heredoce(t_vars *v, t_command *tmp, t_env **envr, t_vars *p)
+{
+	if(tmp->file_name)
+	{
+		if (tmp->fd_in >= 3)
+			close(tmp->fd_in);
+		unlink(tmp->file_name);
+		free(tmp->file_name);
+		tmp->file_name = NULL;
+	}
+	v->tmp_value = ft_strdup("<<");
+	open_heredoc(p, v->tmp1, envr);
+	v->fd = p->fd;
+	v->command = ft_strdup(p->val);
+	free(p->val);
+}
+
+t_list *if_redirect(t_command *tmp, t_vars *v, t_env **envr, t_vars *p)
+{
+	tmp->fd_in = -1;
+	tmp->fd_out = -1;
+	while (v->tmp1 && ft_strcmp(v->tmp1->type, "PIPE"))
+	{
+		if(!ft_strcmp(v->tmp1->type, "HEREDOC"))
+		{
+			if_heredoce(v, tmp, envr, p);
+			tmp->file_name = ft_strdup(v->command);
+			free(v->command);
+		}
+		v->tmp1 = v->tmp1->link;
+	}
+	if (tmp && tmp->link)
+		tmp = tmp->link;
+	// free(v->tmp_value);
+	free(v->str);
+	v->tmp_value = NULL;
+	return (v->tmp1);
+}
+
 void open_files(t_list *list, t_command *tmp, t_env **envr)
 {
 	t_vars v;
+	t_vars p;
+	v.command = NULL;
 
 	v.tmp_value = NULL;
+	v.str = NULL;
 	while (list)
 	{
+		v.tmp1 = list;
 		if (!ft_strcmp(list->type, "HEREDOC"))
-			open_heredoc(list, envr);
+			if_heredoce(&v, tmp, envr, &p);
 		else if (is_redir(list) && var_redirect(list, &v))
 		{
-			tmp->fd_in = -1;
-			tmp->fd_out = -1;
-			while (list && ft_strcmp(list->type, "PIPE"))
-				list = list->link;
-			if (tmp && tmp->link)
-				tmp = tmp->link;
 			free(v.tmp_value);
-			v.tmp_value = NULL;
+			list = if_redirect(tmp, &v, envr, &p);
 		}
 		tmp = add_fd(&v, tmp, list);
 		if (!list)
