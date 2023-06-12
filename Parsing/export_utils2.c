@@ -57,9 +57,9 @@ void	print_export(t_env *temp3, int fd_out)
 	while (temp3)
 	{
 		if (!temp3->value)
-			ft_printf_fd("declare -x %s\n", fd_out, (temp3)->key);
+			ft_printf("declare -x %s\n", fd_out, (temp3)->key);
 		else
-			ft_printf_fd("declare -x %s=\"%s\"\n", fd_out,
+			ft_printf("declare -x %s=\"%s\"\n", fd_out,
 				(temp3)->key, (temp3)->value);
 		temp3 = (temp3)->link;
 	}

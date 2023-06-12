@@ -12,7 +12,7 @@
 
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -g -O1 #-fsanitize=address #-Werror
+CFLAGS	= -Wall -Wextra -g -O1 -fsanitize=address #-Werror
 OBJDIR	= _Object_files/
 R		= \x1B[91m
 G		= \x1B[32m

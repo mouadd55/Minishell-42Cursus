@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 16:30:52 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 19:21:40 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct t_vars
 	int			start;
 	int			count;
 	int			d_quotes;
+	int			pipefd[2];
 	pid_t		child;
 	char		*tmp;
 	char		*tmp_str;
@@ -72,6 +73,7 @@ typedef struct t_vars
 	char		*tmp_key;
 	char		*command;
 	char		*tmp_value;
+	char		**env_arr;
 	t_list		**lst;
 	t_list		*tmp1;
 	t_list		*tmp2;
@@ -157,7 +159,7 @@ void			delete_node(t_env **env, int position);
 void			spaces_in_quotes(t_cmd **final_list);
 void			change_dir(t_env **envr, t_cmd *f_list);
 char			*spaces_in_quotes_utils(char *str, int idx);
-int				ft_printf_fd(const char *first, int fd, ...);
+int				ft_printf(const char *first, int fd, ...);
 void			env_parsing(char **cmd, t_env *env, int fd_out);
 void			mooooore_steps(t_vars *v, t_env **env, int length);
 void			lstadd_back_final(t_cmd **head, t_cmd *new);

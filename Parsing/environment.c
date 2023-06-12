@@ -19,7 +19,7 @@ void	print_env(int i, int count, t_env *env, int fd_out)
 		while (env)
 		{
 			if (env->value)
-				ft_printf_fd("%s=%s\n", fd_out, env->key, env->value);
+				ft_printf("%s=%s\n", fd_out, env->key, env->value);
 			env = env->link;
 		}
 	}	
@@ -37,12 +37,12 @@ void	env_parsing(char **cmd, t_env *env, int fd_out)
 			v.count++;
 		else if (v.count && cmd[v.i][0] == '-' && ft_strlen(cmd[v.i]) > 1)
 		{
-			ft_printf_fd("env: illegal option -- %c\n", 2, cmd[v.i][1]);
+			ft_printf("env: illegal option -- %c\n", 2, cmd[v.i][1]);
 			return ;
 		}
 		else if (v.count && cmd[v.i][0] != '-')
 		{
-			ft_printf_fd("env: %s: No such file or directory\n", 2, cmd[v.i]);
+			ft_printf("env: %s: No such file or directory\n", 2, cmd[v.i]);
 			return ;
 		}
 	}

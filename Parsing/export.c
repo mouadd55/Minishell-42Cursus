@@ -83,10 +83,10 @@ void	mooooore_steps(t_vars *v, t_env **env, int length)
 	v->tmp3 = v->tmp1;
 	join_variable_values(v);
 	if (ft_strlen(v->var) == 0 && v->val)
-		ft_printf_fd("minishell: export: `=%s': not a valid identifier\n",
+		ft_printf("minishell: export: `=%s': not a valid identifier\n",
 			2, v->val);
 	else if (ft_strlen(v->var) == 0 && !length)
-		ft_printf_fd("minishell: export: `': not a valid identifier\n", 2);
+		ft_printf("minishell: export: `': not a valid identifier\n", 2);
 	else if (!length && check_if_variable_exist(*env, v->var, &v->temp2))
 		existed_variable(v);
 	else if (!length)
@@ -112,7 +112,7 @@ int	export_parsing(t_list **list, t_env **env, int length)
 		join_variable_names(&v);
 		if (check_valid_var(v.var) || (v.var && v.var[0] == '-'))
 		{
-			ft_printf_fd("minishell: export: `%s': not a valid identifier\n", 2, v.var);
+			ft_printf("minishell: export: `%s': not a valid identifier\n", 2, v.var);
 			if (v.vars == 1 && v.var[0] == '-')
 				return (1);
 		}

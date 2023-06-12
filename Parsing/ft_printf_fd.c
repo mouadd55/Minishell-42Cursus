@@ -36,7 +36,7 @@ int	ft_specifier(va_list args, char specifier, int fd)
 	return (printed);
 }
 
-int	ft_printf_fd(const char *first, int fd, ...)
+int	ft_printf(const char *first, int fd, ...)
 {
 	int		i;
 	int		out;

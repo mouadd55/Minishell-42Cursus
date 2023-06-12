@@ -58,7 +58,7 @@ void	pwd(t_cmd *f_list)
 
 	pwd = getcwd(NULL, 0);
 	if (pwd)
-		ft_printf_fd("%s\n", f_list->fd_out, pwd);
+		ft_printf("%s\n", f_list->fd_out, pwd);
 	close(f_list->fd_out);
 	free(pwd);
 }

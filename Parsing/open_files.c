@@ -79,7 +79,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr, char *old_file)
 		if (check_char(v->str, '$'))
 			v->str = expand_in_here_doc(v->str, envr, v->flag);
 		if(v->str)
-			ft_printf_fd("%s\n", v->fd, v->str);
+			ft_printf("%s\n", v->fd, v->str);
 		free(v->str);
 	}
 }
@@ -141,7 +141,7 @@ int var_redirect(t_list *list, t_vars *v)
 	v->str = NULL;
 	if (!ft_strcmp("VAR", list->type))
 	{
-		ft_printf_fd("minishell: %s: ambiguous redirect\n", 2, list->content);
+		ft_printf("minishell: %s: ambiguous redirect\n", 2, list->content);
 		return (1);
 	}
 	else if (!ft_strcmp("FILE", list->type))
