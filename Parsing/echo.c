@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/12 11:25:30 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 16:26:50 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	echo(t_command *f_list)
+void	echo(t_cmd *f_list)
 {
 	t_vars v;
 
@@ -52,7 +52,7 @@ char	*strlower(char *str)
 	return (str);
 }
 
-void	pwd(t_command *f_list)
+void	pwd(t_cmd *f_list)
 {
 	char	*pwd;
 
@@ -91,7 +91,7 @@ void	change_dir_2(t_env **envr, t_vars *v)
 		perror(v->tmp_str);
 }
 
-void	change_dir(t_env **envr, t_command *f_list)
+void	change_dir(t_env **envr, t_cmd *f_list)
 {
 	t_env	*env;
 	t_vars v;
@@ -118,7 +118,7 @@ void	change_dir(t_env **envr, t_command *f_list)
 	free(v.val);
 }
 
-void	check_cmd(t_list **list, t_env **envr, t_command *f_list)
+void	check_cmd(t_list **list, t_env **envr, t_cmd *f_list)
 {
 	t_list	*tmp;
 	t_env	*env_copy;

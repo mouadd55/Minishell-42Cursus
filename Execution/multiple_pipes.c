@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:14:31 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 14:40:59 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 16:24:12 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	execute_first_command(t_vars *v, t_env **env, char **env_arr, int pipefd[2], t_list **lst)
+void	exec_st_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 {
 	if (v->final_list->cmd && v->final_list->cmd[0]
 		&& v->final_list->fd_in != -1 &&  v->final_list->fd_out != -1)
@@ -45,7 +45,7 @@ void	execute_first_command(t_vars *v, t_env **env, char **env_arr, int pipefd[2]
 		}
 		if (check_if_builtin(v->final_list))
 		{
-			ft_builtins(lst, *env, v->final_list, v->count);
+			ft_builtins(v->lst, *env, v->final_list, v->count);
 			exit (0);
 		}
 		else if (execve(v->command, v->final_list->cmd, env_arr) == -1)
@@ -58,7 +58,7 @@ void	execute_first_command(t_vars *v, t_env **env, char **env_arr, int pipefd[2]
 	}
 }
 
-void	execute_middle_commands(t_vars *v, t_env **env, char **env_arr, int pipefd[2], t_list **lst)
+void	exec_mid_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 {
 	if (v->final_list->cmd && v->final_list->cmd[0]
 		&& v->final_list->fd_in != -1 &&  v->final_list->fd_out != -1)
@@ -91,7 +91,7 @@ void	execute_middle_commands(t_vars *v, t_env **env, char **env_arr, int pipefd[
 		}
 		if (check_if_builtin(v->final_list))
 		{
-			ft_builtins(lst, *env, v->final_list, v->count);
+			ft_builtins(v->lst, *env, v->final_list, v->count);
 			exit (0);
 		}
 		else if (execve(v->command, v->final_list->cmd, env_arr) == -1)
@@ -104,7 +104,7 @@ void	execute_middle_commands(t_vars *v, t_env **env, char **env_arr, int pipefd[
 	}
 }
 
-void	execute_last_command(t_vars *v, t_env **env, char **env_arr, int pipefd[2], t_list **lst)
+void	exec_last_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 {
 	if (v->final_list->cmd && v->final_list->cmd[0]
 		&& v->final_list->fd_in != -1 &&  v->final_list->fd_out != -1)
@@ -138,7 +138,7 @@ void	execute_last_command(t_vars *v, t_env **env, char **env_arr, int pipefd[2],
 		}
 		if (check_if_builtin(v->final_list))
 		{
-			ft_builtins(lst, *env, v->final_list, v->count);
+			ft_builtins(v->lst, *env, v->final_list, v->count);
 			exit (0);
 		}
 		else if (execve(v->command, v->final_list->cmd, env_arr) == -1)

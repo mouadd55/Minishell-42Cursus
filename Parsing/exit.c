@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/11 21:48:16 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 16:27:15 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
-void	ft_exit(char **cmd, t_command *final)
+void	ft_exit(char **cmd, t_cmd *final)
 {
 	t_vars	v;
 

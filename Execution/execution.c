@@ -6,13 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 13:42:19 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 17:00:54 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_if_builtin(t_command *final_list)
+int	check_if_builtin(t_cmd *final_list)
 {
 	int		i;
 	char	**arr;
@@ -32,35 +32,38 @@ int	check_if_builtin(t_command *final_list)
 	return (0);
 }
 
-void	execution(t_command *final_list, t_env **env, t_list **lst)
+void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 {
 	t_vars	v;
-	pid_t	child1;
+	int		std_in;
+	int		std_out;
 	int		pipefd[2];
 	char	**env_arr;
 
-	int	stdin = dup(STDIN_FILENO);
-	int	stdout = dup(STDOUT_FILENO);
-	v.count = lstsize(final_list);
+	v.lst = lst;
 	v.final_list = final_list;
+	std_in = dup(STDIN_FILENO);
+	std_out = dup(STDOUT_FILENO);
+	v.count = lstsize(final_list);
 	while (v.final_list)
 	{
 		pipe(pipefd);
 		env_arr = create_2d_array_from_env_list(*env);
-		child1 = fork();
+		v.child = fork();
 		v.command = NULL;
-		if (child1 < 0)
-			ft_printf_fd("minishell: fork: Resource temporarily unavailable\n", 2);
-		else if (child1 == 0)
+		if (v.child < 0)
+			ft_printf_fd("minishell: fork: Resource temporarily unavailable\n",
+				2);
+		else if (v.child == 0)
 		{
 			if (lstsize(final_list) == 1)
-				simple_command(v.final_list, *env, v.command, env_arr);
+				simple_cmd(v.final_list, *env, v.command, env_arr);
 			if (!v.final_list->prev && v.final_list->link)
-				execute_first_command(&v, env, env_arr, pipefd, lst);
+				exec_st_cmd(&v, env, env_arr, pipefd);
 			else if (v.final_list->prev && v.final_list->link)
-				execute_middle_commands(&v, env, env_arr, pipefd, lst);
+				exec_mid_cmd(&v, env, env_arr, pipefd);
 			else
-				execute_last_command(&v, env, env_arr, pipefd, lst);
+				exec_last_cmd(&v, env, env_arr, pipefd);
 		}
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
@@ -68,9 +71,11 @@ void	execution(t_command *final_list, t_env **env, t_list **lst)
 		ft_free_arr(env_arr);
 		v.final_list = v.final_list->link;
 	}
-	while (wait (NULL) != -1);
+	while (wait (NULL) != -1)
+	{
+	}
 	close(pipefd[0]);
 	close(pipefd[1]);
-	dup2(stdin, STDIN_FILENO);
-	dup2(stdout, STDOUT_FILENO);
+	dup2(std_in, STDIN_FILENO);
+	dup2(std_out, STDOUT_FILENO);
 }

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/11 21:52:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 16:27:50 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int var_redirect(t_list *list, t_vars *v)
 	return (0);
 }
 
-t_command *add_fd(t_vars *v, t_command *tmp, t_list *list)
+t_cmd *add_fd(t_vars *v, t_cmd *tmp, t_list *list)
 {
 	if (v->tmp_value && tmp)
 	{
@@ -183,7 +183,7 @@ t_command *add_fd(t_vars *v, t_command *tmp, t_list *list)
 	return (tmp);
 }
 
-void if_heredoce(t_vars *v, t_command *tmp, t_env **envr, t_vars *p)
+void if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)
 {
 	if(tmp->file_name)
 	{
@@ -200,7 +200,7 @@ void if_heredoce(t_vars *v, t_command *tmp, t_env **envr, t_vars *p)
 	free(p->val);
 }
 
-t_list *if_redirect(t_command *tmp, t_vars *v, t_env **envr, t_vars *p)
+t_list *if_redirect(t_cmd *tmp, t_vars *v, t_env **envr, t_vars *p)
 {
 	tmp->fd_in = -1;
 	tmp->fd_out = -1;
@@ -222,7 +222,7 @@ t_list *if_redirect(t_command *tmp, t_vars *v, t_env **envr, t_vars *p)
 	return (v->tmp1);
 }
 
-void open_files(t_list *list, t_command *tmp, t_env **envr)
+void open_files(t_list *list, t_cmd *tmp, t_env **envr)
 {
 	t_vars v;
 	t_vars p;

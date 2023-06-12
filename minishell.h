@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 11:25:01 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 16:30:52 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,15 @@ typedef struct s_env
 	struct s_env	*prev;
 }	t_env;
 
-typedef struct s_command
+typedef struct s_cmd
 {
 	char				**cmd;
 	int					fd_in;
 	int					fd_out;
 	char				*file_name;
-	struct s_command	*link;
-	struct s_command	*prev;
-}	t_command;
+	struct s_cmd		*link;
+	struct s_cmd		*prev;
+}	t_cmd;
 
 typedef struct t_vars
 {
@@ -72,13 +72,14 @@ typedef struct t_vars
 	char		*tmp_key;
 	char		*command;
 	char		*tmp_value;
+	t_list		**lst;
 	t_list		*tmp1;
 	t_list		*tmp2;
 	t_list		*tmp3;
 	t_env		*temp1;
 	t_env		*temp2;
 	t_env		*temp3;
-	t_command	*final_list;
+	t_cmd		*final_list;
 }	t_vars;
 
 /********************************* Libft utils ********************************/
@@ -129,20 +130,18 @@ void			expand_var(t_list **list, t_env *envr, int rm_quotes);
 
 /**************************** Builtins functions *****************************/
 
-void	change_dir(t_env **envr, t_command *f_list);
-void	change_dir_2(t_env **envr, t_vars *v);
-void	echo(t_command *f_list);
-char	*strlower(char *str);
-void			pwd(t_command *f_list);
+char			*strlower(char *str);
+void			pwd(t_cmd *f_list);
 int				check_type(char *type);
+void			echo(t_cmd *f_list);
 char			*is_redir(t_list *list);
 void			catching_signals(int sig);
 int				check_valid_var(char *var);
-int				count_commands(t_list *list);
+int				count_cmds(t_list *list);
 t_env			*ft_copy_env_list(t_env *env);
 void			free_some_variables(t_vars *v);
 void			join_variable_names(t_vars *v);
-t_command		*lstlast_final(t_command *head);
+t_cmd			*lstlast_final(t_cmd *head);
 t_list			*lexer_for_unset(t_list **list);
 void			lexer_for_export(t_list **list);
 void			sort_env(t_env *env, int fd_out);
@@ -150,38 +149,40 @@ void			switch_space(char *input, int x);
 int				check_valid_variable(char *input);
 void			unset(t_list **list, t_env **env);
 t_env			*ft_split_environment(char **env);
-void			*ft_destroy_final(t_command **head);
-void			ft_exit(char **cmd, t_command *final);
+void			*ft_destroy_final(t_cmd **head);
+void			change_dir_2(t_env **envr, t_vars *v);
+void			ft_exit(char **cmd, t_cmd *final);
 void			print_export(t_env *temp3, int fd_out);
-void			mooooore_steps(t_vars *v, t_env **env, int length);
 void			delete_node(t_env **env, int position);
-void			spaces_in_quotes(t_command **final_list);
-int				export_parsing(t_list **list, t_env **env, int length);
+void			spaces_in_quotes(t_cmd **final_list);
+void			change_dir(t_env **envr, t_cmd *f_list);
 char			*spaces_in_quotes_utils(char *str, int idx);
 int				ft_printf_fd(const char *first, int fd, ...);
 void			env_parsing(char **cmd, t_env *env, int fd_out);
-void			lstadd_back_final(t_command **head, t_command *new);
-t_command		*lstnew_final(char **command, int fd_in, int fd_out);
-void			create_final_list(t_list *list, t_command **final_list);
+void			mooooore_steps(t_vars *v, t_env **env, int length);
+void			lstadd_back_final(t_cmd **head, t_cmd *new);
+t_cmd			*lstnew_final(char **command, int fd_in, int fd_out);
+int				export_parsing(t_list **list, t_env **env, int length);
+void			create_final_list(t_list *list, t_cmd **final_list);
 void			expand_in_quotes(t_list **list, t_env *envr, char *type);
-void			check_cmd(t_list **list, t_env **envr, t_command *f_list);
+void			check_cmd(t_list **list, t_env **envr, t_cmd *f_list);
 int				check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list			*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
-void			open_files(t_list *list, t_command *final_list, t_env **envr);
+void			open_files(t_list *list, t_cmd *final_list, t_env **envr);
 
 /**************************** Execution Part *****************************/
 
-int				lstsize(t_command *lst);
+int				lstsize(t_cmd *lst);
 char			*get_path_value(t_env *env);
 char			*get_paths(char *cmd, t_env *env);
 char			*get_paths(char *cmd, t_env *env);
-int				check_if_builtin(t_command *final_list);
+int				check_if_builtin(t_cmd *final_list);
 char			**create_2d_array_from_env_list(t_env *env);
-void			ft_builtins(t_list **list, t_env *envr, t_command *f_list, int length);
-void			execution(t_command *final_list, t_env **envr, t_list **lst);
-void			simple_command(t_command *final_list, t_env *env, char *command, char **env_arr);
-void			execute_first_command(t_vars *v, t_env **env, char **env_arr, int pipefd[2], t_list **lst);
-void			execute_middle_commands(t_vars *v, t_env **env, char **env_arr, int pipefd[2], t_list **lst);
-void			execute_last_command(t_vars *v, t_env **env, char **env_arr, int pipefd[2], t_list **lst);
+void			execution(t_cmd *final_list, t_env **envr, t_list **lst);
+void			ft_builtins(t_list **list, t_env *env, t_cmd *f_lst, int len);
+void			simple_cmd(t_cmd *f_lst, t_env *env, char *cmd, char **arr);
+void			exec_st_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
+void			exec_mid_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
+void			exec_last_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
 
 #endif

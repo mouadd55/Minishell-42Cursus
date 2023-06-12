@@ -6,15 +6,15 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 20:43:41 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/02 18:29:38 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 16:27:50 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	*ft_destroy_final(t_command **head)
+void	*ft_destroy_final(t_cmd **head)
 {
-	t_command	*tmp;
+	t_cmd	*tmp;
 
 	if (!head || !*head)
 		return (0);
@@ -39,11 +39,11 @@ void	*ft_destroy_final(t_command **head)
 	return (0);
 }
 
-t_command	*lstnew_final(char **command, int fd_in, int fd_out)
+t_cmd	*lstnew_final(char **command, int fd_in, int fd_out)
 {
-	t_command	*head;
+	t_cmd	*head;
 
-	head = (t_command *)malloc(sizeof(t_command));
+	head = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!head)
 		return (NULL);
 	head->cmd = command;
@@ -55,7 +55,7 @@ t_command	*lstnew_final(char **command, int fd_in, int fd_out)
 	return (head);
 }
 
-t_command	*lstlast_final(t_command *head)
+t_cmd	*lstlast_final(t_cmd *head)
 {
 	if (!head)
 		return (NULL);
@@ -68,9 +68,9 @@ t_command	*lstlast_final(t_command *head)
 	return (NULL);
 }
 
-void	lstadd_back_final(t_command **head, t_command *new)
+void	lstadd_back_final(t_cmd **head, t_cmd *new)
 {
-	t_command	*tmp;
+	t_cmd	*tmp;
 
 	if (!*head || !head)
 		*head = new;
@@ -82,7 +82,7 @@ void	lstadd_back_final(t_command **head, t_command *new)
 	}
 }
 
-int	count_commands(t_list *list)
+int	count_cmds(t_list *list)
 {
 	int	commands;
 
@@ -96,7 +96,7 @@ int	count_commands(t_list *list)
 	return (commands);
 }
 
-int	lstsize(t_command *lst)
+int	lstsize(t_cmd *lst)
 {
 	int	counter;
 
@@ -136,10 +136,10 @@ char	*spaces_in_quotes_utils(char *str, int idx)
 	return (updated_str);
 }
 
-void	spaces_in_quotes(t_command **final_list)
+void	spaces_in_quotes(t_cmd **final_list)
 {
 	int			i;
-	t_command	*tmp;
+	t_cmd	*tmp;
 
 	tmp = *final_list;
 	while (tmp)
@@ -151,7 +151,7 @@ void	spaces_in_quotes(t_command **final_list)
 	}
 }
 
-void	create_final_list(t_list *list, t_command **final_list)
+void	create_final_list(t_list *list, t_cmd **final_list)
 {
 	t_vars	v;
 

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 14:41:14 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 16:27:50 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ void	ft(t_list *stack)
 	printf("---------------------------------------\x1B[0m\n\n");
 }
 
-void	final(t_command *list)
+void	final(t_cmd *list)
 {
 	int			i;
-	t_command	*tmp;
+	t_cmd	*tmp;
 
 	if (!list)
 		return ;
@@ -60,7 +60,7 @@ void	final(t_command *list)
 	printf("-----------------------------------------------------------------------\x1B[0m\n\n");
 }
 
-void	ft_builtins(t_list **list, t_env *envr, t_command *f_list, int length)
+void	ft_builtins(t_list **list, t_env *envr, t_cmd *f_list, int length)
 {
 	t_list	*tmp;
 	t_env	*env_copy;
@@ -107,7 +107,7 @@ t_env	*ft_copy_env_list(t_env *env)
 	return (copy);
 }
 
-void	recreate_list(t_command *final_list, t_env **envr)
+void	recreate_list(t_cmd *final_list, t_env **envr)
 {
 	t_vars	v;
 	int		size;
@@ -142,7 +142,7 @@ void	recreate_list(t_command *final_list, t_env **envr)
 
 void	minihell(t_env **envr, t_list **lst)
 {
-	t_command	*final_list;
+	t_cmd	*final_list;
 
 	if (check_syntax(*lst))
 		return ;
