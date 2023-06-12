@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/12 16:26:50 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 20:22:56 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ void	change_dir(t_env **envr, t_cmd *f_list)
 	v.val = getcwd(NULL, 0);
 	change_dir_2(envr, &v);
 	free(v.tmp_str);
-	free(v.tmp_value);
 	free(v.val);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/08 16:01:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 21:45:08 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ void	switch_space(char *input, int x)
 	v.i = 0;
 	while (input[v.i] && x)
 	{
-		if (input[v.i] == '\'')
+		if (input[v.i] == '\'' && ft_strchr(&input[v.i+1], '\''))
 		{
 			while (input[++v.i] && input[v.i] != '\'')
 				if (is_space(input[v.i]))
 					input[v.i] *= -1;
 		}
-		else if (input[v.i] == '\"')
+		else if (input[v.i] == '\"' && ft_strchr(&input[v.i+1], '\"'))
 		{
 			while (input[++v.i] && input[v.i] != '\"')
 				if (is_space(input[v.i]))
@@ -89,7 +89,8 @@ void	handle_quotes(t_vars *v, t_list **lst, char c)
 				v->j++;
 			ft_lstadd_back(lst, ft_lstnew(ft_substr(v->arr[v->i], v->start, v->j
 						- v->start + 1)));
-			v->j++;
+			if (v->arr[v->i][v->j])
+				v->j++;
 		}
 		else if (v->arr[v->i][v->j] && !is_quote(v->arr[v->i][v->j]))
 		{

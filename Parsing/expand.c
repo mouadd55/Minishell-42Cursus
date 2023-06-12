@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/09 21:52:04 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 22:45:35 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,22 +82,36 @@ t_list	*del_node(t_list **list, t_list *del_node)
 	return (tmp1);
 }
 
+// void	remove_quotes_2(t_list *list, t_vars *v)
+// {
+// }
+
 void	remove_quotes(t_list **list)
 {
-	t_list	*temp;
+	t_vars v;
 
-	temp = *list;
-	while (temp)
+	v.tmp1 = *list;
+	while (v.tmp1)
 	{
-		if (!ft_strcmp("DOUBLE_Q", temp->type) || !ft_strcmp("SINGLE_Q",
-				temp->type) || (!ft_strcmp("FILE", temp->type)))
+		if (!ft_strcmp("DOUBLE_Q", v.tmp1->type) || !ft_strcmp("SINGLE_Q",
+				v.tmp1->type) || (!ft_strcmp("FILE", v.tmp1->type)))
 		{
-			if (temp->content[0] == '\"')
-				temp->content = ft_strtrim(temp->content, "\"");
-			else if (temp->content[0] == '\'')
-				temp->content = ft_strtrim(temp->content, "\'");
+			if (v.tmp1->content[0] == '\"')
+			{
+				v.command = ft_strtrim(v.tmp1->content, "\"");
+				free(v.tmp1->content);
+				v.tmp1->content = ft_strdup(v.command);
+				free(v.command);
+			}
+			else if (v.tmp1->content[0] == '\'')
+			{
+				v.command = ft_strtrim(v.tmp1->content, "\'");
+				free(v.tmp1->content);
+				v.tmp1->content = ft_strdup(v.command);
+				free(v.command);
+			}
 		}
-		temp = temp->link;
+		v.tmp1 = v.tmp1->link;
 	}
 }
 
@@ -128,12 +142,12 @@ void	expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
 			{
 				*save = ft_strjoin(*save, env->value);
 				v->flag = 0;
-				break ;
 			}
 			env = env->link;
 		}
 		if (v->flag == 1)
 			*save = ft_strjoin(*save, "");
+		free(v->str);
 	}
 }
 
@@ -147,8 +161,9 @@ void	expand_in_quotes_2(t_list *temp, t_env *envr, t_vars *v, char **save)
 			v->j = v->i;
 			while (temp->content[v->i] && temp->content[v->i] != '$')
 				v->i++;
-			*save = ft_strjoin(*save, ft_substr(temp->content, v->j, v->i
-						- v->j));
+			v->command = ft_substr(temp->content, v->j, v->i - v->j);
+			*save = ft_strjoin(*save, v->command);
+			free(v->command);
 		}
 		else if (temp->content[v->i] == '$')
 			expand_in_quotes_3(temp, envr, v, save);
@@ -168,12 +183,14 @@ void	expand_in_quotes(t_list **list, t_env *envr, char *type)
 	while (temp)
 	{
 		v.i = 0;
-		if (check_char(temp->content, '$') && (!ft_strcmp(type,
-				temp->type) || (!ft_strcmp("FILE", temp->type)
-				&& temp->content[0] == '\"')))
+		if (check_char(temp->content, '$') && (!ft_strcmp(type, temp->type)
+				|| (!ft_strcmp("FILE", temp->type)
+					&& temp->content[0] == '\"')))
 		{
 			expand_in_quotes_2(temp, envr, &v, &save);
+			free(temp->content);
 			temp->content = ft_strdup(save);
+			free(save);
 			save = NULL;
 		}
 		temp = temp->link;
@@ -183,7 +200,7 @@ void	expand_in_quotes(t_list **list, t_env *envr, char *type)
 void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 {
 	v->temp1 = envr;
-	if ((*tmp) && (*tmp)->content[0] == '$' && (*tmp)->link)
+	if (*tmp && (*tmp)->content[0] == '$' && (*tmp)->link)
 	{
 		(*tmp) = (*tmp)->link;
 		while (ft_isalpha((*tmp)->content[v->i]) || check_char("0123456789_",
@@ -192,11 +209,13 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 		v->str = ft_substr((*tmp)->content, 0, v->i);
 		while (v->temp1)
 		{
-			if (v->temp1  && !ft_strcmp(v->temp1->key, v->str))
+			if (v->temp1 && !ft_strcmp(v->temp1->key, v->str))
 			{
+				free((*tmp)->prev->content);
 				(*tmp)->prev->content = ft_strdup(v->temp1->value);
 				v->command = ft_strdup(&(*tmp)->content[v->i]);
-				(*tmp)->prev->content = ft_strjoin((*tmp)->prev->content, v->command);
+				(*tmp)->prev->content = ft_strjoin((*tmp)->prev->content,
+						v->command);
 				*tmp = del_node(list, *tmp);
 				free(v->command);
 				break ;
@@ -205,27 +224,29 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 		}
 	}
 }
-void remove_dollar(t_list **list)
+void	remove_dollar(t_list **list)
 {
-	t_list *tmp;
+	t_list	*tmp;
 
 	tmp = *list;
 	while (tmp)
 	{
-		if ((tmp->content[0] == '$' && tmp->link && (!ft_strcmp(tmp->link->type, "DOUBLE_Q")
-				|| !ft_strcmp(tmp->link->type, "SINGLE_Q"))))
-				{
-					free(tmp->content);
-					tmp->content = ft_strdup(tmp->link->content);
-					tmp = del_node(list, tmp->link);
-				}
-		 else if ((tmp->content[0] == '$' && tmp->link
-				&& tmp->link->content[0] != 32))
+		if ((tmp->content[0] == '$' && tmp->link && (!ft_strcmp(tmp->link->type,
+						"DOUBLE_Q") || !ft_strcmp(tmp->link->type,
+						"SINGLE_Q"))))
 		{
-			tmp->content  = ft_strjoin(tmp->content, tmp->link->content);
+			free(tmp->content);
+			tmp->content = ft_strdup(tmp->link->content);
+			tmp = del_node(list, tmp->link);
+		}
+		else if ((tmp->content[0] == '$' && tmp->link
+					&& tmp->link->content[0] != 32))
+		{
+			tmp->content = ft_strjoin(tmp->content, tmp->link->content);
 			free(tmp->type);
 			if (tmp->prev && (!ft_strcmp(tmp->prev->content, "<<")
-				|| (tmp->prev->prev && !ft_strcmp(tmp->prev->prev->content, "<<"))))
+					|| (tmp->prev->prev && !ft_strcmp(tmp->prev->prev->content,
+							"<<"))))
 				tmp->type = ft_strdup("DELIMITER");
 			else
 				tmp->type = ft_strdup("VAR");
