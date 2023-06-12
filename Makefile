@@ -6,7 +6,7 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/11 19:36:37 by moudrib          ###   ########.fr        #
+#    Updated: 2023/06/12 14:44:51 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,8 @@ SRC		=	\
 				Parsing/export_utils2.c \
 				Parsing/lexer_for_export.c \
 				Execution/execution.c \
+				Execution/simple_cmd.c \
+				Execution/multiple_pipes.c \
 
 OBJ		= $(addprefix $(OBJDIR),$(SRC:.c=.o))
 

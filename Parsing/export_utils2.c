@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 12:02:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/03 16:00:19 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 10:41:10 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	check_if_variable_exist(t_env *env, char *var, t_env **tmp)
 int	check_type(char *type)
 {
 	if (ft_strcmp(type, "PIPE") && ft_strcmp(type, "APPEND") && ft_strcmp(type,
-			"INPUT") && ft_strcmp(type, "OUTPUT") && ft_strcmp(type, "HEREDOC"))
+			"INFILE") && ft_strcmp(type, "OUTFILE") && ft_strcmp(type, "HEREDOC"))
 		return (1);
 	return (0);
 }
@@ -60,7 +60,7 @@ void	print_export(t_env *temp3, int fd_out)
 			ft_printf_fd("declare -x %s\n", fd_out, (temp3)->key);
 		else
 			ft_printf_fd("declare -x %s=\"%s\"\n", fd_out,
-			(temp3)->key, (temp3)->value);
+				(temp3)->key, (temp3)->value);
 		temp3 = (temp3)->link;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/06 19:15:23 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 11:57:01 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,23 +78,23 @@ void	add_variable_to_env(t_env **env, t_vars *v)
 	}
 }
 
-void	mooooore_steps(t_vars *v, t_env **env)
+void	mooooore_steps(t_vars *v, t_env **env, int length)
 {
 	v->tmp3 = v->tmp1;
 	join_variable_values(v);
 	if (ft_strlen(v->var) == 0 && v->val)
-		printf("minishell: export: `=%s': not a valid identifier\n",
-			v->val);
-	else if (ft_strlen(v->var) == 0)
-		printf("minishell: export: `': not a valid identifier\n");
-	else if (check_if_variable_exist(*env, v->var, &v->temp2))
+		ft_printf_fd("minishell: export: `=%s': not a valid identifier\n",
+			2, v->val);
+	else if (ft_strlen(v->var) == 0 && !length)
+		ft_printf_fd("minishell: export: `': not a valid identifier\n", 2);
+	else if (!length && check_if_variable_exist(*env, v->var, &v->temp2))
 		existed_variable(v);
-	else
+	else if (!length)
 		add_variable_to_env(env, v);
 	v->flag = 0;
 }
 
-int	export_parsing(t_list **list, t_env **env)
+int	export_parsing(t_list **list, t_env **env, int length)
 {
 	t_vars	v;
 
@@ -112,12 +112,12 @@ int	export_parsing(t_list **list, t_env **env)
 		join_variable_names(&v);
 		if (check_valid_var(v.var) || (v.var && v.var[0] == '-'))
 		{
-			printf("minishell: export: `%s': not a valid identifier\n", v.var);
+			ft_printf_fd("minishell: export: `%s': not a valid identifier\n", 2, v.var);
 			if (v.vars == 1 && v.var[0] == '-')
 				return (1);
 		}
 		else
-			mooooore_steps(&v, env);
+			mooooore_steps(&v, env, length);
 		free_some_variables(&v);
 	}
 	return (0);

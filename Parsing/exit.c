@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/08 15:49:56 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/11 21:48:16 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,25 +114,27 @@ void	ft_exit(char **cmd, t_command *final)
 			v.flag++;
 			if (ft_strcmp(cmd[v.i], ft_itoa(ft_atoi(cmd[v.i]))))
 			{
-				printf("exit\nminishell: exit: %s: numeric argument required\n",
+				ft_printf_fd("exit\nminishell: exit: %s: numeric argument required\n", 2,
 					cmd[v.i]);
 				exit(255);
 			}
 		}
 		if (v.flag == 0)
 		{
-			printf("exit\nminishell: exit: %s: numeric argument required\n",
+			ft_printf_fd("exit\nminishell: exit: %s: numeric argument required\n", 2,
 				cmd[v.i]);
 			exit(255);
 		}
 		else if ((v.flag == 2 && v.i == 2) || (v.flag == 1 && v.i == 2))
 		{
 			v.j++;
-			printf("exit\nminishell: exit: too many arguments\n");
+			ft_printf_fd("exit\nminishell: exit: too many arguments\n", 2);
 		}
 	}
 	if (final && !final->link && !final->prev && v.j == 0)
 	{
+		if (v.flag == 1)
+			exit(ft_atoi(cmd[1]));
 		printf("exit\n");
 		exit(255);
 	}

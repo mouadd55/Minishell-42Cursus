@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 17:00:08 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/05 13:59:47 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/11 22:03:04 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ void	catching_signals(int sig)
 {
 	if (sig == SIGINT)
 	{
-	    printf("\n");
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();	
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }

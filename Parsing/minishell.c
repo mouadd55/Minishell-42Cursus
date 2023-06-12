@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/11 20:20:14 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 14:41:14 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,42 @@ void	final(t_command *list)
 			i++;
 		}
 		printf("|    ---------------------------------------                          |\n");
-		printf("|%29s %2d                                     |\n", "fd_in:", tmp->fd_in);
-		printf("| %29s %2d                                    |\n", "fd_out:", tmp->fd_out);
-		printf("| %29s %2s                                    |\n", "file_name:", tmp->file_name);
+		printf("| %25s %2d                                        |\n", "fd_in:", tmp->fd_in);
+		printf("| %25s %2d                                        |\n", "fd_out:", tmp->fd_out);
+		printf("| %25s %2s                                        |\n", "file_name:", tmp->file_name);
 		tmp = tmp->link;
 	}
 	printf("-----------------------------------------------------------------------\x1B[0m\n\n");
 }
 
-void	ft_builtins(char **cmd, t_env **env, int fd_out)
+void	ft_builtins(t_list **list, t_env *envr, t_command *f_list, int length)
 {
-	env_parsing(cmd, *env, fd_out);
+	t_list	*tmp;
+	t_env	*env_copy;
+
+	tmp = *list;
+	if (f_list && !ft_strcmp(f_list->cmd[0], "echo"))
+		echo(f_list);
+	else if (f_list && !ft_strcmp(f_list->cmd[0], "cd"))
+		change_dir(&envr, f_list);
+	else if (f_list && !ft_strcmp("pwd", strlower(f_list->cmd[0])))
+		pwd(f_list);
+	else if (*list && !(*list)->prev && (*list)->link
+		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
+		unset(list, &envr);
+	if (!ft_strcmp(f_list->cmd[0], "export") && f_list->cmd[1] == 0)
+	{
+		env_copy = ft_copy_env_list(envr);
+		sort_env(env_copy, f_list->fd_out);
+		ft_destroy_list_env(&env_copy);
+	}
+	if (export_parsing(list, &envr, length))
+		return ;
+	if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "exit"))
+		ft_exit(f_list->cmd, f_list);
+	else if (lstsize(f_list) == 1 && f_list->cmd
+		&& f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
+		env_parsing(f_list->cmd, envr, f_list->fd_out);
 }
 
 t_env	*ft_copy_env_list(t_env *env)
@@ -110,10 +135,6 @@ void	recreate_list(t_command *final_list, t_env **envr)
 			free(v.str);
 			v.str = NULL;
 		}
-		if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], "exit"))
-			ft_exit(final_list->cmd, final_list);
-		else if (lstsize(final_list) == 1 && !ft_strcmp(final_list->cmd[0], "env"))
-			ft_builtins(final_list->cmd, envr, final_list->fd_out);
 		final_list = final_list->link;
 	}
 	spaces_in_quotes(&final_list);
@@ -133,7 +154,7 @@ void	minihell(t_env **envr, t_list **lst)
 		create_final_list(*lst, &final_list);
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
-		execution(final_list, *envr);
+		execution(final_list, envr, lst);
 		// ft(*lst);
 		// final(final_list);
 	}
@@ -195,7 +216,6 @@ int	main(int ac, char **av, char **env)
 		}
 		ft_destroy_list(&lst);
 		free(input);
-
 	}
 	ft_destroy_list_env(&envr);
 	printf("exit\n");

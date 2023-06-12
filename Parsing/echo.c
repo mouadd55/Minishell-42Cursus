@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/08 15:58:02 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/12 11:25:30 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,12 +133,17 @@ void	check_cmd(t_list **list, t_env **envr, t_command *f_list)
 	else if (*list && !(*list)->prev && (*list)->link
 		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
 		unset(list, envr);
-	if (ft_lstsize(*list) == 1 && !ft_strcmp((*list)->content, "export"))
+	if (!ft_strcmp(f_list->cmd[0], "export") && f_list->cmd[1] == 0)
 	{
 		env_copy = ft_copy_env_list(*envr);
 		sort_env(env_copy, f_list->fd_out);
 		ft_destroy_list_env(&env_copy);
 	}
-	if (export_parsing(list, envr))
+	if (export_parsing(list, envr, 0))
 		return ;
+	if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "exit"))
+		ft_exit(f_list->cmd, f_list);
+	else if (lstsize(f_list) == 1 && f_list->cmd
+		&& f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
+		env_parsing(f_list->cmd, *envr, f_list->fd_out);
 }
