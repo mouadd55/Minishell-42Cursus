@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 19:21:40 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 10:40:19 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,18 +132,18 @@ void			expand_var(t_list **list, t_env *envr, int rm_quotes);
 
 /**************************** Builtins functions *****************************/
 
-char			*strlower(char *str);
 void			pwd(t_cmd *f_list);
-int				check_type(char *type);
 void			echo(t_cmd *f_list);
+char			*strlower(char *str);
+int				check_type(char *type);
 char			*is_redir(t_list *list);
 void			catching_signals(int sig);
 int				check_valid_var(char *var);
-int				count_cmds(t_list *list);
+t_cmd			*lstlast_final(t_cmd *head);
 t_env			*ft_copy_env_list(t_env *env);
 void			free_some_variables(t_vars *v);
 void			join_variable_names(t_vars *v);
-t_cmd			*lstlast_final(t_cmd *head);
+void			*ft_destroy_final(t_cmd **head);
 t_list			*lexer_for_unset(t_list **list);
 void			lexer_for_export(t_list **list);
 void			sort_env(t_env *env, int fd_out);
@@ -151,40 +151,43 @@ void			switch_space(char *input, int x);
 int				check_valid_variable(char *input);
 void			unset(t_list **list, t_env **env);
 t_env			*ft_split_environment(char **env);
-void			*ft_destroy_final(t_cmd **head);
-void			change_dir_2(t_env **envr, t_vars *v);
 void			ft_exit(char **cmd, t_cmd *final);
+void			spaces_in_quotes(t_cmd **final_list);
+void			change_dir_2(t_env **envr, t_vars *v);
 void			print_export(t_env *temp3, int fd_out);
 void			delete_node(t_env **env, int position);
-void			spaces_in_quotes(t_cmd **final_list);
 void			change_dir(t_env **envr, t_cmd *f_list);
-char			*spaces_in_quotes_utils(char *str, int idx);
 int				ft_printf(const char *first, int fd, ...);
+char			*spaces_in_quotes_utils(char *str, int idx);
+void			lstadd_back_final(t_cmd **head, t_cmd *new);
 void			env_parsing(char **cmd, t_env *env, int fd_out);
 void			mooooore_steps(t_vars *v, t_env **env, int length);
-void			lstadd_back_final(t_cmd **head, t_cmd *new);
-t_cmd			*lstnew_final(char **command, int fd_in, int fd_out);
-int				export_parsing(t_list **list, t_env **env, int length);
 void			create_final_list(t_list *list, t_cmd **final_list);
-void			expand_in_quotes(t_list **list, t_env *envr, char *type);
+t_cmd			*lstnew_final(char **command, int fd_in, int fd_out);
 void			check_cmd(t_list **list, t_env **envr, t_cmd *f_list);
+int				export_parsing(t_list **list, t_env **env, int length);
+void			expand_in_quotes(t_list **list, t_env *envr, char *type);
+void			open_files(t_list *list, t_cmd *final_list, t_env **envr);
 int				check_if_variable_exist(t_env *env, char *var, t_env **tmp);
 t_list			*skip_whats_before_the_first_var(t_list *tmp, t_list *list);
-void			open_files(t_list *list, t_cmd *final_list, t_env **envr);
+void			first_conditions(t_list *tmp);
+void			conditions_for_delimiter(t_list *tmp);
+void			conditions_for_files(t_list *tmp);
+int				search_for_pipe(t_vars *v);
 
 /**************************** Execution Part *****************************/
 
-int				lstsize(t_cmd *lst);
+int				lstsize_cmd(t_cmd *lst);
 char			*get_path_value(t_env *env);
 char			*get_paths(char *cmd, t_env *env);
 char			*get_paths(char *cmd, t_env *env);
 int				check_if_builtin(t_cmd *final_list);
 char			**create_2d_array_from_env_list(t_env *env);
 void			execution(t_cmd *final_list, t_env **envr, t_list **lst);
-void			ft_builtins(t_list **list, t_env *env, t_cmd *f_lst, int len);
 void			simple_cmd(t_cmd *f_lst, t_env *env, char *cmd, char **arr);
 void			exec_st_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
 void			exec_mid_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
+void			ft_builtins(t_list **list, t_env *env, t_cmd *f_lst, int len);
 void			exec_last_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
 
 #endif

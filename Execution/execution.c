@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 19:26:08 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 10:14:59 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	execute_commands(t_vars *v, t_env **env)
 			ft_printf("minishell: fork: Resource temporarily unavailable\n", 2);
 		else if (v->child == 0)
 		{
-			if (lstsize(v->final_list) == 1)
+			if (lstsize_cmd(v->final_list) == 1)
 				simple_cmd(v->final_list, *env, v->command, v->env_arr);
 			if (!v->final_list->prev && v->final_list->link)
 				exec_st_cmd(v, env, v->env_arr, v->pipefd);
@@ -71,8 +71,9 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	v.final_list = final_list;
 	std_in = dup(STDIN_FILENO);
 	std_out = dup(STDOUT_FILENO);
-	v.count = lstsize(final_list);
-	execute_commands(&v, env);
+	v.count = lstsize_cmd(final_list);
+	if (final_list->cmd && final_list->cmd[0])
+		execute_commands(&v, env);
 	while (wait (NULL) != -1)
 	{
 	}

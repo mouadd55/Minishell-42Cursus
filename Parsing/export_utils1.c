@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 18:22:13 by moudrib           #+#    #+#             */
-/*   Updated: 2023/05/23 16:22:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 10:23:10 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,33 +45,6 @@ t_list	*skip_whats_before_the_first_var(t_list *tmp, t_list *list)
 		return (0);
 	tmp = tmp->link->link;
 	return (tmp);
-}
-
-t_env	*ft_lstlast_env(t_env *head)
-{
-	if (!head)
-		return (NULL);
-	while (head)
-	{
-		if (head->link == NULL)
-			return (head);
-		head = head->link;
-	}
-	return (NULL);
-}
-
-t_env	*ft_lstnew_env(char *key, char *value)
-{
-	t_env	*head;
-
-	head = (t_env *)malloc(sizeof(t_env));
-	if (!head)
-		return (NULL);
-	head->key = key;
-	head->value = value;
-	head->link = NULL;
-	head->prev = NULL;
-	return (head);
 }
 
 int	check_valid_variable(char *input)

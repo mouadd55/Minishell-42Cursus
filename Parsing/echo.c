@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/12 20:22:56 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/13 09:49:17 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void	check_cmd(t_list **list, t_env **envr, t_cmd *f_list)
 		return ;
 	if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "exit"))
 		ft_exit(f_list->cmd, f_list);
-	else if (lstsize(f_list) == 1 && f_list->cmd
+	else if (lstsize_cmd(f_list) == 1 && f_list->cmd
 		&& f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
 		env_parsing(f_list->cmd, *envr, f_list->fd_out);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
+#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/12 22:44:51 by yonadry          ###   ########.fr        #
+#    Updated: 2023/06/13 10:33:23 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,9 @@ SRC		=	\
 				Parsing/libft_utils4.c \
 				Parsing/export_utils1.c \
 				Parsing/export_utils2.c \
+				Parsing/list_env_tools.c \
+				Parsing/list_cmd_tools.c \
+				Parsing/builtins_lexers.c \
 				Parsing/lexer_for_export.c \
 				Execution/execution.c \
 				Execution/simple_cmd.c \

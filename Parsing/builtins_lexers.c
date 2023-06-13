@@ -1,35 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing2.c                                         :+:      :+:    :+:   */
+/*   builtins_lexers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/04 20:32:43 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/13 10:39:24 by moudrib          ###   ########.fr       */
+/*   Created: 2023/06/13 10:29:52 by moudrib           #+#    #+#             */
+/*   Updated: 2023/06/13 10:30:32 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	syntax_error(char *s2, char e)
+t_list	*lexer_for_unset(t_list **list)
 {
-	ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
-	if (s2)
-		ft_putstr_fd(s2, 2);
-	if (e)
-		ft_putchar(e, 2);
-	ft_putchar('\n', 2);
-	return ;
+	t_list	*tmp;
+
+	tmp = *list;
+	tmp = tmp->link->link;
+	while (tmp && check_type(tmp->type))
+	{
+		if (tmp->type[0] != 's')
+		{
+			free(tmp->type);
+			tmp->type = ft_strdup("VAR");
+		}
+		tmp = tmp->link;
+	}
+	return ((*list)->link->link);
 }
 
-int	search_for_pipe(t_vars *v)
+void	lexer(t_list **list)
 {
-	while (v->tmp1)
+	t_list	*tmp;
+
+	tmp = *list;
+	while (tmp)
 	{
-		if (!ft_strcmp(v->tmp1->type, "PIPE"))
-			return (1);
-		v->tmp1 = v->tmp1->link;
+		first_conditions(tmp);
+		conditions_for_files(tmp);
+		conditions_for_delimiter(tmp);
+		tmp = tmp->link;
 	}
-	return (0);
 }

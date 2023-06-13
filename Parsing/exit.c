@@ -6,53 +6,11 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 16:27:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 09:47:00 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	nbr_len(long nbr)
-{
-	int	len;
-
-	len = 0;
-	if (nbr <= 0)
-		len++;
-	while (nbr != 0)
-	{
-		len++;
-		nbr /= 10;
-	}
-	return (len);
-}
-
-char	*ft_itoa(long long n)
-{
-	int			len;
-	char		*str;
-	long long	nb;
-
-	nb = n;
-	len = nbr_len(nb);
-	str = malloc(len * sizeof(char) + 1);
-	if (!str)
-		return (NULL);
-	if (nb < 0)
-	{
-		str[0] = '-';
-		nb *= (-1);
-	}
-	if (nb == 0)
-		str[0] = '0';
-	str[len--] = '\0';
-	while (nb != 0)
-	{
-		str[len--] = nb % 10 + 48;
-		nb /= 10;
-	}
-	return (str);
-}
 
 long long	ft_atoi(const char *str)
 {
@@ -95,6 +53,31 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
+void	exit_errors(t_vars *v, char **cmd)
+{
+	if (ft_isdigit(cmd[v->i]))
+	{
+		v->flag++;
+		if (ft_strcmp(cmd[v->i], ft_itoa(ft_atoi(cmd[v->i]))))
+		{
+			ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
+				cmd[v->i]);
+			exit(255);
+		}
+	}
+	if (v->flag == 0)
+	{
+		ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
+			cmd[v->i]);
+		exit(255);
+	}
+	else if ((v->flag == 2 && v->i == 2) || (v->flag == 1 && v->i == 2))
+	{
+		v->j++;
+		ft_printf("exit\nminishell: exit: too many arguments\n", 2);
+	}
+}
+
 void	ft_exit(char **cmd, t_cmd *final)
 {
 	t_vars	v;
@@ -109,27 +92,7 @@ void	ft_exit(char **cmd, t_cmd *final)
 			printf("exit\n");
 			exit(255);
 		}
-		if (ft_isdigit(cmd[v.i]))
-		{
-			v.flag++;
-			if (ft_strcmp(cmd[v.i], ft_itoa(ft_atoi(cmd[v.i]))))
-			{
-				ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
-					cmd[v.i]);
-				exit(255);
-			}
-		}
-		if (v.flag == 0)
-		{
-			ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
-				cmd[v.i]);
-			exit(255);
-		}
-		else if ((v.flag == 2 && v.i == 2) || (v.flag == 1 && v.i == 2))
-		{
-			v.j++;
-			ft_printf("exit\nminishell: exit: too many arguments\n", 2);
-		}
+		exit_errors(&v, cmd);
 	}
 	if (final && !final->link && !final->prev && v.j == 0)
 	{

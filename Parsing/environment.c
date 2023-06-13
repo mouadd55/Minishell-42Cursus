@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/11 21:40:34 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 10:21:33 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,38 +47,6 @@ void	env_parsing(char **cmd, t_env *env, int fd_out)
 		}
 	}
 	print_env(v.i, v.count, env, fd_out);
-}
-
-void	ft_lstadd_back_env(t_env **head, t_env *new)
-{
-	t_env	*tmp;
-
-	if (!*head || !head)
-		*head = new;
-	else
-	{
-		tmp = ft_lstlast_env(*head);
-		tmp->link = new;
-		new->prev = tmp;
-	}
-}
-
-void	*ft_destroy_list_env(t_env **head)
-{
-	t_env	*tmp;
-
-	if (!head || !*head)
-		return (0);
-	tmp = *head;
-	while (tmp)
-	{
-		tmp = (*head)->link;
-		free((*head)->key);
-		free((*head)->value);
-		free(*head);
-		(*head) = tmp;
-	}
-	return (0);
 }
 
 t_env	*ft_split_environment(char **env)

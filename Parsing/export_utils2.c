@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 12:02:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 10:41:10 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 09:42:04 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ int	check_if_variable_exist(t_env *env, char *var, t_env **tmp)
 
 int	check_type(char *type)
 {
-	if (ft_strcmp(type, "PIPE") && ft_strcmp(type, "APPEND") && ft_strcmp(type,
-			"INFILE") && ft_strcmp(type, "OUTFILE") && ft_strcmp(type, "HEREDOC"))
+	if (ft_strcmp(type, "PIPE") && ft_strcmp(type, "APPEND")
+		&& ft_strcmp(type, "INFILE") && ft_strcmp(type, "OUTFILE")
+		&& ft_strcmp(type, "HEREDOC"))
 		return (1);
 	return (0);
 }

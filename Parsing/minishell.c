@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 22:48:07 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/13 10:26:12 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	ft_builtins(t_list **list, t_env *envr, t_cmd *f_list, int length)
 		return ;
 	if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "exit"))
 		ft_exit(f_list->cmd, f_list);
-	else if (lstsize(f_list) == 1 && f_list->cmd
+	else if (lstsize_cmd(f_list) == 1 && f_list->cmd
 		&& f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
 		env_parsing(f_list->cmd, envr, f_list->fd_out);
 }
@@ -112,7 +112,7 @@ void	recreate_list(t_cmd *final_list, t_env **envr)
 	t_vars	v;
 	int		size;
 
-	size = lstsize(final_list);
+	size = lstsize_cmd(final_list);
 	while (final_list)
 	{
 		v.i = 0;
@@ -155,8 +155,8 @@ void	minihell(t_env **envr, t_list **lst)
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
 		execution(final_list, envr, lst);
-		// final(final_list);
 		// ft(*lst);
+		final(final_list);
 	}
 	ft_destroy_final(&final_list);
 }
@@ -179,14 +179,9 @@ void	shell_level(t_env **env)
 		v.temp1 = v.temp1->link;
 	}
 }
-// void	l()
-// {
-// 	system ("leaks minishell");
-// }
 
 int	main(int ac, char **av, char **env)
 {
-	// atexit(l);
 	char	*input;
 	t_env	*envr;
 	t_list	*lst;

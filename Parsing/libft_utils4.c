@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft_utils4.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:20:27 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/12 22:20:51 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/13 09:38:23 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,47 @@ char	*ft_strtrim(char *s1, char *set)
 		j++;
 	}
 	str[j] = '\0';
+	return (str);
+}
+
+int	nbr_len(long nbr)
+{
+	int	len;
+
+	len = 0;
+	if (nbr <= 0)
+		len++;
+	while (nbr != 0)
+	{
+		len++;
+		nbr /= 10;
+	}
+	return (len);
+}
+
+char	*ft_itoa(long long n)
+{
+	int			len;
+	char		*str;
+	long long	nb;
+
+	nb = n;
+	len = nbr_len(nb);
+	str = malloc(len * sizeof(char) + 1);
+	if (!str)
+		return (NULL);
+	if (nb < 0)
+	{
+		str[0] = '-';
+		nb *= (-1);
+	}
+	if (nb == 0)
+		str[0] = '0';
+	str[len--] = '\0';
+	while (nb != 0)
+	{
+		str[len--] = nb % 10 + 48;
+		nb /= 10;
+	}
 	return (str);
 }
