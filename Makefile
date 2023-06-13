@@ -6,7 +6,7 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/13 10:33:23 by moudrib          ###   ########.fr        #
+#    Updated: 2023/06/13 10:51:32 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,32 +21,32 @@ B		= \033[1m
 LIB 	= $(shell brew --prefix readline)/lib 
 INC 	= $(shell brew --prefix readline)/include
 SRC		=	\
-				Parsing/echo.c \
-				Parsing/exit.c \
+				Builtins/echo.c \
+				Builtins/exit.c \
 				Parsing/input.c \
-				Parsing/unset.c \
 				Parsing/lexer.c \
-				Parsing/export.c \
+				Builtins/unset.c \
 				Parsing/expand.c \
-				Parsing/signals.c \
+				Builtins/export.c \
+				Signals/signals.c \
 				Parsing/parsing1.c \
 				Parsing/parsing2.c \
 				Parsing/minishell.c \
 				Parsing/final_list.c \
-				Parsing/list_utils.c \
 				Parsing/open_files.c \
-				Parsing/environment.c \
+				Builtins/environment.c \
 				Parsing/ft_printf_fd.c \
-				Parsing/libft_utils1.c \
-				Parsing/libft_utils2.c \
-				Parsing/libft_utils3.c \
-				Parsing/libft_utils4.c \
-				Parsing/export_utils1.c \
-				Parsing/export_utils2.c \
-				Parsing/list_env_tools.c \
-				Parsing/list_cmd_tools.c \
-				Parsing/builtins_lexers.c \
-				Parsing/lexer_for_export.c \
+				List_tools/list_utils.c \
+				Builtins/export_utils1.c \
+				Builtins/export_utils2.c \
+				Libft_tools/libft_utils1.c \
+				Libft_tools/libft_utils2.c \
+				Libft_tools/libft_utils3.c \
+				Libft_tools/libft_utils4.c \
+				Builtins/builtins_lexers.c \
+				List_tools/list_env_tools.c \
+				List_tools/list_cmd_tools.c \
+				Builtins/lexer_for_export.c \
 				Execution/execution.c \
 				Execution/simple_cmd.c \
 				Execution/multiple_pipes.c \
