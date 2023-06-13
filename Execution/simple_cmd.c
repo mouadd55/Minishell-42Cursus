@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:04:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 16:26:33 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 19:01:34 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,11 @@ char	**create_2d_array_from_env_list(t_env *env)
 	{
 		str = NULL;
 		str = ft_strjoin(str, env->key);
-		str = ft_strjoin(str, "=");
-		str = ft_strjoin(str, env->value);
+		if (env->value)
+		{
+			str = ft_strjoin(str, "=");
+			str = ft_strjoin(str, env->value);
+		}
 		env_arr[i] = ft_strdup(str);
 		free(str);
 		i++;

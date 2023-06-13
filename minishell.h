@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 10:52:30 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 15:54:22 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <signal.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <termios.h>
 
 typedef struct s_list
 {
@@ -43,12 +42,12 @@ typedef struct s_env
 
 typedef struct s_cmd
 {
-	char				**cmd;
-	int					fd_in;
-	int					fd_out;
-	char				*file_name;
-	struct s_cmd		*link;
-	struct s_cmd		*prev;
+	char			**cmd;
+	int				fd_in;
+	int				fd_out;
+	char			*file_name;
+	struct s_cmd	*link;
+	struct s_cmd	*prev;
 }	t_cmd;
 
 typedef struct t_vars

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/12 16:27:50 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 19:16:27 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,14 @@ int	open_file(char *file_name, char *type)
 {
 	int	fd;
 
-	if (file_name)
-	{
-		if (!ft_strcmp(type, ">"))
-			fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
-		if (!ft_strcmp(type, ">>"))
-			fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
-		if (!ft_strcmp(type, "<"))
-			fd = open(file_name, O_RDONLY, 0777);
-		if (fd == -1)
-			perror(file_name);
-	}
+	if (!ft_strcmp(type, ">"))
+		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
+	if (!ft_strcmp(type, ">>"))
+		fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
+	if (!ft_strcmp(type, "<"))
+		fd = open(file_name, O_RDONLY, 0777);
+	if (fd == -1)
+		perror(file_name);
 	return (fd);
 }
 
@@ -62,7 +59,7 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 
 
 
-void	open_heredoc_3(t_vars *v, t_env **envr, char *old_file)
+void	open_heredoc_3(t_vars *v, t_env **envr)
 {
 	v->fd = open(v->val, O_CREAT | O_RDWR | O_APPEND, 0777);
 	while (1)
@@ -70,7 +67,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr, char *old_file)
 		v->str = readline("Heredoc> ");
 		if (!v->str || !ft_strcmp(v->str, v->tmp_str))
 		{
-			close(v->fd);
+			// close(v->fd);
 			free(v->str);
 			free(v->val);
 			free(v->tmp_str);
@@ -94,17 +91,17 @@ void	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
 	free(v->val);
 	v->val = ft_strjoin(v->tmp_value, v->tmp_key);
 	free(v->tmp_key);
-	if (open(v->val, O_RDONLY) != -1)
+	if (!access(v->val, F_OK))
 	{
 		save = ft_itoa(rand());
 		v->val = ft_strjoin(v->val, save);
 		free(save);
 	}
 	p->val = ft_strdup(v->val);
-	open_heredoc_3(v, envr, p->tmp_value);
+	open_heredoc_3(v, envr);
 }
 
-int	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
+void	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
 {
 	t_vars	v;
 
@@ -121,6 +118,7 @@ int	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
 				v.var = ft_strdup("\'");
 			else if (list->content[0] == '\"')
 				v.var = ft_strdup("\"");
+			free(list->content);
 			list->content = ft_strtrim(list->content, v.var);
 			free(v.var);
 		}
@@ -154,6 +152,7 @@ int var_redirect(t_list *list, t_vars *v)
 		v->fd = open_file(v->str, v->tmp_value);
 		if (v->fd == -1)
 			return (1);
+		free(v->str);
 	}
 	return (0);
 }
@@ -175,7 +174,6 @@ t_cmd *add_fd(t_vars *v, t_cmd *tmp, t_list *list)
 		}
 		free(v->tmp_value);
 		v->tmp_value = NULL;
-		free(v->str);
 	}
 	if (list && !ft_strcmp(list->type , "PIPE")
 		&& tmp && tmp->link)
@@ -216,13 +214,12 @@ t_list *if_redirect(t_cmd *tmp, t_vars *v, t_env **envr, t_vars *p)
 	}
 	if (tmp && tmp->link)
 		tmp = tmp->link;
-	// free(v->tmp_value);
 	free(v->str);
 	v->tmp_value = NULL;
 	return (v->tmp1);
 }
 
-void open_files(t_list *list, t_cmd *tmp, t_env **envr)
+void  open_files(t_list *list, t_cmd *tmp, t_env **envr)
 {
 	t_vars v;
 	t_vars p;
@@ -240,9 +237,57 @@ void open_files(t_list *list, t_cmd *tmp, t_env **envr)
 			free(v.tmp_value);
 			list = if_redirect(tmp, &v, envr, &p);
 		}
-		tmp = add_fd(&v, tmp, list);
+		if (v.fd >= 3)
+			tmp = add_fd(&v, tmp, list);
 		if (!list)
 			break;
 		list = list->link;
 	}
 }
+
+
+
+// exit 0 0
+// exit 42 42
+// exit -42 -24
+// exit 42
+// exit 42 53 68
+// exit 259
+// exit -12030
+// exit --1239312
+// exit ++++1203020103
+// exit +0
+// exit ++++++0
+// exit -----0
+// exit wrong
+// exit a
+// exit 1
+// exit "1"
+// exit "+102"
+// exit "1230"
+// exit "+++1230"
+// exit "1"23
+// exit "2"32"32"
+// exit "'42'"
+// exit '42'"42"42
+// exit +'42'"42"42
+// exit -'42'"42"42
+// exit 9223372
+// exit -9223372
+// exit 9223372036854775807
+// exit 9223372036854775808
+// exit 9223372036854775807135813514351
+// exit -9223372036854775807135813514351
+// exit 9223372036854775807135813514351 1351351531
+// exit -4
+// exit -1
+// exit 0
+// exit --000
+// exit "nenie_iri"
+// exit export
+// exit echo
+// exit cd ..
+// exit nenie iri
+// exit 42 42 42 42 42
+// exit echo nenie_iri
+// exit exit

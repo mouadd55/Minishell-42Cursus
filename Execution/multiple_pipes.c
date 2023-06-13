@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:14:31 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/12 19:27:43 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 11:02:38 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ void	exec_last_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		if (v->final_list->fd_out != STDOUT_FILENO)
 		{
 			dup2(v->final_list->fd_out, STDOUT_FILENO);
-			ft_printf("out :%d %d\n",2,v->final_list->fd_out,STDOUT_FILENO);
 			if (!check_if_builtin(v->final_list))
 				close(v->final_list->fd_out);
 		}

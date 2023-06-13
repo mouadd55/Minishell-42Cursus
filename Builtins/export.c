@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 09:41:19 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/13 14:42:34 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ int	export_parsing(t_list **list, t_env **env, int length)
 			ft_printf("minishell: export: `%s': not a valid identifier\n",
 				2, v.var);
 			if (v.vars == 1 && v.var[0] == '-')
+			{
+				free(v.var);
 				return (1);
+			}
 		}
 		else
 			mooooore_steps(&v, env, length);

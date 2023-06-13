@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/12 22:45:35 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/13 19:27:09 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,6 @@ t_list	*del_node(t_list **list, t_list *del_node)
 
 	tmp1 = NULL;
 	tmp = *list;
-	// if (ft_lstsize(tmp) == 1)
-	// {
-	// 	free(tmp->content);
-	// 	free(tmp->type);
-	// 	free(tmp);
-	// 	return (NULL);
-	// }
 	if (del_node == tmp)
 	{
 		tmp = tmp->link;
@@ -81,10 +74,6 @@ t_list	*del_node(t_list **list, t_list *del_node)
 		del_node_2(&tmp, &tmp1, del_node);
 	return (tmp1);
 }
-
-// void	remove_quotes_2(t_list *list, t_vars *v)
-// {
-// }
 
 void	remove_quotes(t_list **list)
 {
@@ -231,7 +220,7 @@ void	remove_dollar(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		if ((tmp->content[0] == '$' && tmp->link && (!ft_strcmp(tmp->link->type,
+		if ((!ft_strcmp(tmp->content, "$") && tmp->link && (!ft_strcmp(tmp->link->type,
 						"DOUBLE_Q") || !ft_strcmp(tmp->link->type,
 						"SINGLE_Q"))))
 		{
@@ -239,7 +228,7 @@ void	remove_dollar(t_list **list)
 			tmp->content = ft_strdup(tmp->link->content);
 			tmp = del_node(list, tmp->link);
 		}
-		else if ((tmp->content[0] == '$' && tmp->link
+		else if ((!ft_strcmp(tmp->content, "$") && tmp->link
 					&& tmp->link->content[0] != 32))
 		{
 			tmp->content = ft_strjoin(tmp->content, tmp->link->content);
