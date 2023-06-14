@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 19:25:24 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:49:22 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,48 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
-void	exit_errors(t_vars *v, char **cmd)
+int	sign_case(t_vars *v, char **cmd)
 {
-	if (ft_isdigit(cmd[v->i]))
+	if (!ft_strcmp(cmd[1], "-0") && cmd[2] == 0)
 	{
-		v->flag++;
-		if (ft_strcmp(cmd[v->i], ft_itoa(ft_atoi(cmd[v->i]))))
+		printf("exit\n");
+		exit(0);
+	}
+	else if (cmd[2] && ft_atoi(cmd[1]) == 0 && ft_atoi(cmd[2]) == 0)
+	{
+		ft_printf("exit\nminishell: exit: too many arguments\n", 2);
+		return (1);
+	}
+	else if (cmd[v->i][0] == '+')
+	{
+		if (ft_strcmp(cmd[v->i] + 1, ft_itoa(ft_atoi(cmd[v->i]))))
 		{
 			ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
 				cmd[v->i]);
 			exit(255);
 		}
+		if (!cmd[v->i + 1])
+		{
+			printf("exit\n");
+			exit(ft_atoi(cmd[v->i]));
+		}
+	}
+	return (0);
+}
+
+int	exit_errors(t_vars *v, char **cmd)
+{
+	if (ft_isdigit(cmd[v->i]))
+	{
+		v->flag++;
+		if (sign_case(v, cmd))
+			return (1);
+		// else if (ft_strcmp(cmd[v->i], ft_itoa(ft_atoi(cmd[v->i]))))
+		// {
+		// 	ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
+		// 		cmd[v->i]);
+		// 	exit(255);
+		// }
 	}
 	if (v->flag == 0)
 	{
@@ -76,6 +107,7 @@ void	exit_errors(t_vars *v, char **cmd)
 		v->j++;
 		ft_printf("exit\nminishell: exit: too many arguments\n", 2);
 	}
+	return (0);
 }
 
 void	ft_exit(char **cmd, t_cmd *final)
@@ -92,12 +124,16 @@ void	ft_exit(char **cmd, t_cmd *final)
 			printf("exit\n");
 			exit(255);
 		}
-		exit_errors(&v, cmd);
+		if (exit_errors(&v, cmd))
+			return ;
 	}
 	if (final && !final->link && !final->prev && v.j == 0)
 	{
 		if (v.flag == 1)
+		{
+			printf("exit\n");
 			exit(ft_atoi(cmd[1]));
+		}
 		printf("exit\n");
 		exit(255);
 	}

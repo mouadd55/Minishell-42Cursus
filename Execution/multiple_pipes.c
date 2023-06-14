@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:14:31 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 11:02:38 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:57:16 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	exec_st_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		{
 			ft_free_arr(env_arr);
 			ft_printf("minishell: %s: No such file or directory\n", 2, v->final_list->cmd[0]);
-			exit(1);
+			exit(127);
 		}
 		if (v->final_list->fd_in != STDIN_FILENO)
 		{
@@ -53,7 +53,7 @@ void	exec_st_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 			ft_printf("minishell: %s: command not found\n", 2, v->final_list->cmd[0]);
 			free(v->command);
 			ft_free_arr(env_arr);
-			exit(1);
+			exit(127);
 		}
 	}
 }
@@ -68,7 +68,7 @@ void	exec_mid_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		{
 			ft_free_arr(env_arr);
 			ft_printf("minishell: %s: No such file or directory\n", 2, v->final_list->cmd[0]);
-			exit(1);
+			exit(127);
 		}
 		if (v->final_list->fd_in != STDIN_FILENO)
 		{
@@ -99,7 +99,7 @@ void	exec_mid_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 			ft_printf("minishell: %s: command not found\n", 2, v->final_list->cmd[0]);
 			free(v->command);
 			ft_free_arr(env_arr);
-			exit(1);
+			exit(127);
 		}
 	}
 }
@@ -114,7 +114,7 @@ void	exec_last_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		{
 			ft_free_arr(env_arr);
 			ft_printf("minishell: %s: No such file or directory\n", 2, v->final_list->cmd[0]);
-			exit(1);
+			exit(127);
 		}
 		if (v->final_list->fd_out != STDOUT_FILENO)
 		{
@@ -145,7 +145,7 @@ void	exec_last_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 			ft_printf("minishell: %s: command not found\n", 2, v->final_list->cmd[0]);
 			free(v->command);
 			ft_free_arr(env_arr);
-			exit(1);
+			exit(127);
 		}
 	}
 }

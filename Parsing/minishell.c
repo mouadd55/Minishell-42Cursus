@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 19:05:38 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/14 12:47:01 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,11 @@ void	ft_builtins(t_list **list, t_env *envr, t_cmd *f_list, int length)
 		echo(f_list);
 	else if (f_list && !ft_strcmp(f_list->cmd[0], "cd"))
 		change_dir(&envr, f_list);
+	else if (f_list && !ft_strcmp("pwd", strlower(f_list->cmd[0])))
+		pwd(f_list);
 	else if (*list && !(*list)->prev && (*list)->link
 		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
 		unset(list, &envr);
-	else
-		pwd(f_list);
 	if (!ft_strcmp(f_list->cmd[0], "export") && f_list->cmd[1] == 0)
 	{
 		env_copy = ft_copy_env_list(envr);
