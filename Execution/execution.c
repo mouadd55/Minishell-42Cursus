@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 17:58:05 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/14 14:38:39 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,13 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 		pipe(v->pipefd);
 		v->env_arr = create_2d_array_from_env_list(*env);
 		v->child = fork();
-		v->command = NULL;
 		if (v->child < 0)
-			ft_printf("minishell: fork: Resource temporarily unavailable\n", 2);
-		else if (v->child == 0)
+		{
+			perror("minishell: fork");
+			return ;
+		}
+		v->command = NULL;
+		if (v->child == 0)
 		{
 			if (size == 1)
 				simple_cmd(v->final_list, *env, v->command, v->env_arr);
@@ -65,12 +68,10 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 {
 	t_vars	v;
 	int		std_in;
-	int		std_out;
 
 	v.lst = lst;
 	v.final_list = final_list;
 	std_in = dup(STDIN_FILENO);
-	std_out = dup(STDOUT_FILENO);
 	v.count = lstsize_cmd(final_list);
 	if (final_list->cmd && final_list->cmd[0])
 		execute_commands(&v, env, v.count);
@@ -80,5 +81,4 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	close(v.pipefd[0]);
 	close(v.pipefd[1]);
 	dup2(std_in, STDIN_FILENO);
-	dup2(std_out, STDOUT_FILENO);
 }

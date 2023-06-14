@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:04:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/14 11:57:46 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/14 14:42:00 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void	dup_file_descriptors(char *command, t_cmd *f_list, char **env_arr)
 		}
 		if (f_list->fd_in != STDIN_FILENO)
 		{
+			f_list->fd_in = open(f_list->file_name, O_RDONLY);
 			dup2(f_list->fd_in, STDIN_FILENO);
 			close(f_list->fd_in);
 		}
@@ -109,6 +110,7 @@ void	dup_file_descriptors(char *command, t_cmd *f_list, char **env_arr)
 void	simple_cmd(t_cmd *f_list, t_env *env, char *command
 	, char **env_arr)
 {
+	// write (3, "Hello\n", 6);
 	if (f_list->cmd && f_list->cmd[0])
 	{
 		if (check_if_builtin(f_list))
