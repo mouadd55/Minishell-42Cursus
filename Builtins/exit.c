@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/15 18:45:14 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 13:14:17 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,21 @@ int	sign_case(t_vars *v, char **cmd)
 	}
 	else if (cmd[v->i][0] == '+')
 	{
-		if (ft_strcmp(cmd[v->i] + 1, ft_itoa(ft_atoi(cmd[v->i]))))
+		v->str = ft_itoa(ft_atoi(cmd[v->i]));
+		if (ft_strcmp(cmd[v->i] + 1, v->str))
 		{
 			ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
 				cmd[v->i]);
+			free(v->str);
 			exit(255);
 		}
 		if (!cmd[v->i + 1])
 		{
 			printf("exit\n");
+			free(v->str);
 			exit(ft_atoi(cmd[v->i]));
 		}
+		free(v->str);
 	}
 	return (0);
 }
@@ -87,12 +91,19 @@ int	exit_errors(t_vars *v, char **cmd)
 	if (ft_isdigit(cmd[v->i]))
 	{
 		v->flag++;
+		v->str = ft_itoa(ft_atoi(cmd[v->i]));
 		if (sign_case(v, cmd))
+		{
+			free(v->str);
+			v->str = NULL;
 			return (1);
-		else if (ft_strcmp(cmd[v->i], ft_itoa(ft_atoi(cmd[v->i]))))
+		}
+		else if (ft_strcmp(cmd[v->i], v->str))
 		{
 			ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
 				cmd[v->i]);
+			free(v->str);
+			v->str = NULL;
 			exit(255);
 		}
 	}
@@ -100,12 +111,22 @@ int	exit_errors(t_vars *v, char **cmd)
 	{
 		ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
 			cmd[v->i]);
+		if (v->str)
+		{
+			free(v->str);
+			v->str = NULL;
+		}
 		exit(255);
 	}
 	else if ((v->flag == 2 && v->i == 2) || (v->flag == 1 && v->i == 2))
 	{
 		v->j++;
 		ft_printf("exit\nminishell: exit: too many arguments\n", 2);
+	}
+	if (v->str)
+	{
+		free(v->str);
+		v->str = NULL;
 	}
 	return (0);
 }

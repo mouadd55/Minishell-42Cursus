@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 12:47:38 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/16 14:09:56 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,16 @@ int	check_if_builtin(t_cmd *final_list)
 {
 	int		i;
 	char	**arr;
+	char	*tmp;
 
 	i = -1;
-	arr = ft_split("echo pwd cd export env exit unset", " ");
+	tmp = strlower(final_list->cmd[0]);
+	if (!ft_strcmp(tmp, "pwd") || !ft_strcmp(tmp, "echo"))
+	{
+		free(tmp);
+		return (1);
+	}
+	arr = ft_split("cd export env exit unset", " ");
 	while (arr[++i])
 	{
 		if (final_list->cmd && final_list->cmd[0]

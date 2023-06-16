@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/13 19:16:27 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 13:50:09 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,7 @@ void  open_files(t_list *list, t_cmd *tmp, t_env **envr)
 
 	v.tmp_value = NULL;
 	v.str = NULL;
+	/*v.fd = 0; Valgrind: Conditional jump or move depends on uninitialised value(s) */
 	while (list)
 	{
 		v.tmp1 = list;
@@ -244,50 +245,3 @@ void  open_files(t_list *list, t_cmd *tmp, t_env **envr)
 		list = list->link;
 	}
 }
-
-
-
-// exit 0 0
-// exit 42 42
-// exit -42 -24
-// exit 42
-// exit 42 53 68
-// exit 259
-// exit -12030
-// exit --1239312
-// exit ++++1203020103
-// exit +0
-// exit ++++++0
-// exit -----0
-// exit wrong
-// exit a
-// exit 1
-// exit "1"
-// exit "+102"
-// exit "1230"
-// exit "+++1230"
-// exit "1"23
-// exit "2"32"32"
-// exit "'42'"
-// exit '42'"42"42
-// exit +'42'"42"42
-// exit -'42'"42"42
-// exit 9223372
-// exit -9223372
-// exit 9223372036854775807
-// exit 9223372036854775808
-// exit 9223372036854775807135813514351
-// exit -9223372036854775807135813514351
-// exit 9223372036854775807135813514351 1351351531
-// exit -4
-// exit -1
-// exit 0
-// exit --000
-// exit "nenie_iri"
-// exit export
-// exit echo
-// exit cd ..
-// exit nenie iri
-// exit 42 42 42 42 42
-// exit echo nenie_iri
-// exit exit
