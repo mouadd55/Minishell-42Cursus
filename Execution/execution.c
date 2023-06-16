@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 14:09:56 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 19:13:14 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,15 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 		dup2(v->pipefd[0], STDIN_FILENO);
 		close(v->pipefd[0]);
 		ft_free_arr(v->env_arr);
+		while ((*v->lst) && ft_strcmp((*v->lst)->type, "PIPE"))
+		{
+			(*v->lst) = (*v->lst)->link;
+			if ((*v->lst) && !ft_strcmp((*v->lst)->type, "PIPE"))
+			{
+				(*v->lst) = (*v->lst)->link;
+				break ;
+			}
+		}
 		v->final_list = v->final_list->link;
 	}
 }
@@ -79,6 +88,7 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 {
 	t_vars	v;
 	int		std_in;
+	int		status;
 
 	v.lst = lst;
 	v.final_list = final_list;
@@ -87,8 +97,10 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	if (final_list->cmd && final_list->cmd[0]
 		&& final_list->fd_out != -1 && final_list->fd_in != -1)
 		execute_commands(&v, env, v.count);
-	while (wait (NULL) != -1)
+	while (wait (&status) != -1)
 	{
+		if (WIFEXITED(status))
+			g_exit_status = WEXITSTATUS(status);
 	}
 	close(v.pipefd[0]);
 	close(v.pipefd[1]);

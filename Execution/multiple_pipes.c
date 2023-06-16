@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:14:31 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/14 11:57:16 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 19:42:58 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	exec_st_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		if (check_if_builtin(v->final_list))
 		{
 			ft_builtins(v->lst, *env, v->final_list, v->count);
-			exit (0);
+			exit (g_exit_status);
 		}
 		else if (execve(v->command, v->final_list->cmd, env_arr) == -1)
 		{
@@ -92,7 +92,7 @@ void	exec_mid_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		if (check_if_builtin(v->final_list))
 		{
 			ft_builtins(v->lst, *env, v->final_list, v->count);
-			exit (0);
+			exit (g_exit_status);
 		}
 		else if (execve(v->command, v->final_list->cmd, env_arr) == -1)
 		{
@@ -138,7 +138,7 @@ void	exec_last_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		if (check_if_builtin(v->final_list))
 		{
 			ft_builtins(v->lst, *env, v->final_list, v->count);
-			exit (0);
+			exit (g_exit_status);
 		}
 		else if (execve(v->command, v->final_list->cmd, env_arr) == -1)
 		{

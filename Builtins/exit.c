@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 13:14:17 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 16:18:54 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	sign_case(t_vars *v, char **cmd)
 	}
 	else if (cmd[2] && ft_atoi(cmd[1]) == 0 && ft_atoi(cmd[2]) == 0)
 	{
+		g_exit_status = 1;
 		ft_printf("exit\nminishell: exit: too many arguments\n", 2);
 		return (1);
 	}
@@ -73,12 +74,14 @@ int	sign_case(t_vars *v, char **cmd)
 			ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
 				cmd[v->i]);
 			free(v->str);
+			g_exit_status = 255;
 			exit(255);
 		}
 		if (!cmd[v->i + 1])
 		{
 			printf("exit\n");
 			free(v->str);
+			g_exit_status = ft_atoi(cmd[v->i]);
 			exit(ft_atoi(cmd[v->i]));
 		}
 		free(v->str);
