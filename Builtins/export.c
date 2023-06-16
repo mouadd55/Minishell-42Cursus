@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 14:42:34 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/15 18:27:53 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,16 @@ void	mooooore_steps(t_vars *v, t_env **env, int length)
 	v->tmp3 = v->tmp1;
 	join_variable_values(v);
 	if (ft_strlen(v->var) == 0 && v->val)
+	{
 		ft_printf("minishell: export: `=%s': not a valid identifier\n",
 			2, v->val);
+		g_exit_status = 1;
+	}
 	else if (ft_strlen(v->var) == 0 && !length)
+	{
 		ft_printf("minishell: export: `': not a valid identifier\n", 2);
+		g_exit_status = 1;
+	}
 	else if (!length && check_if_variable_exist(*env, v->var, &v->temp2))
 		existed_variable(v);
 	else if (!length)
@@ -113,6 +119,7 @@ int	export_parsing(t_list **list, t_env **env, int length)
 		{
 			ft_printf("minishell: export: `%s': not a valid identifier\n",
 				2, v.var);
+			g_exit_status = 1;
 			if (v.vars == 1 && v.var[0] == '-')
 			{
 				free(v.var);

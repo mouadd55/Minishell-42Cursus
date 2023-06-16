@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/14 11:49:22 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/15 18:45:14 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,12 @@ int	exit_errors(t_vars *v, char **cmd)
 		v->flag++;
 		if (sign_case(v, cmd))
 			return (1);
-		// else if (ft_strcmp(cmd[v->i], ft_itoa(ft_atoi(cmd[v->i]))))
-		// {
-		// 	ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
-		// 		cmd[v->i]);
-		// 	exit(255);
-		// }
+		else if (ft_strcmp(cmd[v->i], ft_itoa(ft_atoi(cmd[v->i]))))
+		{
+			ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,
+				cmd[v->i]);
+			exit(255);
+		}
 	}
 	if (v->flag == 0)
 	{

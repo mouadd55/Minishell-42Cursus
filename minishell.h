@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/13 15:54:22 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/15 18:31:15 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <signal.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+
+int	g_exit_status;
 
 typedef struct s_list
 {
@@ -50,7 +52,7 @@ typedef struct s_cmd
 	struct s_cmd	*prev;
 }	t_cmd;
 
-typedef struct t_vars
+typedef struct s_vars
 {
 	int			i;
 	int			fd;

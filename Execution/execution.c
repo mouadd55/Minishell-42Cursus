@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/14 14:38:39 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/15 18:21:03 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,11 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 {
 	while (v->final_list)
 	{
-		pipe(v->pipefd);
+		if (pipe(v->pipefd) == -1)
+		{
+        	perror("minishell: pipe");
+			return ;
+    	}
 		v->env_arr = create_2d_array_from_env_list(*env);
 		v->child = fork();
 		if (v->child < 0)
@@ -73,7 +77,8 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	v.final_list = final_list;
 	std_in = dup(STDIN_FILENO);
 	v.count = lstsize_cmd(final_list);
-	if (final_list->cmd && final_list->cmd[0])
+	if (final_list->cmd && final_list->cmd[0]
+		&& final_list->fd_out != -1 && final_list->fd_in != -1)
 		execute_commands(&v, env, v.count);
 	while (wait (NULL) != -1)
 	{
