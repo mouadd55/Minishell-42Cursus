@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/15 19:01:14 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 12:52:52 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,8 @@ void	ft_builtins(t_list **list, t_env *envr, t_cmd *f_list, int length)
 	t_env	*env_copy;
 
 	tmp = *list;
-	if (f_list && !ft_strcmp(f_list->cmd[0], "echo"))
-		echo(f_list);
-	else if (f_list && !ft_strcmp(f_list->cmd[0], "cd"))
+	if (f_list && !ft_strcmp(f_list->cmd[0], "cd"))
 		change_dir(&envr, f_list);
-	else if (f_list && !ft_strcmp("pwd", strlower(f_list->cmd[0])))
-		pwd(f_list);
 	else if (*list && !(*list)->prev && (*list)->link
 		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
 		unset(list, &envr);
@@ -85,8 +81,11 @@ void	ft_builtins(t_list **list, t_env *envr, t_cmd *f_list, int length)
 		return ;
 	if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "exit"))
 		ft_exit(f_list->cmd, f_list);
-	else if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
+	else if (ft_lstsize(f_list) == 1 && f_list->cmd
+		&& f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
 		env_parsing(f_list->cmd, envr, f_list->fd_out);
+	echo(f_list);
+	pwd(f_list, envr);
 }
 
 t_env	*ft_copy_env_list(t_env *env)
@@ -111,7 +110,7 @@ void	recreate_list(t_cmd *final_list, t_env **envr)
 	t_vars	v;
 	int		size;
 
-	size = lstsize_cmd(final_list);
+	size = ft_lstsize(final_list);
 	while (final_list)
 	{
 		v.i = 0;
@@ -154,8 +153,8 @@ void	minihell(t_env **envr, t_list **lst)
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
 		execution(final_list, envr, lst);
-		// ft(*lst);
 		// final(final_list);
+		ft(*lst);
 	}
 	ft_destroy_final(&final_list);
 }
@@ -178,9 +177,14 @@ void	shell_level(t_env **env)
 		v.temp1 = v.temp1->link;
 	}
 }
+// void	l()
+// {
+// 	system ("leaks minishell");
+// }
 
 int	main(int ac, char **av, char **env)
 {
+	// atexit(l);
 	char	*input;
 	t_env	*envr;
 	t_list	*lst;

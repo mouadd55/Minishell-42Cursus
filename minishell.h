@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/15 18:31:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 13:21:26 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,8 @@ void			expand_var(t_list **list, t_env *envr, int rm_quotes);
 
 /**************************** Builtins functions *****************************/
 
-void			pwd(t_cmd *f_list);
+char			*ft_getenv(t_env *env, char *key);
+void			pwd(t_cmd *f_list, t_env *env);
 void			echo(t_cmd *f_list);
 char			*strlower(char *str);
 int				check_type(char *type);

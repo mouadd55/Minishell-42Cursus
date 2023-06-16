@@ -3,63 +3,78 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/13 18:57:23 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 12:48:40 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+char	*strlower(char *str)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	tmp = ft_strdup(str);
+	while (tmp[i])
+	{
+		if (tmp[i] >= 'A' && tmp[i] <= 'Z')
+			tmp[i] += 32;
+		i++;
+	}
+	return (tmp);
+}
+
 void	echo(t_cmd *f_list)
 {
 	t_vars v;
 
-	v.flag = 0;
-	v.i  = 1;
-	while (f_list->cmd[v.i] && (ft_strnstr(f_list->cmd[v.i], "-n", 2))
-	&& ft_count_char(&f_list->cmd[v.i][2], 'n') == ft_strlen(&f_list->cmd[v.i][2]))
+	v.str = strlower(f_list->cmd[0]);
+	if (!ft_strcmp("echo", v.str))
 	{
-		v.flag = 1;
-		v.i++;
-	}
-	while (f_list->cmd[v.i])
-	{
-		ft_putstr_fd(f_list->cmd[v.i], f_list->fd_out);
-		if (f_list->cmd[v.i + 1])
-			ft_putstr_fd(" ", f_list->fd_out);
-		if (!f_list->cmd[v.i + 1])
-			break;
-		v.i++;
+		v.flag = 0;
+		v.i  = 1;
+		while (f_list->cmd[v.i] && (ft_strnstr(f_list->cmd[v.i], "-n", 2))
+		&& ft_count_char(&f_list->cmd[v.i][2], 'n') == ft_strlen(&f_list->cmd[v.i][2]))
+		{
+			v.flag = 1;
+			v.i++;
+		}
+		while (f_list->cmd[v.i])
+		{
+			ft_putstr_fd(f_list->cmd[v.i], f_list->fd_out);
+			if (f_list->cmd[v.i + 1])
+				ft_putstr_fd(" ", f_list->fd_out);
+			v.i++;
 
+		}
+		if (f_list && !v.flag)
+			ft_putstr_fd("\n", f_list->fd_out);
 	}
-	if (f_list && !v.flag)
-		ft_putstr_fd("\n", f_list->fd_out);
+	free(v.str);
 }
 
-char	*strlower(char *str)
+
+char *ft_getenv(t_env *env, char *key)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
+	while (env)
 	{
-		if (str[i] >= 'A' && str[i] <= 'Z')
-			str[i] += 32;
-		i++;
+		if (!ft_strcmp(env->key, key))
+			return (env->value);
+		env = env->link;
 	}
-	return (str);
+	return (NULL);
 }
-
-void	pwd(t_cmd *f_list)
+void	pwd(t_cmd *f_list, t_env *env)
 {
 	char	*pwd;
 
-	pwd = getcwd(NULL, 0);
-	if (pwd)
-		ft_printf("%s\n", f_list->fd_out, pwd);
-	close(f_list->fd_out);
+	pwd = strlower(f_list->cmd[0]);
+	if (!ft_strcmp("pwd", pwd))
+		ft_printf("%s\n", f_list->fd_out, ft_getenv(env, "PWD"));
 	free(pwd);
 }
 
@@ -123,12 +138,8 @@ void	check_cmd(t_list **list, t_env **envr, t_cmd *f_list)
 	t_env	*env_copy;
 
 	tmp = *list;
-	if (f_list && !ft_strcmp(f_list->cmd[0], "echo"))
-		echo(f_list);
-	else if (f_list && !ft_strcmp(f_list->cmd[0], "cd"))
+	if (f_list && !ft_strcmp(f_list->cmd[0], "cd"))
 		change_dir(envr, f_list);
-	else if (f_list && !ft_strcmp("pwd", strlower(f_list->cmd[0])))
-		pwd(f_list);
 	else if (*list && !(*list)->prev && (*list)->link
 		&& (*list)->link->type[0] == 's' && !strcmp("unset", (*list)->content))
 		unset(list, envr);
@@ -145,4 +156,6 @@ void	check_cmd(t_list **list, t_env **envr, t_cmd *f_list)
 	else if (lstsize_cmd(f_list) == 1 && f_list->cmd
 		&& f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
 		env_parsing(f_list->cmd, *envr, f_list->fd_out);
+	pwd(f_list, *envr);
+	echo(f_list);
 }

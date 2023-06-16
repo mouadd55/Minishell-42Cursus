@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/13 19:27:09 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 13:54:55 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,17 @@ int	is_alpha_num(char c)
 	return (0);
 }
 
-void	expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
+void	 expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
 {
-	t_env	*env;
-
 	v->i++;
-	if (!temp->content[v->i] || !is_alpha_num(temp->content[v->i]))
+	if (temp->content[v->i] == '?')
+	{
+		v->var = ft_itoa(g_exit_status);
+		*save = ft_strjoin(*save, v->var);
+		v->i++;
+		free(v->var);
+	}
+	else if (!temp->content[v->i] || !is_alpha_num(temp->content[v->i]))
 		*save = ft_strjoin(*save, "$");
 	else
 	{
@@ -124,15 +129,10 @@ void	expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
 		while (temp->content[v->i] && is_alpha_num(temp->content[v->i]))
 			v->i++;
 		v->str = ft_substr(temp->content, v->j, v->i - v->j);
-		env = envr;
-		while (env)
+		if (ft_getenv(envr, v->str))
 		{
-			if (!ft_strcmp(env->key, v->str))
-			{
-				*save = ft_strjoin(*save, env->value);
-				v->flag = 0;
-			}
-			env = env->link;
+			*save = ft_strjoin(*save, ft_getenv(envr, v->str));
+			v->flag = 0;
 		}
 		if (v->flag == 1)
 			*save = ft_strjoin(*save, "");
@@ -155,7 +155,9 @@ void	expand_in_quotes_2(t_list *temp, t_env *envr, t_vars *v, char **save)
 			free(v->command);
 		}
 		else if (temp->content[v->i] == '$')
+		{
 			expand_in_quotes_3(temp, envr, v, save);
+		}
 	}
 }
 
@@ -188,7 +190,6 @@ void	expand_in_quotes(t_list **list, t_env *envr, char *type)
 
 void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 {
-	v->temp1 = envr;
 	if (*tmp && (*tmp)->content[0] == '$' && (*tmp)->link)
 	{
 		(*tmp) = (*tmp)->link;
@@ -196,20 +197,15 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 				(*tmp)->content[v->i]))
 			v->i++;
 		v->str = ft_substr((*tmp)->content, 0, v->i);
-		while (v->temp1)
+		if (ft_getenv(envr, v->str))
 		{
-			if (v->temp1 && !ft_strcmp(v->temp1->key, v->str))
-			{
-				free((*tmp)->prev->content);
-				(*tmp)->prev->content = ft_strdup(v->temp1->value);
-				v->command = ft_strdup(&(*tmp)->content[v->i]);
-				(*tmp)->prev->content = ft_strjoin((*tmp)->prev->content,
-						v->command);
-				*tmp = del_node(list, *tmp);
-				free(v->command);
-				break ;
-			}
-			v->temp1 = v->temp1->link;
+			free((*tmp)->prev->content);
+			(*tmp)->prev->content = ft_strdup(ft_getenv(envr, v->str));
+			v->command = ft_strdup(&(*tmp)->content[v->i]);
+			(*tmp)->prev->content = ft_strjoin((*tmp)->prev->content,
+					v->command);
+			*tmp = del_node(list, *tmp);
+			free(v->command);
 		}
 	}
 }
@@ -246,6 +242,26 @@ void	remove_dollar(t_list **list)
 	}
 }
 
+void expand_exit_status(t_list *tmp)
+{
+	t_vars v;
+
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->content, "$?"))
+		{
+			v.str = ft_itoa(g_exit_status);
+			free(tmp->content);
+			tmp->content = ft_strdup(v.str);
+			free(tmp->type);
+			tmp->type = ft_strdup("COMMAND");
+			free(v.str);
+		}
+		tmp = tmp->link;
+	}
+	
+}
+
 void	expand_var(t_list **list, t_env *envr, int rm_quotes)
 {
 	t_list	*tmp;
@@ -269,4 +285,5 @@ void	expand_var(t_list **list, t_env *envr, int rm_quotes)
 		remove_quotes(list);
 	tmp = *list;
 	remove_dollar(&tmp);
+	expand_exit_status(tmp);
 }

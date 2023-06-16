@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/12 21:45:08 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/16 13:51:11 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	is_quote(char input)
 
 char	is_special(char c)
 {
-	if (check_char("()=+|><$", c))
+	if (check_char("()=+|><$?", c))
 		return (c);
 	return (0);
 }
