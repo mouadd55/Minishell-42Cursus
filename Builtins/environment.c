@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 19:51:22 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/17 10:22:22 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	print_env(int i, int count, t_env *env, int fd_out)
 {
-	fprintf(stderr, "|%d|\n", fd_out);
 	if (i && i == count)
 	{
 		while (env)
@@ -38,16 +37,17 @@ void	env_parsing(char **cmd, t_env *env, int fd_out)
 			v.count++;
 		else if (v.count && cmd[v.i][0] == '-' && ft_strlen(cmd[v.i]) > 1)
 		{
+			g_exit_status = 1;
 			ft_printf("env: illegal option -- %c\n", 2, cmd[v.i][1]);
 			return ;
 		}
 		else if (v.count && cmd[v.i][0] != '-')
 		{
+			g_exit_status = 127;
 			ft_printf("env: %s: No such file or directory\n", 2, cmd[v.i]);
 			return ;
 		}
 	}
-		fprintf(stderr, "|%d|\n", fd_out);
 	print_env(v.i, v.count, env, fd_out);
 }
 

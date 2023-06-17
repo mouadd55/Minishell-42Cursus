@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/16 13:50:09 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/17 09:29:29 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ int	open_file(char *file_name, char *type)
 	if (!ft_strcmp(type, "<"))
 		fd = open(file_name, O_RDONLY, 0777);
 	if (fd == -1)
+	{
+		g_exit_status = 1;
 		perror(file_name);
+	}
 	return (fd);
 }
 
@@ -139,6 +142,7 @@ int var_redirect(t_list *list, t_vars *v)
 	v->str = NULL;
 	if (!ft_strcmp("VAR", list->type))
 	{
+		g_exit_status = 1;
 		ft_printf("minishell: %s: ambiguous redirect\n", 2, list->content);
 		return (1);
 	}

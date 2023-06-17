@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 19:13:14 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/17 13:17:49 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 		v->command = NULL;
 		if (v->child == 0)
 		{
+			signal(SIGQUIT,SIG_DFL);
+			if (v->final_list->cmd && !v->final_list->cmd[0])
+				exit (0);
 			if (size == 1)
 				simple_cmd(v->final_list, *env, v->command, v->env_arr);
 			if (!v->final_list->prev && v->final_list->link)
@@ -88,7 +91,6 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 {
 	t_vars	v;
 	int		std_in;
-	int		status;
 
 	v.lst = lst;
 	v.final_list = final_list;
@@ -97,11 +99,7 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	if (final_list->cmd && final_list->cmd[0]
 		&& final_list->fd_out != -1 && final_list->fd_in != -1)
 		execute_commands(&v, env, v.count);
-	while (wait (&status) != -1)
-	{
-		if (WIFEXITED(status))
-			g_exit_status = WEXITSTATUS(status);
-	}
+	exit_by_signal();
 	close(v.pipefd[0]);
 	close(v.pipefd[1]);
 	dup2(std_in, STDIN_FILENO);

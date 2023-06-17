@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 19:39:28 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/17 13:31:00 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,7 @@ void	ft_builtins(t_list **list, t_env *envr, t_cmd *f_list, int length)
 		return ;
 	if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "exit"))
 		ft_exit(f_list->cmd, f_list);
-	else if (lstsize_cmd(f_list) == 1 && f_list->cmd
-		&& f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
+	else if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "env"))
 		env_parsing(f_list->cmd, envr, f_list->fd_out);
 	echo(f_list);
 	pwd(f_list, envr);
@@ -143,7 +142,10 @@ void	minihell(t_env **envr, t_list **lst)
 	t_cmd	*final_list;
 
 	if (check_syntax(*lst))
+	{
+		g_exit_status = 258;
 		return ;
+	}
 	lexer(lst);
 	final_list = NULL;
 	if (lst)
@@ -153,7 +155,7 @@ void	minihell(t_env **envr, t_list **lst)
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
 		execution(final_list, envr, lst);
-		final(final_list);
+		// final(final_list);
 		// ft(*lst);
 	}
 	ft_destroy_final(&final_list);
@@ -193,7 +195,6 @@ int	main(int ac, char **av, char **env)
 	shell_level(&envr);
 	signal(SIGINT, &catching_signals);
 	signal(SIGQUIT,SIG_IGN);
-	// signal(SIGQUIT,SIG_DFL);
 	rl_catch_signals = 0;
 	while (1)
 	{

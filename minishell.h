@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 19:38:59 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/17 13:16:13 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,7 @@ int				search_for_pipe(t_vars *v);
 
 /**************************** Execution Part *****************************/
 
+void			exit_by_signal(void);
 int				lstsize_cmd(t_cmd *lst);
 char			*get_path_value(t_env *env);
 char			*get_paths(char *cmd, t_env *env);

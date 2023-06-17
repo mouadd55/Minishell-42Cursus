@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:04:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 19:30:42 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/17 12:54:25 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,10 @@ void	dup_file_descriptors(char *command, t_cmd *f_list, char **env_arr)
 		g_exit_status = 0;
 		if (execve(command, f_list->cmd, env_arr) == -1)
 		{
-			printf("minishell: %s: command not found\n", f_list->cmd[0]);
+			ft_printf("minishell: %s: command not found\n", 2, f_list->cmd[0]);
 			free(command);
 			ft_free_arr(env_arr);
-			g_exit_status = 127;
+			// g_exit_status = 127;
 			exit(127);
 		}
 	}
@@ -119,8 +119,8 @@ void	simple_cmd(t_cmd *f_list, t_env *env, char *command
 		if (!command)
 		{
 			ft_free_arr(env_arr);
-			printf("minishell: %s: No such file or directory\n", f_list->cmd[0]);
-			g_exit_status = 127;
+			ft_printf("minishell: %s: No such file or directory\n", 2, f_list->cmd[0]);
+			// g_exit_status = 127;
 			exit(127);
 		}
 		dup_file_descriptors(command, f_list, env_arr);
