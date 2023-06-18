@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/17 09:29:29 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/18 17:26:40 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ void  open_files(t_list *list, t_cmd *tmp, t_env **envr)
 
 	v.tmp_value = NULL;
 	v.str = NULL;
-	/*v.fd = 0; Valgrind: Conditional jump or move depends on uninitialised value(s) */
+	v.fd = 0; /*Valgrind: Conditional jump or move depends on uninitialised value(s) */
 	while (list)
 	{
 		v.tmp1 = list;

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:04:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/17 12:54:25 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/18 13:45:52 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,8 @@ void	dup_file_descriptors(char *command, t_cmd *f_list, char **env_arr)
 		}
 		if (f_list->fd_in != STDIN_FILENO)
 		{
-			f_list->fd_in = open(f_list->file_name, O_RDONLY); // check this case in multiple commands
+			if (f_list->file_name)
+				f_list->fd_in = open(f_list->file_name, O_RDONLY);
 			dup2(f_list->fd_in, STDIN_FILENO);
 			close(f_list->fd_in);
 		}
@@ -102,7 +103,6 @@ void	dup_file_descriptors(char *command, t_cmd *f_list, char **env_arr)
 			ft_printf("minishell: %s: command not found\n", 2, f_list->cmd[0]);
 			free(command);
 			ft_free_arr(env_arr);
-			// g_exit_status = 127;
 			exit(127);
 		}
 	}
@@ -120,7 +120,6 @@ void	simple_cmd(t_cmd *f_list, t_env *env, char *command
 		{
 			ft_free_arr(env_arr);
 			ft_printf("minishell: %s: No such file or directory\n", 2, f_list->cmd[0]);
-			// g_exit_status = 127;
 			exit(127);
 		}
 		dup_file_descriptors(command, f_list, env_arr);

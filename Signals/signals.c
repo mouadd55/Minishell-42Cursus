@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 17:00:08 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/17 14:10:19 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/18 16:14:34 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void	catching_signals(int sig)
 	if (sig == SIGINT)
 	{
 		g_exit_status = 1;
-		ft_printf("\n", 2);
-		rl_on_new_line();
+		write(1, "\n", 1);
 		rl_replace_line("", 0);
+		rl_on_new_line();
 		rl_redisplay();
 	}
 }
@@ -28,16 +28,27 @@ void	exit_by_signal(void)
 {
 	int	status;
 
-	while (wait(&status) != -1)
+	while (waitpid(-1, &status, 0) != -1)
 	{
-		if (WIFEXITED(status))
-			g_exit_status = WEXITSTATUS(status);
-		if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGINT)
-				g_exit_status = 130;
-			else if (WTERMSIG(status) == SIGQUIT)
-				g_exit_status = 131;
-		}
+	}
+	if (WIFEXITED(status))
+		g_exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			write(1, "\n", 1);
+		else if (WTERMSIG(status) == SIGABRT)
+			write(1, "Abort trap: 6\n", 15);
+		else if (WTERMSIG(status) == SIGSEGV)
+			write(1, "Segmentation fault: 11\n", 24);
+		else if (WTERMSIG(status) == SIGTERM)
+			write(1, "Terminated: 15\n", 16);
+		else if (WTERMSIG(status) == SIGKILL)
+			write(1, "Killed: 9\n", 11);
+		else if (WTERMSIG(status) == SIGBUS)
+			write(1, "Bus error: 10\n", 15);
+		else if (WTERMSIG(status) == SIGQUIT)
+			write(1, "Quit: 3\n", 9);
+		g_exit_status = WTERMSIG(status) + 128;
 	}
 }

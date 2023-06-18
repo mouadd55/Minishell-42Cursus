@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/17 13:16:13 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/18 17:45:40 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "string.h"
 # include "limits.h"
 # include <signal.h>
+# include <dirent.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 
@@ -75,7 +76,7 @@ typedef struct s_vars
 	char		*command;
 	char		*tmp_value;
 	char		**env_arr;
-	t_list		**lst;
+	t_list		*lst;
 	t_list		*tmp1;
 	t_list		*tmp2;
 	t_list		*tmp3;
@@ -191,7 +192,7 @@ void			execution(t_cmd *final_list, t_env **envr, t_list **lst);
 void			simple_cmd(t_cmd *f_lst, t_env *env, char *cmd, char **arr);
 void			exec_st_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
 void			exec_mid_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
-void			ft_builtins(t_list **list, t_env *env, t_cmd *f_lst, int len);
+void			ft_builtins(t_list *list, t_env *env, t_cmd *f_lst, int len);
 void			exec_last_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
 
 #endif

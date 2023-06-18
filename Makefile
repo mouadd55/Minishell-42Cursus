@@ -6,13 +6,13 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/17 13:20:36 by moudrib          ###   ########.fr        #
+#    Updated: 2023/06/18 17:26:07 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -g -O1 -fsanitize=address #-Werror
+CFLAGS	= -Wall -Wextra  -Werror -g -O1 #-fsanitize=address
 OBJDIR	= _Object_files/
 R		= \x1B[91m
 G		= \x1B[32m

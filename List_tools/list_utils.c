@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 16:45:14 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/02 15:19:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/18 15:09:44 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	*ft_destroy_list(t_list **head)
 		free(*head);
 		(*head) = tmp;
 	}
+	head = NULL;
 	return (0);
 }
 
