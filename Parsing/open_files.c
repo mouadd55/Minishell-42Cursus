@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/18 17:26:40 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 22:57:04 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 			return ;
 		}
 		if (check_char(v->str, '$'))
-			v->str = expand_in_here_doc(v->str, envr, v->flag);
+			v->str = expand_in_here_doc(v->str, envr, 0);
 		if(v->str)
 			ft_printf("%s\n", v->fd, v->str);
 		free(v->str);

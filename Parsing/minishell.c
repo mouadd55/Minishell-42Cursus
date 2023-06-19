@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/19 21:54:11 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 22:55:56 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	minihell(t_env **envr, t_list **lst)
 		create_final_list(*lst, &final_list);
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
-		// ft(*lst);
+		ft(*lst);
 		execution(final_list, envr, lst);
 		// final(final_list);
 	}
