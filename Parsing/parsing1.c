@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 15:52:52 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/18 18:43:14 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 21:34:11 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,31 @@ int	check_syntax(t_list *lst)
 		lst = lst->link;
 	}
 	return (0);
+}
+
+long long	ft_atoi(const char *str)
+{
+	long long	i;
+	long long	sign;
+	long long	res;
+
+	i = 0;
+	sign = 1;
+	res = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9' && str[i])
+	{
+		res *= 10;
+		res += str[i] - 48;
+		i++;
+	}
+	return (res * sign);
 }

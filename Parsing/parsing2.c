@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:43 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/13 10:39:24 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 20:48:12 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,28 @@ int	search_for_pipe(t_vars *v)
 		v->tmp1 = v->tmp1->link;
 	}
 	return (0);
+}
+
+int	ft_isdigit(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] && (str[i] == '-' || str[i] == '+'))
+		if (!str[++i])
+			return (0);
+	while (str[i])
+		if (!(str[i] >= '0' && str[i++] <= '9'))
+			return (0);
+	return (1);
+}
+
+void	initialize_variables(t_vars *v)
+{
+	v->vars = 0;
+	v->flag = 0;
+	v->var = NULL;
+	v->val = NULL;
+	v->temp2 = NULL;
+	v->tmp3 = NULL;
 }

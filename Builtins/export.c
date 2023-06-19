@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:47:40 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 19:02:43 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 20:48:05 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,7 @@ int	export_parsing(t_list **list, t_env **env, int length)
 {
 	t_vars	v;
 
-	v.vars = 0;
-	v.flag = 0;
-	v.var = NULL;
-	v.val = NULL;
-	v.temp2 = NULL;
-	v.tmp3 = NULL;
+	initialize_variables(&v);
 	v.tmp1 = skip_whats_before_the_first_var(*list, *list);
 	lexer_for_export(&v.tmp1);
 	while (v.tmp1 && check_type(v.tmp1->type))

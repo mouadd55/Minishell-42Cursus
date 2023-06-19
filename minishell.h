@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/18 17:45:40 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 22:03:59 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 # include "string.h"
 # include "limits.h"
 # include <signal.h>
-# include <dirent.h>
+// # include <dirent.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 
+// # define malloc(x) NULL
 int	g_exit_status;
 
 typedef struct s_list
@@ -94,6 +95,7 @@ char			is_special(char c);
 char			*ft_itoa(long long n);
 long long		ft_atoi(const char *str);
 char			**ft_free_arr(char **str);
+int				ft_isdigit(char *str);
 size_t			ft_strlen(const char *str);
 char			*ft_strdup(const char *s1);
 void			ft_putchar(char ch, int fd);
@@ -147,6 +149,7 @@ t_cmd			*lstlast_final(t_cmd *head);
 t_env			*ft_copy_env_list(t_env *env);
 void			free_some_variables(t_vars *v);
 void			join_variable_names(t_vars *v);
+void			initialize_variables(t_vars *v);
 void			*ft_destroy_final(t_cmd **head);
 t_list			*lexer_for_unset(t_list **list);
 void			lexer_for_export(t_list **list);

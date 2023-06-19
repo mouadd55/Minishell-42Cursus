@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:04:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/18 13:45:52 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 21:33:13 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,8 @@ void	simple_cmd(t_cmd *f_list, t_env *env, char *command
 		if (!command)
 		{
 			ft_free_arr(env_arr);
-			ft_printf("minishell: %s: No such file or directory\n", 2, f_list->cmd[0]);
+			ft_printf("minishell: %s: No such file or directory\n",
+				2, f_list->cmd[0]);
 			exit(127);
 		}
 		dup_file_descriptors(command, f_list, env_arr);

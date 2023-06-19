@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:32 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/16 13:51:11 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/19 21:56:38 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ t_list	*ft_split_input(char *input)
 	lst = NULL;
 	switch_space(input, 1);
 	v.arr = ft_split(input, " \t");
-	while (v.arr[v.i])
+	while (v.arr && v.arr[v.i]) // add protection
 	{
 		v.j = 0;
 		split_input(&lst, &v);

@@ -6,54 +6,13 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/16 16:18:54 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 20:41:53 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-long long	ft_atoi(const char *str)
-{
-	long long	i;
-	long long	sign;
-	long long	res;
-
-	i = 0;
-	sign = 1;
-	res = 0;
-	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
-	else if (str[i] == '+')
-		i++;
-	while (str[i] >= '0' && str[i] <= '9' && str[i])
-	{
-		res *= 10;
-		res += str[i] - 48;
-		i++;
-	}
-	return (res * sign);
-}
-
-int	ft_isdigit(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[i] && (str[i] == '-' || str[i] == '+'))
-		if (!str[++i])
-			return (0);
-	while (str[i])
-		if (!(str[i] >= '0' && str[i++] <= '9'))
-			return (0);
-	return (1);
-}
-
-int	sign_case(t_vars *v, char **cmd)
+int	sign_case2(char **cmd)
 {
 	if (!ft_strcmp(cmd[1], "-0") && cmd[2] == 0)
 	{
@@ -66,6 +25,13 @@ int	sign_case(t_vars *v, char **cmd)
 		ft_printf("exit\nminishell: exit: too many arguments\n", 2);
 		return (1);
 	}
+	return (0);
+}
+
+int	sign_case(t_vars *v, char **cmd)
+{
+	if (sign_case2(cmd))
+		return (1);
 	else if (cmd[v->i][0] == '+')
 	{
 		v->str = ft_itoa(ft_atoi(cmd[v->i]));
@@ -89,7 +55,7 @@ int	sign_case(t_vars *v, char **cmd)
 	return (0);
 }
 
-int	exit_errors(t_vars *v, char **cmd)
+int	check_if_digit(t_vars *v, char **cmd)
 {
 	if (ft_isdigit(cmd[v->i]))
 	{
@@ -110,6 +76,13 @@ int	exit_errors(t_vars *v, char **cmd)
 			exit(255);
 		}
 	}
+	return (0);
+}
+
+int	exit_errors(t_vars *v, char **cmd)
+{
+	if (check_if_digit(v, cmd))
+		return (1);
 	if (v->flag == 0)
 	{
 		ft_printf("exit\nminishell: exit: %s: numeric argument required\n", 2,

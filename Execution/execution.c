@@ -6,17 +6,17 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/18 17:32:38 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 21:32:57 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int check_if_builtin(t_cmd *final_list)
+int	check_if_builtin(t_cmd *final_list)
 {
-	int i;
-	char **arr;
-	char *tmp;
+	int		i;
+	char	**arr;
+	char	*tmp;
 
 	i = -1;
 	tmp = strlower(final_list->cmd[0]);
@@ -25,10 +25,12 @@ int check_if_builtin(t_cmd *final_list)
 		free(tmp);
 		return (1);
 	}
+	free(tmp);
 	arr = ft_split("cd export env exit unset", " ");
 	while (arr[++i])
 	{
-		if (final_list->cmd && final_list->cmd[0] && !ft_strcmp(final_list->cmd[0], arr[i]))
+		if (final_list->cmd && final_list->cmd[0]
+			&& !ft_strcmp(final_list->cmd[0], arr[i]))
 		{
 			ft_free_arr(arr);
 			return (1);
@@ -38,39 +40,49 @@ int check_if_builtin(t_cmd *final_list)
 	return (0);
 }
 
-void execute_commands(t_vars *v, t_env **env, int size)
+int	pipe_and_fork_protection(t_vars *v, t_env **env)
+{
+	if (pipe(v->pipefd) == -1)
+	{
+		perror("minishell: pipe");
+		return (1);
+	}
+	v->env_arr = create_2d_array_from_env_list(*env);
+	v->child = fork();
+	if (v->child < 0)
+	{
+		ft_free_arr(v->env_arr);
+		perror("minishell: fork");
+		return (1);
+	}
+	v->command = NULL;
+	return (0);
+}
+
+void	inside_child_process(t_vars *v, t_env **env, int size)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (v->final_list->cmd && !v->final_list->cmd[0])
+		exit(0);
+	if (size == 1)
+		simple_cmd(v->final_list, *env, v->command, v->env_arr);
+	if (!v->final_list->prev && v->final_list->link)
+		exec_st_cmd(v, env, v->env_arr, v->pipefd);
+	else if (v->final_list->prev && v->final_list->link)
+		exec_mid_cmd(v, env, v->env_arr, v->pipefd);
+	else
+		exec_last_cmd(v, env, v->env_arr, v->pipefd);
+}
+
+void	execute_commands(t_vars *v, t_env **env, int size)
 {
 	while (v->final_list)
 	{
-		if (pipe(v->pipefd) == -1)
-		{
-			perror("minishell: pipe");
-			return;
-		}
-		v->env_arr = create_2d_array_from_env_list(*env);
-		v->child = fork();
-		if (v->child < 0)
-		{
-			ft_free_arr(v->env_arr);
-			perror("minishell: fork");
-			return;
-		}
-		v->command = NULL;
+		if (pipe_and_fork_protection(v, env))
+			return ;
 		if (v->child == 0)
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			if (v->final_list->cmd && !v->final_list->cmd[0])
-				exit(0);
-			if (size == 1)
-				simple_cmd(v->final_list, *env, v->command, v->env_arr);
-			if (!v->final_list->prev && v->final_list->link)
-				exec_st_cmd(v, env, v->env_arr, v->pipefd);
-			else if (v->final_list->prev && v->final_list->link)
-				exec_mid_cmd(v, env, v->env_arr, v->pipefd);
-			else
-				exec_last_cmd(v, env, v->env_arr, v->pipefd);
-		}
+			inside_child_process(v, env, size);
 		close(v->pipefd[1]);
 		dup2(v->pipefd[0], STDIN_FILENO);
 		close(v->pipefd[0]);
@@ -81,17 +93,17 @@ void execute_commands(t_vars *v, t_env **env, int size)
 			if ((v->lst) && !ft_strcmp((v->lst)->type, "PIPE"))
 			{
 				(v->lst) = (v->lst)->link;
-				break;
+				break ;
 			}
 		}
 		v->final_list = v->final_list->link;
 	}
 }
 
-void execution(t_cmd *final_list, t_env **env, t_list **lst)
+void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 {
-	t_vars v;
-	int std_in;
+	t_vars	v;
+	int		std_in;
 
 	v.lst = *lst;
 	v.final_list = final_list;

@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/18 17:30:27 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 21:54:11 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft(t_list *stack)
 
 void	final(t_cmd *list)
 {
-	int			i;
+	int		i;
 	t_cmd	*tmp;
 
 	if (!list)
@@ -104,6 +104,17 @@ t_env	*ft_copy_env_list(t_env *env)
 	return (copy);
 }
 
+void	split_string(t_vars *v, t_cmd *final_list, t_env **envr, int size)
+{
+	v->tmp1 = ft_split_input(v->str);
+	lexer(&v->tmp1);
+	if (size == 1)
+		check_cmd(&v->tmp1, envr, final_list);
+	ft_destroy_list(&v->tmp1);
+	free(v->str);
+	v->str = NULL;
+}
+
 void	recreate_list(t_cmd *final_list, t_env **envr)
 {
 	t_vars	v;
@@ -123,15 +134,7 @@ void	recreate_list(t_cmd *final_list, t_env **envr)
 			v.i++;
 		}
 		if (v.str)
-		{
-			v.tmp1 = ft_split_input(v.str);
-			lexer(&v.tmp1);
-			if (size == 1)
-				check_cmd(&v.tmp1, envr, final_list);
-			ft_destroy_list(&v.tmp1);
-			free(v.str);
-			v.str = NULL;
-		}
+			split_string(&v, final_list, envr, size);
 		final_list = final_list->link;
 	}
 	spaces_in_quotes(&final_list);
@@ -154,9 +157,9 @@ void	minihell(t_env **envr, t_list **lst)
 		create_final_list(*lst, &final_list);
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
+		// ft(*lst);
 		execution(final_list, envr, lst);
 		// final(final_list);
-		// ft(*lst);
 	}
 	ft_destroy_final(&final_list);
 }
@@ -180,27 +183,17 @@ void	shell_level(t_env **env)
 	}
 }
 
-int	main(int ac, char **av, char **env)
+void	everything_starts_here(t_env *envr)
 {
 	char	*input;
-	t_env	*envr;
 	t_list	*lst;
 
-	(void)av;
-	if (ac != 1)
-		return (0);
 	lst = NULL;
-	envr = NULL;
-	envr = ft_split_environment(env);
-	shell_level(&envr);
-	signal(SIGINT, &catching_signals);
-	signal(SIGQUIT,SIG_IGN);
-	rl_catch_signals = 0;
 	while (1)
 	{
 		input = readline("➜  Minishell ");
 		if (!input)
-			break ;
+			return ;
 		if (ft_strlen(input))
 		{
 			add_history(input);
@@ -209,8 +202,24 @@ int	main(int ac, char **av, char **env)
 				minihell(&envr, &lst);
 		}
 		ft_destroy_list(&lst);
-		free(input);
+		free(input);	
 	}
+}
+
+int	main(int ac, char **av, char **env)
+{
+	t_env	*envr;
+
+	(void)av;
+	if (ac != 1)
+		return (0);
+	envr = NULL;
+	envr = ft_split_environment(env);
+	shell_level(&envr);
+	signal(SIGINT, &catching_signals);
+	signal(SIGQUIT, SIG_IGN);
+	rl_catch_signals = 0;
+	everything_starts_here(envr);
 	ft_destroy_list_env(&envr);
 	printf("exit\n");
 	return (0);
