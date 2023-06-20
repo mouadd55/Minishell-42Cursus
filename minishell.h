@@ -181,7 +181,7 @@ void			first_conditions(t_list *tmp);
 void			conditions_for_delimiter(t_list *tmp);
 void			conditions_for_files(t_list *tmp);
 int				search_for_pipe(t_vars *v);
-
+void			if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p);
 /**************************** Execution Part *****************************/
 
 void			exit_by_signal(void);

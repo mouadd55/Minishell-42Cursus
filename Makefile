@@ -25,6 +25,8 @@ SRC		=	\
 				Builtins/exit.c \
 				Parsing/input.c \
 				Parsing/lexer.c \
+				Parsing/is_function.c \
+				Parsing/here_doc.c \
 				Builtins/unset.c \
 				Parsing/expand.c \
 				Builtins/export.c \
