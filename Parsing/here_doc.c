@@ -22,11 +22,11 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 	return (v.str);
 }
 
-int sig_hand(int sig)
+void sig_hand(int sig)
 {
 	if (sig == SIGINT)
 	{
-		g_exit_status = 130;
+		g_exit_status = -1;
 		ioctl(STDIN_FILENO, TIOCSTI, "\n");
 	}
 }
@@ -38,7 +38,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 	v->str = readline("Heredoc> ");
 	while (v->str)
 	{
-		if (g_exit_status == 130)
+		if (g_exit_status == -1)
 			return;
 		if (!v->str || !ft_strcmp(v->str, v->tmp_str))
 		{

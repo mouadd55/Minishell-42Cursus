@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 17:00:08 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/18 16:14:34 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/20 19:37:20 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	exit_by_signal(void)
 {
 	int	status;
 
-	while (waitpid(-1, &status, 0) != -1)
+	while (wait(&status) != -1)
 	{
 	}
 	if (WIFEXITED(status))
@@ -37,7 +37,7 @@ void	exit_by_signal(void)
 	{
 		if (WTERMSIG(status) == SIGINT)
 			write(1, "\n", 1);
-		else if (WTERMSIG(status) == SIGABRT)
+		if (WTERMSIG(status) == SIGABRT)
 			write(1, "Abort trap: 6\n", 15);
 		else if (WTERMSIG(status) == SIGSEGV)
 			write(1, "Segmentation fault: 11\n", 24);

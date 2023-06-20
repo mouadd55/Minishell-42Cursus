@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/19 22:03:59 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/20 19:39:44 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int				is_space(int c);
 int				ft_isalpha(int ch);
 char			is_special(char c);
 char			*ft_itoa(long long n);
+char	is_quote(char input);
 long long		ft_atoi(const char *str);
 char			**ft_free_arr(char **str);
 int				ft_isdigit(char *str);
@@ -199,4 +200,5 @@ void			exec_mid_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
 void			ft_builtins(t_list *list, t_env *env, t_cmd *f_lst, int len);
 void			exec_last_cmd(t_vars *v, t_env **env, char **arr, int pipe[2]);
 
+void	final(t_cmd *list);
 #endif

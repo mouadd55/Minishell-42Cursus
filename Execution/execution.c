@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/19 21:32:57 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/20 20:20:34 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,17 +104,23 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 {
 	t_vars	v;
 	int		std_in;
+	int		std_out;
 
 	v.lst = *lst;
 	v.final_list = final_list;
 	std_in = dup(STDIN_FILENO);
+	std_out = dup(STDOUT_FILENO);
 	v.count = lstsize_cmd(final_list);
+	signal(SIGINT, SIG_IGN);
 	if (final_list->cmd && final_list->fd_out != -1 
 		&& final_list->fd_in != -1)
 		execute_commands(&v, env, v.count);
-	ft_destroy_list(lst);
-	exit_by_signal();
-	signal(SIGQUIT, SIG_IGN);
+	// signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, &catching_signals);
+	ft_destroy_list(lst);
 	dup2(std_in, STDIN_FILENO);
+	dup2(std_out, STDOUT_FILENO);
+	close(std_in);
+	close(std_out);
+	exit_by_signal();
 }
