@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 20:32:43 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/19 20:48:12 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/20 08:26:31 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,15 @@ void	initialize_variables(t_vars *v)
 	v->val = NULL;
 	v->temp2 = NULL;
 	v->tmp3 = NULL;
+}
+
+void	split_string(t_vars *v, t_cmd *final_list, t_env **envr, int size)
+{
+	v->tmp1 = ft_split_input(v->str);
+	lexer(&v->tmp1);
+	if (size == 1)
+		check_cmd(&v->tmp1, envr, final_list);
+	ft_destroy_list(&v->tmp1);
+	free(v->str);
+	v->str = NULL;
 }
