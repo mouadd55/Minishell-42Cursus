@@ -25,7 +25,7 @@
 # include <readline/readline.h>
 
 // # define malloc(x) NULL
-int	g_exit_status;
+extern int	g_exit_status;
 
 typedef struct s_list
 {

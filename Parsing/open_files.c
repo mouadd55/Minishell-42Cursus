@@ -45,7 +45,7 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 	v.str = NULL;
 	v.tmp1 = ft_split_input(input);
 	lexer(&v.tmp1);
-	if (!istrue)
+	if (istrue)
 	{
 		expand_in_quotes(&v.tmp1, *envr, "SINGLE_Q");
 		expand_var(&v.tmp1, *envr, 0);
@@ -77,7 +77,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 			return ;
 		}
 		if (check_char(v->str, '$'))
-			v->str = expand_in_here_doc(v->str, envr, 0);
+			v->str = expand_in_here_doc(v->str, envr, v->flag);
 		if(v->str)
 			ft_printf("%s\n", v->fd, v->str);
 		free(v->str);
@@ -109,6 +109,7 @@ void	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
 	t_vars	v;
 
 	v.val = NULL;
+	v.flag = 1;
 	if (list->link && !ft_strcmp(list->link->type, "space"))
 		list = list->link->link;
 	else if (list->link)
@@ -121,13 +122,15 @@ void	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
 				v.var = ft_strdup("\'");
 			else if (list->content[0] == '\"')
 				v.var = ft_strdup("\"");
-			free(list->content);
+			v.flag = 0;
+			// free(list->content);
 			list->content = ft_strtrim(list->content, v.var);
 			free(v.var);
 		}
 		v.val = ft_strjoin(v.val, list->content);
 		list = list->link;
-	}
+	} 
+	printf("%s\n\n", v.val);
 	open_heredoc_2(&v, envr, p);
 	p->fd = v.fd;
 }

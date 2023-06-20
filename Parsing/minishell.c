@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+int	g_exit_status;
+
 void	ft(t_list *stack)
 {
 	t_list	*tmp;
@@ -157,7 +159,7 @@ void	minihell(t_env **envr, t_list **lst)
 		create_final_list(*lst, &final_list);
 		open_files(*lst, final_list, envr);
 		recreate_list(final_list, envr);
-		ft(*lst);
+		// ft(*lst);
 		execution(final_list, envr, lst);
 		// final(final_list);
 	}
