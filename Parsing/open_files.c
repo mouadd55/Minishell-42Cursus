@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_files.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/20 08:20:19 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 22:57:04 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	open_file(char *file_name, char *type)
 	return (fd);
 }
 
-int	var_redirect(t_list *list, t_vars *v)
+int var_redirect(t_list *list, t_vars *v)
 {
 	v->tmp_value = ft_strdup(is_redir(list));
 	if (list->link && !ft_strcmp(list->link->type, "space"))
@@ -59,14 +59,13 @@ int	var_redirect(t_list *list, t_vars *v)
 	return (0);
 }
 
-t_cmd	*add_fd(t_vars *v, t_cmd *tmp, t_list *list)
+t_cmd *add_fd(t_vars *v, t_cmd *tmp, t_list *list)
 {
 	if (v->tmp_value && tmp)
 	{
 		if (!ft_strcmp(v->tmp_value, ">") || !ft_strcmp(v->tmp_value, ">>"))
 			tmp->fd_out = v->fd;
-		else if (!ft_strcmp(v->tmp_value, "<")
-			|| !ft_strcmp(v->tmp_value, "<<"))
+		else if (!ft_strcmp(v->tmp_value, "<") || !ft_strcmp(v->tmp_value, "<<"))
 		{
 			tmp->fd_in = v->fd;
 			if (!ft_strcmp(v->tmp_value, "<<"))
@@ -78,19 +77,19 @@ t_cmd	*add_fd(t_vars *v, t_cmd *tmp, t_list *list)
 		free(v->tmp_value);
 		v->tmp_value = NULL;
 	}
-	if (list && !ft_strcmp(list->type, "PIPE")
+	if (list && !ft_strcmp(list->type , "PIPE")
 		&& tmp && tmp->link)
 		tmp = tmp->link;
 	return (tmp);
 }
 
-t_list	*if_redirect(t_cmd *tmp, t_vars *v, t_env **envr, t_vars *p)
+t_list *if_redirect(t_cmd *tmp, t_vars *v, t_env **envr, t_vars *p)
 {
 	tmp->fd_in = -1;
 	tmp->fd_out = -1;
 	while (v->tmp1 && ft_strcmp(v->tmp1->type, "PIPE"))
 	{
-		if (!ft_strcmp(v->tmp1->type, "HEREDOC"))
+		if(!ft_strcmp(v->tmp1->type, "HEREDOC"))
 		{
 			if_heredoce(v, tmp, envr, p);
 			tmp->file_name = ft_strdup(v->command);
@@ -105,16 +104,16 @@ t_list	*if_redirect(t_cmd *tmp, t_vars *v, t_env **envr, t_vars *p)
 	return (v->tmp1);
 }
 
-void	open_files(t_list *list, t_cmd *tmp, t_env **envr)
+void  open_files(t_list *list, t_cmd *tmp, t_env **envr)
 {
-	t_vars	v;
-	t_vars	p;
-
+	t_vars v;
+	t_vars p;
 	v.command = NULL;
+
 	v.tmp_value = NULL;
 	v.str = NULL;
 	v.fd = 0;
-	while (list)
+	while (list && g_exit_status != 130)
 	{
 		v.tmp1 = list;
 		if (!ft_strcmp(list->type, "HEREDOC"))
@@ -127,7 +126,7 @@ void	open_files(t_list *list, t_cmd *tmp, t_env **envr)
 		if (v.fd >= 3)
 			tmp = add_fd(&v, tmp, list);
 		if (!list)
-			break ;
+			break;
 		list = list->link;
 	}
 }

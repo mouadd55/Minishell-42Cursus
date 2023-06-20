@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/20 08:29:04 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/16 13:54:55 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_list	*del_node(t_list **list, t_list *del_node)
 
 void	remove_quotes(t_list **list)
 {
-	t_vars	v;
+	t_vars v;
 
 	v.tmp1 = *list;
 	while (v.tmp1)
@@ -111,7 +111,7 @@ int	is_alpha_num(char c)
 	return (0);
 }
 
-void	expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
+void	 expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
 {
 	v->i++;
 	if (temp->content[v->i] == '?')
@@ -209,7 +209,6 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 		}
 	}
 }
-
 void	remove_dollar(t_list **list)
 {
 	t_list	*tmp;
@@ -217,15 +216,16 @@ void	remove_dollar(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		if ((!ft_strcmp(tmp->content, "$") && tmp->link
-				&& (!ft_strcmp(tmp->link->type, "DOUBLE_Q") || !ft_strcmp(tmp->link->type, "SINGLE_Q"))))
+		if ((!ft_strcmp(tmp->content, "$") && tmp->link && (!ft_strcmp(tmp->link->type,
+						"DOUBLE_Q") || !ft_strcmp(tmp->link->type,
+						"SINGLE_Q"))))
 		{
 			free(tmp->content);
 			tmp->content = ft_strdup(tmp->link->content);
 			tmp = del_node(list, tmp->link);
 		}
 		else if ((!ft_strcmp(tmp->content, "$") && tmp->link
-				&& tmp->link->content[0] != 32))
+					&& tmp->link->content[0] != 32))
 		{
 			tmp->content = ft_strjoin(tmp->content, tmp->link->content);
 			free(tmp->type);
@@ -242,9 +242,9 @@ void	remove_dollar(t_list **list)
 	}
 }
 
-void	expand_exit_status(t_list *tmp)
+void expand_exit_status(t_list *tmp)
 {
-	t_vars	v;
+	t_vars v;
 
 	while (tmp)
 	{
@@ -259,6 +259,7 @@ void	expand_exit_status(t_list *tmp)
 		}
 		tmp = tmp->link;
 	}
+	
 }
 
 void	expand_var(t_list **list, t_env *envr, int rm_quotes)

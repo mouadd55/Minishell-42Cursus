@@ -1,4 +1,4 @@
-#include "../minishell.h"
+# include "../minishell.h"
 
 char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 {
@@ -22,12 +22,24 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 	return (v.str);
 }
 
+int sig_hand(int sig)
+{
+	if (sig == SIGINT)
+	{
+		g_exit_status = 130;
+		ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	}
+}
+
 void	open_heredoc_3(t_vars *v, t_env **envr)
 {
 	v->fd = open(v->val, O_CREAT | O_RDWR | O_APPEND, 0777);
-	while (1)
+	signal(SIGINT, &sig_hand);
+	v->str = readline("Heredoc> ");
+	while (v->str)
 	{
-		v->str = readline("Heredoc> ");
+		if (g_exit_status == 130)
+			return;
 		if (!v->str || !ft_strcmp(v->str, v->tmp_str))
 		{
 			// close(v->fd);
@@ -38,9 +50,10 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 		}
 		if (check_char(v->str, '$'))
 			v->str = expand_in_here_doc(v->str, envr, v->flag);
-		if (v->str)
+		if(v->str)
 			ft_printf("%s\n", v->fd, v->str);
 		free(v->str);
+		v->str = readline("Heredoc> ");
 	}
 }
 
@@ -89,14 +102,14 @@ void	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
 		}
 		v.val = ft_strjoin(v.val, list->content);
 		list = list->link;
-	}
+	} 
 	open_heredoc_2(&v, envr, p);
 	p->fd = v.fd;
 }
 
-void	if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)
+void if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)
 {
-	if (tmp->file_name)
+	if(tmp->file_name)
 	{
 		if (tmp->fd_in >= 3)
 			close(tmp->fd_in);

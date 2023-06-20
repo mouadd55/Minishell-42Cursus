@@ -109,8 +109,8 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	v.final_list = final_list;
 	std_in = dup(STDIN_FILENO);
 	v.count = lstsize_cmd(final_list);
-	if (final_list->cmd && final_list->cmd[0]
-		&& final_list->fd_out != -1 && final_list->fd_in != -1)
+	if (final_list->cmd && final_list->fd_out != -1 
+		&& final_list->fd_in != -1)
 		execute_commands(&v, env, v.count);
 	ft_destroy_list(lst);
 	exit_by_signal();

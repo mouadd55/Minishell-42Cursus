@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/20 08:27:42 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 22:03:59 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "string.h"
 # include "limits.h"
 # include <signal.h>
+# include <sys/ioctl.h>
 // # include <dirent.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -129,13 +130,11 @@ void			ft_lstadd_back_env(t_env **head, t_env *new);
 /***************************** Parsing functions ******************************/
 
 void			lexer(t_list **list);
-char			is_quote(char input);
 int				check_syntax(t_list *lst);
 t_list			*ft_split_input(char *input);
 void			syntax_error(char *s2, char e);
 size_t			ft_count_char(char *input, char c);
 void			expand_var(t_list **list, t_env *envr, int rm_quotes);
-void			split_string(t_vars *v, t_cmd *f_list, t_env **envr, int size);
 
 /**************************** Builtins functions *****************************/
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/20 08:11:31 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/19 22:41:54 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	echo(t_cmd *f_list)
 		v.i = 1;
 		while (f_list->cmd[v.i] && (ft_strnstr(f_list->cmd[v.i], "-n", 2))
 			&& ft_count_char(&f_list->cmd[v.i][2],
-			'n') == ft_strlen(&f_list->cmd[v.i][2]))
+				'n') == ft_strlen(&f_list->cmd[v.i][2]))
 		{
 			v.flag = 1;
 			v.i++;
@@ -68,7 +68,6 @@ char	*ft_getenv(t_env *env, char *key)
 	}
 	return (NULL);
 }
-
 void	pwd(t_cmd *f_list, t_env *env)
 {
 	char	*pwd;
@@ -151,8 +150,8 @@ void	check_cmd(t_list **list, t_env **envr, t_cmd *f_list)
 	if (f_list && !ft_strcmp(f_list->cmd[0], "cd"))
 		change_dir(envr, f_list);
 	else if (*list && !(*list)->prev && (*list)->link
-		&& (*list)->link->type[0] == 's' && !strcmp("unset",
-			(*list)->content))
+			&& (*list)->link->type[0] == 's' && !strcmp("unset",
+				(*list)->content))
 		unset(list, envr);
 	if (!ft_strcmp(f_list->cmd[0], "export") && f_list->cmd[1] == 0)
 	{
@@ -165,7 +164,7 @@ void	check_cmd(t_list **list, t_env **envr, t_cmd *f_list)
 	if (f_list->cmd && f_list->cmd[0] && !ft_strcmp(f_list->cmd[0], "exit"))
 		ft_exit(f_list->cmd, f_list);
 	else if (lstsize_cmd(f_list) == 1 && f_list->cmd && f_list->cmd[0]
-		&& !ft_strcmp(f_list->cmd[0], "env"))
+			&& !ft_strcmp(f_list->cmd[0], "env"))
 		env_parsing(f_list->cmd, *envr, f_list->fd_out);
 	pwd(f_list, *envr);
 	echo(f_list);

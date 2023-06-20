@@ -1,4 +1,4 @@
-#include "../minishell.h"
+# include "../minishell.h"
 
 int	is_space(int c)
 {
@@ -14,13 +14,13 @@ void	switch_space(char *input, int x)
 	v.i = 0;
 	while (input[v.i] && x)
 	{
-		if (input[v.i] == '\'' && ft_strchr(&input[v.i + 1], '\''))
+		if (input[v.i] == '\'' && ft_strchr(&input[v.i+1], '\''))
 		{
 			while (input[++v.i] && input[v.i] != '\'')
 				if (is_space(input[v.i]))
 					input[v.i] *= -1;
 		}
-		else if (input[v.i] == '\"' && ft_strchr(&input[v.i + 1], '\"'))
+		else if (input[v.i] == '\"' && ft_strchr(&input[v.i+1], '\"'))
 		{
 			while (input[++v.i] && input[v.i] != '\"')
 				if (is_space(input[v.i]))
