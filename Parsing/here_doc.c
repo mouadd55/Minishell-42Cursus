@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 15:31:54 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 16:22:44 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 17:08:21 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 	v.str = NULL;
 	v.tmp1 = ft_split_input(input);
 	free(input);
+	v.tmp2 = v.tmp1;
 	lexer(&v.tmp1);
 	if (istrue)
 	{
@@ -30,7 +31,7 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 		v.str = ft_strjoin(v.str, v.tmp1->content);
 		v.tmp1 = v.tmp1->link;
 	}
-	ft_destroy_list(&v.tmp1);
+	ft_destroy_list(&v.tmp2);
 	return (v.str);
 }
 
@@ -56,9 +57,11 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 		free(v->str);
 		v->str = readline("Heredoc> ");
 	}
+	free(v->tmp_str);
+	free(v->val);
 }
 
-void	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
+int	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
 {
 	char	*save;
 
@@ -76,9 +79,10 @@ void	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
 	}
 	p->val = ft_strdup(v->val);
 	open_heredoc_3(v, envr);
+	return (v->fd);
 }
 
-void	open_heredoc(t_vars *p, t_list *list, t_env **envr)
+int	open_heredoc(t_vars *p, t_list *list, t_env **envr)
 {
 	t_vars	v;
 
@@ -104,8 +108,7 @@ void	open_heredoc(t_vars *p, t_list *list, t_env **envr)
 		v.val = ft_strjoin(v.val, list->content);
 		list = list->link;
 	}
-	open_heredoc_2(&v, envr, p);
-	p->fd = v.fd;
+	return (open_heredoc_2(&v, envr, p));
 }
 
 void	if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)

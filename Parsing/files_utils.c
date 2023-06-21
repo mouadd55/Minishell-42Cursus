@@ -1,23 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_function.c                                      :+:      :+:    :+:   */
+/*   files_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 15:31:06 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 15:33:15 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 16:58:51 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	is_space(int c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
-		return (1);
-	return (0);
-}
 
 void	switch_space(char *input, int x)
 {
@@ -69,6 +62,7 @@ char	*is_redir(t_list *list)
 		return (list->content);
 	return (0);
 }
+
 void	sig_hand(int sig)
 {
 	if (sig == SIGINT)

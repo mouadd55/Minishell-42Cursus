@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 15:30:31 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 16:45:21 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	open_files(t_list *list, t_cmd *tmp, t_env **envr)
 	v.tmp_value = NULL;
 	v.str = NULL;
 	v.fd = 0;
-	while (list && g_exit_status != 130)
+	while (list)
 	{
 		v.tmp1 = list;
 		if (!ft_strcmp(list->type, "HEREDOC"))
@@ -123,6 +123,8 @@ void	open_files(t_list *list, t_cmd *tmp, t_env **envr)
 			free(v.tmp_value);
 			list = if_redirect(tmp, &v, envr, &p);
 		}
+		if (list && !ft_strcmp(list->content, "|") && tmp && tmp->link)
+			tmp = tmp->link;
 		if (v.fd >= 3)
 			tmp = add_fd(&v, tmp, list);
 		if (!list)

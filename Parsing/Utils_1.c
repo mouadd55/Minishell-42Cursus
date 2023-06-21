@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 15:38:39 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 15:41:56 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 17:08:46 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,51 +19,11 @@ int	is_alpha_num(char c)
 	return (0);
 }
 
-void	del_node_2(t_list **tmp, t_list **tmp1, t_list *del_node)
+int	is_space(int c)
 {
-	while (*tmp)
-	{
-		if (*tmp == del_node)
-		{
-			*tmp1 = (*tmp)->prev;
-			(*tmp1)->link = (*tmp)->link;
-			(*tmp)->link->prev = *tmp1;
-			free((*tmp)->type);
-			free((*tmp)->content);
-			free(*tmp);
-			*tmp = *tmp1;
-		}
-		*tmp = (*tmp)->link;
-	}
-}
-
-t_list	*del_node(t_list **list, t_list *del_node)
-{
-	t_list	*tmp;
-	t_list	*tmp1;
-
-	tmp1 = NULL;
-	tmp = *list;
-	if (del_node == tmp)
-	{
-		tmp = tmp->link;
-		free(tmp->prev->type);
-		free(tmp->prev->content);
-		free(tmp->prev);
-		tmp->prev = NULL;
-		return (tmp);
-	}
-	else if (del_node == ft_lstlast(tmp))
-	{
-		tmp1 = ft_lstlast(tmp)->prev;
-		free(tmp1->link->type);
-		free(tmp1->link->content);
-		free(tmp1->link);
-		tmp1->link = NULL;
-	}
-	else
-		del_node_2(&tmp, &tmp1, del_node);
-	return (tmp1);
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
 }
 
 void	index_list(t_list **list)
@@ -79,4 +39,20 @@ void	index_list(t_list **list)
 		count++;
 		tmp = tmp->link;
 	}
+}
+
+char	*strlower(char *str)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	tmp = ft_strdup(str);
+	while (tmp[i])
+	{
+		if (tmp[i] >= 'A' && tmp[i] <= 'Z')
+			tmp[i] += 32;
+		i++;
+	}
+	return (tmp);
 }

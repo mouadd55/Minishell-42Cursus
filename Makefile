@@ -6,7 +6,7 @@
 #    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/21 15:40:13 by yonadry          ###   ########.fr        #
+#    Updated: 2023/06/21 16:58:16 by yonadry          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,14 +22,17 @@ LIB 	= $(shell brew --prefix readline)/lib
 INC 	= $(shell brew --prefix readline)/include
 SRC		=	\
 				Builtins/echo.c \
+				Builtins/echo2.c \
 				Builtins/exit.c \
 				Parsing/input.c \
 				Parsing/Utils_1.c \
+				Parsing/Utils_2.c \
 				Parsing/lexer.c \
 				Parsing/files_utils.c \
 				Parsing/here_doc.c \
 				Builtins/unset.c \
 				Parsing/expand.c \
+				Parsing/expand2.c \
 				Builtins/export.c \
 				Signals/signals.c \
 				Parsing/parsing1.c \

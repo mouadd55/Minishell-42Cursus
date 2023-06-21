@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/21 15:42:34 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 17:00:33 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ void				expand_var(t_list **list, t_env *envr, int rm_quotes);
 /**************************** Builtins functions *****************************/
 
 char				*ft_getenv(t_env *env, char *key);
-void				pwd(t_cmd *f_list, t_env *env);
 void				echo(t_cmd *f_list);
 char				*strlower(char *str);
 int					check_type(char *type);
@@ -187,9 +186,18 @@ int					search_for_pipe(t_vars *v);
 void				sig_hand(int sig);
 void				if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p);
 t_list				*del_node(t_list **list, t_list *del_node);
-/**************************** Execution Part *****************************/
+void				remove_quotes(t_list **list);
+void				expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v,
+						char **save);
+void				expand_in_quotes_2(t_list *temp, t_env *envr, t_vars *v,
+						char **save);
+void				expand_in_quotes(t_list **list, t_env *envr, char *type);
+char				*strlower(char *str);
+void				ft_setenv(t_env **envr, char *key, char *value);
+void				pwd(t_cmd *f_list, t_env *env);
+	/**************************** Execution Part *****************************/
 
-void				exit_by_signal(void);
+	void exit_by_signal(void);
 int					lstsize_cmd(t_cmd *lst);
 char				*get_path_value(t_env *env);
 char				*get_paths(char *cmd, t_env *env);
