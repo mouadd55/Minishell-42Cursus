@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 17:24:08 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/21 18:12:18 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ t_cmd	*add_fd(t_vars *v, t_cmd *tmp, t_list *list)
 		{
 			tmp->fd_in = v->fd;
 			if (v->flag == 230)
+			{
 				tmp->fd_in = -2;
+				v->flag = 0;
+			}
 			if (!ft_strcmp(v->tmp_value, "<<"))
 			{
 				tmp->file_name = ft_strdup(v->command);

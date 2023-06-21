@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simple_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:04:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/21 17:07:54 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 18:14:12 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	dup_file_descriptors(char *command, t_cmd *f_list, char **env_arr)
 		}
 		if (f_list->fd_in != STDIN_FILENO)
 		{
-			if (f_list->file_name)
+			if (f_list->file_name && f_list->fd_in == -2)
 				f_list->fd_in = open(f_list->file_name, O_RDONLY);
 			dup2(f_list->fd_in, STDIN_FILENO);
 			close(f_list->fd_in);
