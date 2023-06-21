@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/20 19:44:59 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/21 09:38:24 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,8 +194,9 @@ void	everything_starts_here(t_env *envr)
 {
 	char	*input;
 	t_list	*lst;
-
 	lst = NULL;
+	
+	signal(SIGINT, &catching_signals);
 	while (1)
 	{
 		input = readline("➜  Minishell ");
@@ -223,7 +224,6 @@ int	main(int ac, char **av, char **env)
 	envr = NULL;
 	envr = ft_split_environment(env);
 	shell_level(&envr);
-	signal(SIGINT, &catching_signals);
 	signal(SIGQUIT, SIG_IGN);
 	rl_catch_signals = 0;
 	everything_starts_here(envr);
