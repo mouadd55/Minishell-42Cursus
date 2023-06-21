@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 15:31:54 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 17:08:21 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 17:23:16 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ int	open_heredoc(t_vars *p, t_list *list, t_env **envr)
 
 void	if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)
 {
+	v->flag = 230;
 	if (tmp->file_name)
 	{
 		if (tmp->fd_in >= 3)
