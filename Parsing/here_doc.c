@@ -60,23 +60,42 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 	free(v->tmp_str);
 	free(v->val);
 }
+char *filename_gen(char *d)
+{
+	int	a;
+	char		*name;
+	char		*gen;
+	char		*save;
+
+	a = 0;
+	name = NULL;
+	save = ft_strdup(d);
+	while (1)
+	{
+		d = ft_strdup(save);
+		gen = ft_itoa(a);
+		name = ft_strjoin(d, gen);
+		if (access(name, F_OK))
+		{
+			free(gen);
+			return (name);
+		}
+		free(gen);
+		a++;
+	}
+	free (save);
+}
 
 int	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
 {
-	char	*save;
-
 	v->tmp_str = ft_strdup(v->val);
 	v->tmp_value = ft_strdup(".");
 	v->tmp_key = ft_strdup(v->val);
 	free(v->val);
 	v->val = ft_strjoin(v->tmp_value, v->tmp_key);
 	free(v->tmp_key);
-	if (!access(v->val, F_OK))
-	{
-		save = ft_itoa(rand());
-		v->val = ft_strjoin(v->val, save);
-		free(save);
-	}
+	if 	(!access(v->val, F_OK))
+		v->val = ft_strdup(filename_gen(v->val));
 	p->val = ft_strdup(v->val);
 	open_heredoc_3(v, envr);
 	return (v->fd);
@@ -101,7 +120,7 @@ int	open_heredoc(t_vars *p, t_list *list, t_env **envr)
 			else if (list->content[0] == '\"')
 				v.var = ft_strdup("\"");
 			v.flag = 0;
-			free(list->content);
+			// free(list->content);
 			list->content = ft_strtrim(list->content, v.var);
 			free(v.var);
 		}

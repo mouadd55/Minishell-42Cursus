@@ -132,7 +132,7 @@ void	open_files(t_list *list, t_cmd *tmp, t_env **envr)
 			tmp = tmp->link;
 		if (v.fd >= 3)
 			tmp = add_fd(&v, tmp, list);
-		if (!list)
+		if (!list || g_exit_status == -1)
 			break ;
 		list = list->link;
 	}
