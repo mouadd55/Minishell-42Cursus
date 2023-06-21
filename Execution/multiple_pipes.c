@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 22:14:31 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/20 19:20:15 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/21 18:30:57 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	exec_st_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		get_command(v, env, env_arr);
 		if (v->final_list->fd_in != STDIN_FILENO)
 		{
+			if (v->final_list->file_name && v->final_list->fd_in == -2)
+				v->final_list->fd_in = open(v->final_list->file_name, O_RDONLY);
 			dup2(v->final_list->fd_in, STDIN_FILENO);
 			close (v->final_list->fd_in);
 		}
@@ -57,15 +59,11 @@ void	exec_st_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 			dup2(v->final_list->fd_out, STDOUT_FILENO);
 			if (!check_if_builtin(v->final_list))
 				close (v->final_list->fd_out);
-			close(pipefd[0]);
-			close(pipefd[1]);
 		}
 		else
-		{
-			close(pipefd[0]);
 			dup2(pipefd[1], STDOUT_FILENO);
-			close(pipefd[1]);
-		}
+		close(pipefd[0]);
+		close(pipefd[1]);
 		send_command_to_execve(v, env, env_arr);
 	}
 }
@@ -78,23 +76,21 @@ void	exec_mid_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		get_command(v, env, env_arr);
 		if (v->final_list->fd_in != STDIN_FILENO)
 		{
+			if (v->final_list->file_name && v->final_list->fd_in == -2)
+				v->final_list->fd_in = open(v->final_list->file_name, O_RDONLY);
 			dup2(v->final_list->fd_in, STDIN_FILENO);
 			close(v->final_list->fd_in);
 		}
 		if (v->final_list->fd_out == STDOUT_FILENO)
-		{
-			close(pipefd[0]);
 			dup2(pipefd[1], STDOUT_FILENO);
-			close(pipefd[1]);
-		}
 		else
 		{
 			dup2(v->final_list->fd_out, STDOUT_FILENO);
 			if (!check_if_builtin(v->final_list))
 				close(v->final_list->fd_out);
-			close(pipefd[0]);
-			close(pipefd[1]);
 		}
+		close(pipefd[0]);
+		close(pipefd[1]);
 		send_command_to_execve(v, env, env_arr);
 	}
 }
@@ -113,16 +109,13 @@ void	exec_last_cmd(t_vars *v, t_env **env, char **env_arr, int pipefd[2])
 		}
 		if (v->final_list->fd_in != STDIN_FILENO)
 		{
+			if (v->final_list->file_name && v->final_list->fd_in == -2)
+				v->final_list->fd_in = open(v->final_list->file_name, O_RDONLY);
 			dup2(v->final_list->fd_in, STDIN_FILENO);
 			close(v->final_list->fd_in);
-			close(pipefd[0]);
-			close(pipefd[1]);
 		}
-		else
-		{
-			close(pipefd[1]);
-			close(pipefd[0]);
-		}
+		close(pipefd[1]);
+		close(pipefd[0]);
 		send_command_to_execve(v, env, env_arr);
 	}
 }

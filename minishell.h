@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/21 17:00:33 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 18:35:30 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ t_list				*ft_split_input(char *input);
 void				syntax_error(char *s2, char e);
 size_t				ft_count_char(char *input, char c);
 void				expand_var(t_list **list, t_env *envr, int rm_quotes);
+void				split_string(t_vars *v, t_cmd *flst, t_env **env, int size);
 
 /**************************** Builtins functions *****************************/
 
@@ -195,9 +196,10 @@ void				expand_in_quotes(t_list **list, t_env *envr, char *type);
 char				*strlower(char *str);
 void				ft_setenv(t_env **envr, char *key, char *value);
 void				pwd(t_cmd *f_list, t_env *env);
-	/**************************** Execution Part *****************************/
 
-	void exit_by_signal(void);
+/**************************** Execution Part *****************************/
+
+void				exit_by_signal(void);
 int					lstsize_cmd(t_cmd *lst);
 char				*get_path_value(t_env *env);
 char				*get_paths(char *cmd, t_env *env);

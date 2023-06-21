@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 18:22:34 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/17 10:22:22 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/21 18:32:23 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,21 @@ t_env	*ft_split_environment(char **env)
 				ft_substr(env[i], start + 1, length)));
 	}
 	return (envr);
+}
+
+t_env	*ft_copy_env_list(t_env *env)
+{
+	t_env	*copy;
+
+	copy = NULL;
+	while (env)
+	{
+		if (env->value)
+			ft_lstadd_back_env(&copy,
+				ft_lstnew_env(ft_strdup(env->key), ft_strdup(env->value)));
+		else
+			ft_lstadd_back_env(&copy, ft_lstnew_env(ft_strdup(env->key), NULL));
+		env = env->link;
+	}
+	return (copy);
 }

@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   Utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 16:58:02 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 17:08:48 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 18:34:11 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	split_string(t_vars *v, t_cmd *final_list, t_env **envr, int size)
+{
+	v->tmp1 = ft_split_input(v->str);
+	lexer(&v->tmp1);
+	if (size == 1)
+		check_cmd(&v->tmp1, envr, final_list);
+	ft_destroy_list(&v->tmp1);
+	free(v->str);
+	v->str = NULL;
+}
 
 void	del_node_2(t_list **tmp, t_list **tmp1, t_list *del_node)
 {
