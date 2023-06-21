@@ -12,8 +12,6 @@ int	prints(char *s, int fd)
 	int	i;
 
 	i = 0;
-	if (!s)
-		i += write(1, "(null)", 6);
 	if (s)
 	{
 		while (s[i])

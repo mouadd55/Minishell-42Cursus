@@ -6,78 +6,15 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:10:36 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/16 13:54:55 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 15:39:24 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	index_list(t_list **list)
-{
-	t_list	*tmp;
-	int		count;
-
-	tmp = *list;
-	count = 0;
-	while (tmp)
-	{
-		tmp->pos = count;
-		count++;
-		tmp = tmp->link;
-	}
-}
-
-void	del_node_2(t_list **tmp, t_list **tmp1, t_list *del_node)
-{
-	while (*tmp)
-	{
-		if (*tmp == del_node)
-		{
-			*tmp1 = (*tmp)->prev;
-			(*tmp1)->link = (*tmp)->link;
-			(*tmp)->link->prev = *tmp1;
-			free((*tmp)->type);
-			free((*tmp)->content);
-			free(*tmp);
-			*tmp = *tmp1;
-		}
-		*tmp = (*tmp)->link;
-	}
-}
-
-t_list	*del_node(t_list **list, t_list *del_node)
-{
-	t_list	*tmp;
-	t_list	*tmp1;
-
-	tmp1 = NULL;
-	tmp = *list;
-	if (del_node == tmp)
-	{
-		tmp = tmp->link;
-		free(tmp->prev->type);
-		free(tmp->prev->content);
-		free(tmp->prev);
-		tmp->prev = NULL;
-		return (tmp);
-	}
-	else if (del_node == ft_lstlast(tmp))
-	{
-		tmp1 = ft_lstlast(tmp);
-		tmp1 = tmp1->prev;
-		free(tmp1->link->type);
-		free(tmp1->link->content);
-		free(tmp1->link);
-		tmp1->link = NULL;
-	}
-	else
-		del_node_2(&tmp, &tmp1, del_node);
-	return (tmp1);
-}
-
 void	remove_quotes(t_list **list)
 {
-	t_vars v;
+	t_vars	v;
 
 	v.tmp1 = *list;
 	while (v.tmp1)
@@ -104,14 +41,7 @@ void	remove_quotes(t_list **list)
 	}
 }
 
-int	is_alpha_num(char c)
-{
-	if (ft_isalpha(c) || check_char("0123456789", c))
-		return (1);
-	return (0);
-}
-
-void	 expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
+void	expand_in_quotes_3(t_list *temp, t_env *envr, t_vars *v, char **save)
 {
 	v->i++;
 	if (temp->content[v->i] == '?')
@@ -209,6 +139,7 @@ void	expand_var_2(t_list **list, t_list **tmp, t_env *envr, t_vars *v)
 		}
 	}
 }
+
 void	remove_dollar(t_list **list)
 {
 	t_list	*tmp;
@@ -216,16 +147,16 @@ void	remove_dollar(t_list **list)
 	tmp = *list;
 	while (tmp)
 	{
-		if ((!ft_strcmp(tmp->content, "$") && tmp->link && (!ft_strcmp(tmp->link->type,
-						"DOUBLE_Q") || !ft_strcmp(tmp->link->type,
-						"SINGLE_Q"))))
+		if ((!ft_strcmp(tmp->content, "$") && tmp->link
+				&& (!ft_strcmp(tmp->link->type, "DOUBLE_Q")
+					|| !ft_strcmp(tmp->link->type, "SINGLE_Q"))))
 		{
 			free(tmp->content);
 			tmp->content = ft_strdup(tmp->link->content);
 			tmp = del_node(list, tmp->link);
 		}
 		else if ((!ft_strcmp(tmp->content, "$") && tmp->link
-					&& tmp->link->content[0] != 32))
+				&& tmp->link->content[0] != 32))
 		{
 			tmp->content = ft_strjoin(tmp->content, tmp->link->content);
 			free(tmp->type);
@@ -242,9 +173,9 @@ void	remove_dollar(t_list **list)
 	}
 }
 
-void expand_exit_status(t_list *tmp)
+void	expand_exit_status(t_list *tmp)
 {
-	t_vars v;
+	t_vars	v;
 
 	while (tmp)
 	{
@@ -259,7 +190,6 @@ void expand_exit_status(t_list *tmp)
 		}
 		tmp = tmp->link;
 	}
-	
 }
 
 void	expand_var(t_list **list, t_env *envr, int rm_quotes)

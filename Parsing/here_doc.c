@@ -1,4 +1,16 @@
-# include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 15:31:54 by yonadry           #+#    #+#             */
+/*   Updated: 2023/06/21 16:22:44 by yonadry          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 
 char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 {
@@ -6,29 +18,20 @@ char	*expand_in_here_doc(char *input, t_env **envr, int istrue)
 
 	v.str = NULL;
 	v.tmp1 = ft_split_input(input);
+	free(input);
 	lexer(&v.tmp1);
 	if (istrue)
 	{
 		expand_in_quotes(&v.tmp1, *envr, "SINGLE_Q");
 		expand_var(&v.tmp1, *envr, 0);
 	}
-	while (v.tmp1)
+	while (v.tmp1 && ft_strcmp(v.tmp1->type, "VAR"))
 	{
-		if (ft_strcmp(v.tmp1->type, "VAR"))
-			v.str = ft_strjoin(v.str, v.tmp1->content);
+		v.str = ft_strjoin(v.str, v.tmp1->content);
 		v.tmp1 = v.tmp1->link;
 	}
 	ft_destroy_list(&v.tmp1);
 	return (v.str);
-}
-
-void sig_hand(int sig)
-{
-	if (sig == SIGINT)
-	{
-		g_exit_status = -1;
-		ioctl(STDIN_FILENO, TIOCSTI, "\n");
-	}
 }
 
 void	open_heredoc_3(t_vars *v, t_env **envr)
@@ -38,11 +41,9 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 	v->str = readline("Heredoc> ");
 	while (v->str)
 	{
-		if (g_exit_status == -1)
-			return;
-		if (!v->str || !ft_strcmp(v->str, v->tmp_str))
+		if (!v->str || !ft_strcmp(v->str, v->tmp_str)
+			|| g_exit_status == -1)
 		{
-			// close(v->fd);
 			free(v->str);
 			free(v->val);
 			free(v->tmp_str);
@@ -50,7 +51,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 		}
 		if (check_char(v->str, '$'))
 			v->str = expand_in_here_doc(v->str, envr, v->flag);
-		if(v->str)
+		if (v->str)
 			ft_printf("%s\n", v->fd, v->str);
 		free(v->str);
 		v->str = readline("Heredoc> ");
@@ -77,7 +78,7 @@ void	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
 	open_heredoc_3(v, envr);
 }
 
-void	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
+void	open_heredoc(t_vars *p, t_list *list, t_env **envr)
 {
 	t_vars	v;
 
@@ -96,20 +97,20 @@ void	open_heredoc(t_vars	*p, t_list *list, t_env **envr)
 			else if (list->content[0] == '\"')
 				v.var = ft_strdup("\"");
 			v.flag = 0;
-			// free(list->content);
+			free(list->content);
 			list->content = ft_strtrim(list->content, v.var);
 			free(v.var);
 		}
 		v.val = ft_strjoin(v.val, list->content);
 		list = list->link;
-	} 
+	}
 	open_heredoc_2(&v, envr, p);
 	p->fd = v.fd;
 }
 
-void if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)
+void	if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)
 {
-	if(tmp->file_name)
+	if (tmp->file_name)
 	{
 		if (tmp->fd_in >= 3)
 			close(tmp->fd_in);

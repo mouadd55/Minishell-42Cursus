@@ -6,7 +6,7 @@
 /*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 17:05:37 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/19 22:41:54 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/21 16:01:57 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,10 @@ void	echo(t_cmd *f_list)
 		v.i = 1;
 		while (f_list->cmd[v.i] && (ft_strnstr(f_list->cmd[v.i], "-n", 2))
 			&& ft_count_char(&f_list->cmd[v.i][2],
-				'n') == ft_strlen(&f_list->cmd[v.i][2]))
-		{
-			v.flag = 1;
+			'n') == ft_strlen(&f_list->cmd[v.i][2]))
 			v.i++;
-		}
+		if (v.i > 1)
+			v.flag = 1;
 		while (f_list->cmd[v.i])
 		{
 			ft_putstr_fd(f_list->cmd[v.i], f_list->fd_out);
@@ -52,7 +51,7 @@ void	echo(t_cmd *f_list)
 				ft_putstr_fd(" ", f_list->fd_out);
 			v.i++;
 		}
-		if (f_list && !v.flag)
+		if (!v.flag)
 			ft_putstr_fd("\n", f_list->fd_out);
 	}
 	free(v.str);
@@ -68,14 +67,27 @@ char	*ft_getenv(t_env *env, char *key)
 	}
 	return (NULL);
 }
+
 void	pwd(t_cmd *f_list, t_env *env)
 {
 	char	*pwd;
+	int		i;
 
+	i = 0;
 	pwd = strlower(f_list->cmd[0]);
 	if (!ft_strcmp("pwd", pwd))
-		ft_printf("%s\n", f_list->fd_out, ft_getenv(env, "PWD"));
-	free(pwd);
+	{
+		free(pwd);
+		pwd = getcwd(NULL, 0);
+		if (!pwd)
+		{
+			pwd = ft_getenv(env, "PWD");
+			i = 1;
+		}
+		ft_printf("%s\n", f_list->fd_out, pwd);
+	}
+	if (!i)
+		free(pwd);
 }
 
 void	ft_setenv(t_env **envr, char *key, char *value)
@@ -138,7 +150,7 @@ void	change_dir(t_env **envr, t_cmd *f_list)
 	v.val = getcwd(NULL, 0);
 	change_dir_2(envr, &v);
 	free(v.tmp_str);
-	// free(v.val);
+	free(v.val);
 }
 
 void	check_cmd(t_list **list, t_env **envr, t_cmd *f_list)

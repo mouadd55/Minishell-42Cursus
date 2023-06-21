@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
+#    By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/18 17:26:07 by moudrib          ###   ########.fr        #
+#    Updated: 2023/06/21 15:40:13 by yonadry          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,9 @@ SRC		=	\
 				Builtins/echo.c \
 				Builtins/exit.c \
 				Parsing/input.c \
+				Parsing/Utils_1.c \
 				Parsing/lexer.c \
-				Parsing/is_function.c \
+				Parsing/files_utils.c \
 				Parsing/here_doc.c \
 				Builtins/unset.c \
 				Parsing/expand.c \

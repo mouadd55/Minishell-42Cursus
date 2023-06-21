@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 15:52:52 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/19 21:34:11 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/21 15:29:57 by yonadry          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,32 +41,46 @@ size_t	ft_count_char(char *input, char c)
 	return (count);
 }
 
+int	check_syntax2(t_list *lst)
+{
+	if ((lst->content[0] == '|' && lst->link->content[0] == '|')
+		|| (lst->content[0] == '|' && lst->link->content[0] == 32
+			&& lst->link->link->content[0] == '|'))
+		return (syntax_error(NULL, '|'), 258);
+	else if (check_char(lst->content, '(') || check_char(lst->content, ')'))
+		return (syntax_error(lst->content, 0), 258);
+	else if (lst->content[0] == '\'' && (lst->content[ft_strlen(lst->content)
+				- 1] != '\'' || !lst->content[1]))
+		return (syntax_error(NULL, lst->content[0]), 258);
+	else if (lst->content[0] == '\"' && (lst->content[ft_strlen(lst->content)
+				- 1] != '\"' || !lst->content[1]))
+		return (syntax_error(NULL, lst->content[0]), 258);
+	else if ((!ft_strcmp(lst->content, ">>") && lst->link->content[0] == '|')
+		|| (!ft_strcmp(lst->content, ">>") && lst->link->content[0] == 32
+			&& lst->link->link->content[0] == '|'))
+		return (syntax_error(NULL, '|'), 258);
+	return (0);
+}
+
 int	check_syntax(t_list *lst)
 {
-	if (lst->content[0] == '|')
-		return (syntax_error(NULL, '|'), 258);
 	while (lst)
 	{
 		if ((ft_lstsize(lst) == 1 && check_char("><|", lst->content[0]))
 			|| check_char("><|", ft_lstlast(lst)->content[0]))
 			return (syntax_error("`newline'", 0), 258);
-		else if (check_char("><|", lst->content[0]) && (check_char("><|",
-					lst->link->content[0])))
-			return (syntax_error(lst->link->content, 0), 258);
-		else if (check_char("><|", lst->content[0])
-			&& lst->link->content[0] == 32 && check_char("><|",
+		else if ((check_char("><", lst->content[0])) && check_char("><",
+				lst->link->content[0]))
+			return (syntax_error(NULL, lst->link->content[0]), 258);
+		else if ((check_char("><", lst->content[0])
+				&& lst->link->content[0] == 32) && check_char("><",
 				lst->link->link->content[0]))
 			return (syntax_error(lst->link->link->content, 0), 258);
-		else if (check_char(lst->content, '(') || check_char(lst->content, ')'))
-			return (syntax_error(lst->content, 0), 258);
-		else if (lst->content[0] == '\''
-			&& (lst->content[ft_strlen(lst->content) - 1] != '\''
-				|| !lst->content[1]))
-			return (syntax_error(NULL, lst->content[0]), 258);
-		else if (lst->content[0] == '\"'
-			&& (lst->content[ft_strlen(lst->content) - 1] != '\"'
-				|| !lst->content[1]))
-			return (syntax_error(NULL, lst->content[0]), 258);
+		else if (lst->content[0] == '>' && lst->link->content[0] == 32
+			&& lst->link->link->content[0] == '|')
+			return (syntax_error(lst->link->link->content, 0), 258);
+		else if (check_syntax2(lst))
+			return (258);
 		lst = lst->link;
 	}
 	return (0);
