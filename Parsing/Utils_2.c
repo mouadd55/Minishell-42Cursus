@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 16:58:02 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 18:34:11 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/22 09:12:49 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,31 @@ t_list	*del_node(t_list **list, t_list *del_node)
 	else
 		del_node_2(&tmp, &tmp1, del_node);
 	return (tmp1);
+}
+
+char	*filename_gen(char *d)
+{
+	int			a;
+	char		*name;
+	char		*gen;
+	char		*save;
+
+	a = 0;
+	name = NULL;
+	save = ft_strdup(d);
+	while (1)
+	{
+		d = ft_strdup(save);
+		gen = ft_itoa(a);
+		name = ft_strjoin(d, gen);
+		if (access(name, F_OK))
+		{
+			free(save);
+			free(gen);
+			return (name);
+		}
+		free(gen);
+		a++;
+	}
+	free (save);
 }

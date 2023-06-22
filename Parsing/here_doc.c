@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 15:31:54 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 17:23:16 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/22 09:12:42 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,41 +60,19 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 	free(v->tmp_str);
 	free(v->val);
 }
-char *filename_gen(char *d)
-{
-	int	a;
-	char		*name;
-	char		*gen;
-	char		*save;
-
-	a = 0;
-	name = NULL;
-	save = ft_strdup(d);
-	while (1)
-	{
-		d = ft_strdup(save);
-		gen = ft_itoa(a);
-		name = ft_strjoin(d, gen);
-		if (access(name, F_OK))
-		{
-			free(gen);
-			return (name);
-		}
-		free(gen);
-		a++;
-	}
-	free (save);
-}
 
 int	open_heredoc_2(t_vars *v, t_env **envr, t_vars *p)
 {
 	v->tmp_str = ft_strdup(v->val);
 	v->tmp_value = ft_strdup(".");
-	v->tmp_key = ft_strdup(v->val);
+	if (!ft_strlen(v->val))
+		v->tmp_key = ft_strdup("tmp");
+	else
+		v->tmp_key = ft_strdup(v->val);
 	free(v->val);
 	v->val = ft_strjoin(v->tmp_value, v->tmp_key);
 	free(v->tmp_key);
-	if 	(!access(v->val, F_OK))
+	if (!access(v->val, F_OK))
 		v->val = ft_strdup(filename_gen(v->val));
 	p->val = ft_strdup(v->val);
 	open_heredoc_3(v, envr);
@@ -107,10 +85,6 @@ int	open_heredoc(t_vars *p, t_list *list, t_env **envr)
 
 	v.val = NULL;
 	v.flag = 1;
-	if (list->link && !ft_strcmp(list->link->type, "space"))
-		list = list->link->link;
-	else if (list->link)
-		list = list->link;
 	while (list && !ft_strcmp(list->type, "DELIMITER"))
 	{
 		if (list->content[0] == '\'' || list->content[0] == '\"')
@@ -120,8 +94,10 @@ int	open_heredoc(t_vars *p, t_list *list, t_env **envr)
 			else if (list->content[0] == '\"')
 				v.var = ft_strdup("\"");
 			v.flag = 0;
-			// free(list->content);
-			list->content = ft_strtrim(list->content, v.var);
+			v.str = ft_strdup(list->content);
+			free(list->content);
+			list->content = ft_strtrim(v.str, v.var);
+			free(v.str);
 			free(v.var);
 		}
 		v.val = ft_strjoin(v.val, list->content);
@@ -142,6 +118,10 @@ void	if_heredoce(t_vars *v, t_cmd *tmp, t_env **envr, t_vars *p)
 		tmp->file_name = NULL;
 	}
 	v->tmp_value = ft_strdup("<<");
+	if (v->tmp1->link && !ft_strcmp(v->tmp1->link->type, "space"))
+		v->tmp1 = v->tmp1->link->link;
+	else if (v->tmp1->link)
+		v->tmp1 = v->tmp1->link;
 	open_heredoc(p, v->tmp1, envr);
 	v->fd = p->fd;
 	v->command = ft_strdup(p->val);
