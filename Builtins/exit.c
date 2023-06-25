@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/19 20:41:53 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/25 16:16:10 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	exit_errors(t_vars *v, char **cmd)
 	else if ((v->flag == 2 && v->i == 2) || (v->flag == 1 && v->i == 2))
 	{
 		v->j++;
+		g_exit_status = 1;
 		ft_printf("exit\nminishell: exit: too many arguments\n", 2);
 	}
 	if (v->str)

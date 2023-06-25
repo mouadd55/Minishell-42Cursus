@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 15:31:54 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/22 09:12:42 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/25 16:13:41 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	open_heredoc_3(t_vars *v, t_env **envr)
 		if (!v->str || !ft_strcmp(v->str, v->tmp_str)
 			|| g_exit_status == -1)
 		{
+			close(v->fd);
 			free(v->str);
 			free(v->val);
 			free(v->tmp_str);

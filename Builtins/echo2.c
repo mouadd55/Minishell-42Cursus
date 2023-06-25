@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yonadry <yonadry@student.42.fr>            +#+  +:+       +#+        */
+/*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 16:53:34 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/21 16:56:20 by yonadry          ###   ########.fr       */
+/*   Updated: 2023/06/25 16:09:34 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ void	ft_setenv(t_env **envr, char *key, char *value)
 		{
 			free(env->value);
 			env->value = ft_strdup(value);
-			free(value);
-			return ;
+			break ;
 		}
 		env = env->link;
 	}
+	free(value);
 	return ;
 }
