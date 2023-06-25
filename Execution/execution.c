@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/21 18:25:42 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/06/25 18:55:27 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,24 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 {
 	while (v->final_list)
 	{
-		if (pipe_and_fork_protection(v, env))
-			return ;
-		if (v->child == 0)
-			inside_child_process(v, env, size);
-		close(v->pipefd[1]);
-		dup2(v->pipefd[0], STDIN_FILENO);
-		close(v->pipefd[0]);
-		ft_free_arr(v->env_arr);
-		while ((v->lst) && ft_strcmp((v->lst)->type, "PIPE"))
+		if (v->final_list->fd_out != -1 && v->final_list->fd_in != -1)
 		{
-			(v->lst) = (v->lst)->link;
-			if ((v->lst) && !ft_strcmp((v->lst)->type, "PIPE"))
+			if (pipe_and_fork_protection(v, env))
+				return ;
+			if (v->child == 0)
+				inside_child_process(v, env, size);
+			close(v->pipefd[1]);
+			dup2(v->pipefd[0], STDIN_FILENO);
+			close(v->pipefd[0]);
+			ft_free_arr(v->env_arr);
+			while ((v->lst) && ft_strcmp((v->lst)->type, "PIPE"))
 			{
 				(v->lst) = (v->lst)->link;
-				break ;
+				if ((v->lst) && !ft_strcmp((v->lst)->type, "PIPE"))
+				{
+					(v->lst) = (v->lst)->link;
+					break ;
+				}
 			}
 		}
 		v->final_list = v->final_list->link;
