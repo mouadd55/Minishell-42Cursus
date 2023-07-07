@@ -6,7 +6,7 @@
 #    By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/23 13:25:59 by moudrib           #+#    #+#              #
-#    Updated: 2023/06/25 16:19:41 by moudrib          ###   ########.fr        #
+#    Updated: 2023/07/07 13:04:11 by moudrib          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,24 +22,24 @@ LIB 	= $(shell brew --prefix readline)/lib
 INC 	= $(shell brew --prefix readline)/include
 SRC		=	\
 				Builtins/echo.c \
-				Builtins/echo2.c \
 				Builtins/exit.c \
 				Parsing/input.c \
-				Parsing/Utils_1.c \
-				Parsing/Utils_2.c \
 				Parsing/lexer.c \
-				Parsing/files_utils.c \
-				Parsing/here_doc.c \
+				Builtins/echo2.c \
 				Builtins/unset.c \
 				Parsing/expand.c \
+				Parsing/Utils_1.c \
+				Parsing/Utils_2.c \
 				Parsing/expand2.c \
 				Builtins/export.c \
 				Signals/signals.c \
+				Parsing/here_doc.c \
 				Parsing/parsing1.c \
 				Parsing/parsing2.c \
 				Parsing/minishell.c \
 				Parsing/final_list.c \
 				Parsing/open_files.c \
+				Parsing/files_utils.c \
 				Builtins/environment.c \
 				Parsing/ft_printf_fd.c \
 				List_tools/list_utils.c \

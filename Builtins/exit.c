@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:15:46 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/25 16:16:10 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:11:49 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	sign_case2(char **cmd)
 {
 	if (!ft_strcmp(cmd[1], "-0") && cmd[2] == 0)
 	{
-		printf("exit\n");
+		ft_printf("exit\n", 1);
 		exit(0);
 	}
 	else if (cmd[2] && ft_atoi(cmd[1]) == 0 && ft_atoi(cmd[2]) == 0)
@@ -45,7 +45,7 @@ int	sign_case(t_vars *v, char **cmd)
 		}
 		if (!cmd[v->i + 1])
 		{
-			printf("exit\n");
+			ft_printf("exit\n", 1);
 			free(v->str);
 			g_exit_status = ft_atoi(cmd[v->i]);
 			exit(ft_atoi(cmd[v->i]));
@@ -75,6 +75,7 @@ int	check_if_digit(t_vars *v, char **cmd)
 			v->str = NULL;
 			exit(255);
 		}
+		g_exit_status = ft_atoi(cmd[v->i]);
 	}
 	return (0);
 }
@@ -119,7 +120,7 @@ void	ft_exit(char **cmd, t_cmd *final)
 	{
 		if (!ft_strcmp("-9223372036854775808", cmd[v.i]))
 		{
-			printf("exit\n");
+			ft_printf("exit\n", 1);
 			exit(255);
 		}
 		if (exit_errors(&v, cmd))
@@ -129,10 +130,10 @@ void	ft_exit(char **cmd, t_cmd *final)
 	{
 		if (v.flag == 1)
 		{
-			printf("exit\n");
+			ft_printf("exit\n", 1);
 			exit(ft_atoi(cmd[1]));
 		}
-		printf("exit\n");
+		ft_printf("exit\n", 1);
 		exit(255);
 	}
 }

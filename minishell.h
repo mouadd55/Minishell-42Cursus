@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/22 09:13:22 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/07 10:47:43 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,10 @@ typedef struct s_env
 
 typedef struct s_cmd
 {
-	char			**cmd;
+	int				flag;
 	int				fd_in;
 	int				fd_out;
+	char			**cmd;
 	char			*file_name;
 	struct s_cmd	*link;
 	struct s_cmd	*prev;

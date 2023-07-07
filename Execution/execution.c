@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/06/25 18:55:27 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/07 11:03:31 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 					break ;
 				}
 			}
+			exit_by_signal();
 		}
 		v->final_list = v->final_list->link;
 	}
@@ -122,6 +123,5 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	dup2(std_out, STDOUT_FILENO);
 	close(std_in);
 	close(std_out);
-	exit_by_signal();
 	signal(SIGINT, &catching_signals);
 }
