@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 16:58:02 by yonadry           #+#    #+#             */
-/*   Updated: 2023/06/22 09:12:49 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:43:47 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,22 @@ char	*filename_gen(char *d)
 		a++;
 	}
 	free (save);
+}
+
+int	open_file(char *file_name, char *type)
+{
+	int	fd;
+
+	if (!ft_strcmp(type, ">"))
+		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
+	if (!ft_strcmp(type, ">>"))
+		fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
+	if (!ft_strcmp(type, "<"))
+		fd = open(file_name, O_RDONLY, 0777);
+	if (fd == -1)
+	{
+		g_exit_status = 1;
+		perror(file_name);
+	}
+	return (fd);
 }

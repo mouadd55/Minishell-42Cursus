@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:25:55 by moudrib           #+#    #+#             */
-/*   Updated: 2023/07/07 10:47:43 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:38:31 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,7 @@ char				*strlower(char *str);
 void				ft_setenv(t_env **envr, char *key, char *value);
 void				pwd(t_cmd *f_list, t_env *env);
 char				*filename_gen(char *d);
+int					open_file(char *file_name, char *type);
 /**************************** Execution Part *****************************/
 
 void				exit_by_signal(void);

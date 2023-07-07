@@ -6,28 +6,37 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:57:03 by yonadry           #+#    #+#             */
-/*   Updated: 2023/07/07 10:48:26 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:43:43 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	open_file(char *file_name, char *type)
+void	close_fd(t_cmd *tmp, t_vars *v)
 {
-	int	fd;
-
-	if (!ft_strcmp(type, ">"))
-		fd = open(file_name, O_CREAT | O_RDWR | O_TRUNC, 0777);
-	if (!ft_strcmp(type, ">>"))
-		fd = open(file_name, O_CREAT | O_RDWR | O_APPEND, 0777);
-	if (!ft_strcmp(type, "<"))
-		fd = open(file_name, O_RDONLY, 0777);
-	if (fd == -1)
+	if (!ft_strcmp(v->tmp_value, ">") || !ft_strcmp(v->tmp_value, ">>"))
 	{
-		g_exit_status = 1;
-		perror(file_name);
+		if (tmp->fd_out >= 3)
+			close(tmp->fd_out);
+		tmp->fd_out = v->fd;
 	}
-	return (fd);
+	else if (!ft_strcmp(v->tmp_value, "<") || !ft_strcmp(v->tmp_value,
+			"<<"))
+	{
+		if (tmp->fd_in >= 3)
+			close(tmp->fd_in);
+		tmp->fd_in = v->fd;
+		if (v->flag == 230)
+		{
+			tmp->fd_in = -2;
+			v->flag = 0;
+		}
+		if (!ft_strcmp(v->tmp_value, "<<"))
+		{
+			tmp->file_name = ft_strdup(v->command);
+			free(v->command);
+		}
+	}
 }
 
 int	var_redirect(t_list *list, t_vars *v)
@@ -63,23 +72,7 @@ t_cmd	*add_fd(t_vars *v, t_cmd *tmp, t_list *list)
 {
 	if (v->tmp_value && tmp)
 	{
-		if (!ft_strcmp(v->tmp_value, ">") || !ft_strcmp(v->tmp_value, ">>"))
-			tmp->fd_out = v->fd;
-		else if (!ft_strcmp(v->tmp_value, "<") || !ft_strcmp(v->tmp_value,
-				"<<"))
-		{
-			tmp->fd_in = v->fd;
-			if (v->flag == 230)
-			{
-				tmp->fd_in = -2;
-				v->flag = 0;
-			}
-			if (!ft_strcmp(v->tmp_value, "<<"))
-			{
-				tmp->file_name = ft_strdup(v->command);
-				free(v->command);
-			}
-		}
+		close_fd(tmp, v);
 		free(v->tmp_value);
 		v->tmp_value = NULL;
 	}
@@ -90,6 +83,10 @@ t_cmd	*add_fd(t_vars *v, t_cmd *tmp, t_list *list)
 
 t_list	*if_redirect(t_cmd *tmp, t_vars *v, t_env **envr, t_vars *p)
 {
+	if (tmp->fd_in >= 3)
+		close (tmp->fd_in);
+	if (tmp->fd_out >= 3)
+		close (tmp->fd_out);
 	tmp->fd_in = -1;
 	tmp->fd_out = -1;
 	while (v->tmp1 && ft_strcmp(v->tmp1->type, "PIPE"))
