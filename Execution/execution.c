@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 20:20:23 by moudrib           #+#    #+#             */
-/*   Updated: 2023/07/07 11:03:31 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/08 15:05:10 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	inside_child_process(t_vars *v, t_env **env, int size)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	if (v->final_list->fd_out == -1 && v->final_list->fd_in == -1)
+		exit(g_exit_status);
 	if (v->final_list->cmd && !v->final_list->cmd[0])
 		exit(0);
 	if (size == 1)
@@ -79,8 +81,8 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 {
 	while (v->final_list)
 	{
-		if (v->final_list->fd_out != -1 && v->final_list->fd_in != -1)
-		{
+		// if (v->final_list->fd_out != -1 && v->final_list->fd_in != -1)
+		// {
 			if (pipe_and_fork_protection(v, env))
 				return ;
 			if (v->child == 0)
@@ -98,8 +100,7 @@ void	execute_commands(t_vars *v, t_env **env, int size)
 					break ;
 				}
 			}
-			exit_by_signal();
-		}
+		// }
 		v->final_list = v->final_list->link;
 	}
 }
@@ -123,5 +124,6 @@ void	execution(t_cmd *final_list, t_env **env, t_list **lst)
 	dup2(std_out, STDOUT_FILENO);
 	close(std_in);
 	close(std_out);
+	exit_by_signal();
 	signal(SIGINT, &catching_signals);
 }

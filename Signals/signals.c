@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 17:00:08 by moudrib           #+#    #+#             */
-/*   Updated: 2023/07/07 12:00:53 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/08 11:56:29 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ void	exit_by_signal(void)
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGINT)
+		{
 			write(1, "\n", 1);
+			// g_exit_status = WTERMSIG(status) + 128;
+		}
 		else if (WTERMSIG(status) == SIGABRT)
 			write(1, "Abort trap: 6\n", 15);
 		else if (WTERMSIG(status) == SIGSEGV)
