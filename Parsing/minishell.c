@@ -6,7 +6,7 @@
 /*   By: moudrib <moudrib@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 13:31:57 by moudrib           #+#    #+#             */
-/*   Updated: 2023/07/08 12:22:13 by moudrib          ###   ########.fr       */
+/*   Updated: 2023/07/09 11:07:33 by moudrib          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ int	main(int ac, char **av, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	rl_catch_signals = 0;
 	everything_starts_here(envr);
-	// ft_destroy_list_env(&envr);
 	printf("exit\n");
 	return (0);
 }
