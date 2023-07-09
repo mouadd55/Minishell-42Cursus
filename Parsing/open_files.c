@@ -94,6 +94,7 @@ t_list	*if_redirect(t_cmd *tmp, t_vars *v, t_env **envr, t_vars *p)
 		if (!ft_strcmp(v->tmp1->type, "HEREDOC"))
 		{
 			if_heredoce(v, tmp, envr, p);
+			free(v->tmp_value);
 			tmp->file_name = ft_strdup(v->command);
 			free(v->command);
 		}
