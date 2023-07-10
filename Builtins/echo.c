@@ -39,17 +39,44 @@ void	change_dir_2(t_env **envr, t_vars *v)
 	}
 }
 
+int	check_cd_env(t_env **envr, t_cmd *f_list, t_vars *v)
+{
+	if (!f_list->cmd[1] || !ft_strcmp(f_list->cmd[1], "~"))
+	{
+		chdir(getenv("HOME"));
+		return (1);
+	}
+	else if (!ft_strcmp(f_list->cmd[1], "-"))
+	{
+		if (ft_getenv(*envr, "OLDPWD"))
+		{
+			v->tmp_str = ft_strdup(ft_getenv(*envr, "OLDPWD"));
+			ft_printf("%s\n", 1, v->tmp_str);
+		}
+		else
+		{
+			ft_putstr_fd("Minishell: cd: OLDPWD not set\n", 2);
+			return (1);
+		}
+		return (0);
+	}
+	else
+		v->tmp_str = ft_strdup(f_list->cmd[1]);
+	return (0);
+}
+
 void	change_dir(t_env **envr, t_cmd *f_list)
 {
 	t_vars	v;
 
 	v.tmp_str = NULL;
-	if (!f_list->cmd[1] || !ft_strcmp(f_list->cmd[1], "~"))
-		v.tmp_str = ft_strdup(getenv("HOME"));
-	else if (!ft_strcmp(f_list->cmd[1], "-"))
-		v.tmp_str = ft_strdup(ft_getenv(*envr, "OLDPWD"));
-	else
-		v.tmp_str = ft_strdup(f_list->cmd[1]);
+	if (!f_list->cmd[1] && !ft_getenv(*envr, "HOME"))
+	{
+		ft_putstr_fd("Minishell: cd: HOME not set\n", 2);
+		return ;
+	}
+	else if (check_cd_env(envr, f_list, &v))
+		return ;
 	v.val = getcwd(NULL, 0);
 	change_dir_2(envr, &v);
 	free(v.tmp_str);

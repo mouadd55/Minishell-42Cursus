@@ -59,6 +59,8 @@ int	check_syntax2(t_list *lst)
 		|| (!ft_strcmp(lst->content, ">>") && lst->link->content[0] == 32
 			&& lst->link->link->content[0] == '|'))
 		return (syntax_error(NULL, '|'), 258);
+	else if ((!ft_strcmp(lst->content, ">") && lst->link->content[0] == '|'))
+		return (syntax_error(NULL, '|'), 258);
 	return (0);
 }
 
